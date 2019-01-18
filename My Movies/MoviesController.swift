@@ -12,15 +12,38 @@ class MoviesController: UICollectionViewController {
 
     private let cellId = "Cell"
     
+    let searchBar = UISearchController(searchResultsController: nil)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        collectionView.backgroundColor = .white
-        collectionView.register(MoviesCell.self, forCellWithReuseIdentifier: cellId)
+        setupView()
     }
 
-
+    func setupView() {
+        collectionView.backgroundColor = .white
+        collectionView.register(MoviesCell.self, forCellWithReuseIdentifier: cellId)
+        setupNavBar()
+    }
+    
+    func setupNavBar() {
+        navigationController?.navigationBar.tintColor = .black
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.title = "Movies"
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: nil)
+        navigationItem.hidesSearchBarWhenScrolling = false
+        setupSearchBar()
+    }
+    
+    func setupSearchBar() {
+        searchBar.searchBar.placeholder = "Search movies you own..."
+        searchBar.searchBar.tintColor = .black
+//        searchBar.searchResultsUpdater = self
+        searchBar.obscuresBackgroundDuringPresentation = false
+        navigationItem.searchController = searchBar
+        definesPresentationContext = true
+    }
 }
+
 
 extension MoviesController {
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

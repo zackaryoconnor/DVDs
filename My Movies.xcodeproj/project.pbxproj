@@ -19,6 +19,8 @@
 		F3D9FE7B21F287E200B864AA /* AddNewMovieCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9FE7A21F287E200B864AA /* AddNewMovieCell.swift */; };
 		F3D9FE8221F28D9400B864AA /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9FE8121F28D9400B864AA /* Constants.swift */; };
 		F3D9FE8421F28E1B00B864AA /* ApiData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9FE8321F28E1B00B864AA /* ApiData.swift */; };
+		F3D9FE8621F2918300B864AA /* IsSearchingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9FE8521F2918300B864AA /* IsSearchingController.swift */; };
+		F3D9FE8821F2919900B864AA /* IsSearchingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9FE8721F2919900B864AA /* IsSearchingCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +38,8 @@
 		F3D9FE7A21F287E200B864AA /* AddNewMovieCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNewMovieCell.swift; sourceTree = "<group>"; };
 		F3D9FE8121F28D9400B864AA /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		F3D9FE8321F28E1B00B864AA /* ApiData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiData.swift; sourceTree = "<group>"; };
+		F3D9FE8521F2918300B864AA /* IsSearchingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IsSearchingController.swift; sourceTree = "<group>"; };
+		F3D9FE8721F2919900B864AA /* IsSearchingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IsSearchingCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +90,7 @@
 			children = (
 				F3D9FE5E21F2790E00B864AA /* MoviesController.swift */,
 				F3D9FE7821F287D300B864AA /* AddNewMovieController.swift */,
+				F3D9FE8521F2918300B864AA /* IsSearchingController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -97,6 +102,7 @@
 				F3D9FE7221F27E8900B864AA /* ImageViews.swift */,
 				F3D9FE6E21F27C1B00B864AA /* MoviesCell.swift */,
 				F3D9FE7A21F287E200B864AA /* AddNewMovieCell.swift */,
+				F3D9FE8721F2919900B864AA /* IsSearchingCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -195,12 +201,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F3D9FE8821F2919900B864AA /* IsSearchingCell.swift in Sources */,
 				F3D9FE7321F27E8900B864AA /* ImageViews.swift in Sources */,
 				F3D9FE5F21F2790E00B864AA /* MoviesController.swift in Sources */,
 				F3D9FE6F21F27C1B00B864AA /* MoviesCell.swift in Sources */,
 				F3D9FE7B21F287E200B864AA /* AddNewMovieCell.swift in Sources */,
 				F3D9FE7121F27E7000B864AA /* Labels.swift in Sources */,
 				F3D9FE5D21F2790E00B864AA /* AppDelegate.swift in Sources */,
+				F3D9FE8621F2918300B864AA /* IsSearchingController.swift in Sources */,
 				F3D9FE8421F28E1B00B864AA /* ApiData.swift in Sources */,
 				F3D9FE7721F27EDB00B864AA /* Extensions.swift in Sources */,
 				F3D9FE7921F287D300B864AA /* AddNewMovieController.swift in Sources */,

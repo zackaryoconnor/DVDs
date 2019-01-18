@@ -1,5 +1,5 @@
 //
-//  AddNewMovieCell.swift
+//  IsSearchingCell.swift
 //  My Movies
 //
 //  Created by Zackary O'Connor on 1/18/19.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AddNewMovieCell: UICollectionViewCell {
+class IsSearchingCell: UICollectionViewCell {
     let activitityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
         indicator.translatesAutoresizingMaskIntoConstraints = false
@@ -16,8 +16,8 @@ class AddNewMovieCell: UICollectionViewCell {
     }()
     
     let movieCoverImageView = ImageViews(image: "")
-    let movieTitleLabel = Labels(text: "test", textColor: .black, fontSize: 18, fontWeight: .medium, textAlignment: .left, numberOfLines: 2)
-    let yearReleasedLabel = Labels(text: "09-03-2010", textColor: .lightGray, fontSize: 16, fontWeight: .regular, textAlignment: .left, numberOfLines: 1)
+    let movieTitleLabel = Labels(text: "", textColor: .black, fontSize: 18, fontWeight: .medium, textAlignment: .left, numberOfLines: 2)
+    let yearReleasedLabel = Labels(text: "", textColor: .lightGray, fontSize: 16, fontWeight: .regular, textAlignment: .left, numberOfLines: 1)
     
     
     override init(frame: CGRect) {
@@ -26,7 +26,9 @@ class AddNewMovieCell: UICollectionViewCell {
     }
     
     func setupCell() {
-        movieCoverImageView.backgroundColor = .lightGray
+        movieCoverImageView.backgroundColor = .gray
+        movieTitleLabel.text = "test"
+        yearReleasedLabel.text = "02/23/2233"
         [movieCoverImageView, movieTitleLabel, yearReleasedLabel].forEach { addSubview($0) }
         
         movieCoverImageView.addAnchors(top: topAnchor, leading: leadingAnchor, bottom: bottomAnchor, trailing: nil, padding: .init(top: 8, left: 16, bottom: 8, right: 0), size: .init(width: 64, height: frame.height))
@@ -34,7 +36,8 @@ class AddNewMovieCell: UICollectionViewCell {
         movieTitleLabel.addAnchors(top: nil, leading: movieCoverImageView.trailingAnchor, bottom: nil, trailing: trailingAnchor, padding: .init(top: 0, left: 16, bottom: 0, right: 16))
         movieTitleLabel.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -10).isActive = true
         
-        yearReleasedLabel.addAnchors(top: movieTitleLabel.bottomAnchor, leading: movieCoverImageView.trailingAnchor, bottom: nil, trailing: trailingAnchor, padding: .init(top: 0, left: 16, bottom: 0, right: 16))        
+        yearReleasedLabel.addAnchors(top: movieTitleLabel.bottomAnchor, leading: movieCoverImageView.trailingAnchor, bottom: nil, trailing: trailingAnchor, padding: .init(top: 0, left: 16, bottom: 0, right: 16))
+        
         movieCoverImageView.loadImageUsingUrlString(urlstring: moviesUrl)
     }
     
@@ -42,4 +45,5 @@ class AddNewMovieCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 }
+
 

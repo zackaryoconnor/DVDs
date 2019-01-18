@@ -15,6 +15,8 @@
 		F3D9FE7121F27E7000B864AA /* Labels.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9FE7021F27E7000B864AA /* Labels.swift */; };
 		F3D9FE7321F27E8900B864AA /* ImageViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9FE7221F27E8900B864AA /* ImageViews.swift */; };
 		F3D9FE7721F27EDB00B864AA /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9FE7621F27EDB00B864AA /* Extensions.swift */; };
+		F3D9FE7921F287D300B864AA /* AddNewMovieController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9FE7821F287D300B864AA /* AddNewMovieController.swift */; };
+		F3D9FE7B21F287E200B864AA /* AddNewMovieCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9FE7A21F287E200B864AA /* AddNewMovieCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +30,8 @@
 		F3D9FE7021F27E7000B864AA /* Labels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Labels.swift; sourceTree = "<group>"; };
 		F3D9FE7221F27E8900B864AA /* ImageViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViews.swift; sourceTree = "<group>"; };
 		F3D9FE7621F27EDB00B864AA /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		F3D9FE7821F287D300B864AA /* AddNewMovieController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNewMovieController.swift; sourceTree = "<group>"; };
+		F3D9FE7A21F287E200B864AA /* AddNewMovieCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNewMovieCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +70,8 @@
 				F3D9FE7221F27E8900B864AA /* ImageViews.swift */,
 				F3D9FE5E21F2790E00B864AA /* MoviesController.swift */,
 				F3D9FE6E21F27C1B00B864AA /* MoviesCell.swift */,
+				F3D9FE7821F287D300B864AA /* AddNewMovieController.swift */,
+				F3D9FE7A21F287E200B864AA /* AddNewMovieCell.swift */,
 				F3D9FE6321F2791000B864AA /* Assets.xcassets */,
 				F3D9FE6521F2791000B864AA /* LaunchScreen.storyboard */,
 				F3D9FE6821F2791000B864AA /* Info.plist */,
@@ -146,9 +152,11 @@
 				F3D9FE7321F27E8900B864AA /* ImageViews.swift in Sources */,
 				F3D9FE5F21F2790E00B864AA /* MoviesController.swift in Sources */,
 				F3D9FE6F21F27C1B00B864AA /* MoviesCell.swift in Sources */,
+				F3D9FE7B21F287E200B864AA /* AddNewMovieCell.swift in Sources */,
 				F3D9FE7121F27E7000B864AA /* Labels.swift in Sources */,
 				F3D9FE5D21F2790E00B864AA /* AppDelegate.swift in Sources */,
 				F3D9FE7721F27EDB00B864AA /* Extensions.swift in Sources */,
+				F3D9FE7921F287D300B864AA /* AddNewMovieController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

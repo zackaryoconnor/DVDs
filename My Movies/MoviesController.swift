@@ -29,7 +29,7 @@ class MoviesController: UICollectionViewController {
         navigationController?.navigationBar.tintColor = .black
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = "Movies"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: nil)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(handleAddNewMovie))
         navigationItem.hidesSearchBarWhenScrolling = false
         setupSearchBar()
     }
@@ -41,6 +41,12 @@ class MoviesController: UICollectionViewController {
         searchBar.obscuresBackgroundDuringPresentation = false
         navigationItem.searchController = searchBar
         definesPresentationContext = true
+    }
+    
+    @objc func handleAddNewMovie() {
+        let addNewMovieSearchController = AddNewMovieController(collectionViewLayout: UICollectionViewFlowLayout())
+        let navBarController = UINavigationController(rootViewController: addNewMovieSearchController)
+        present(navBarController, animated: true, completion: nil)
     }
 }
 

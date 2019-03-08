@@ -8,19 +8,38 @@
 
 import UIKit
 
+public func createNavController(viewController: UIViewController, title: String, searchControllerText: String) -> UIViewController {
+    
+    let navigtionController = UINavigationController(rootViewController: viewController)
+    let searchController = UISearchController(searchResultsController: nil)
+    
+    navigtionController.navigationBar.prefersLargeTitles = true
+    navigtionController.navigationBar.tintColor = .black
+    
+    searchController.searchBar.placeholder = searchControllerText
+    searchController.searchBar.tintColor = .black
+    searchController.obscuresBackgroundDuringPresentation = false
+    searchController.definesPresentationContext = true
+    
+    viewController.navigationItem.searchController = searchController
+    viewController.navigationItem.title = title
+    viewController.view.backgroundColor = .white
+    
+    return navigtionController
+}
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
-
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
         let layout = UICollectionViewFlowLayout()
         
         window = UIWindow(frame: UIScreen.main.bounds)
-        window?.rootViewController = UINavigationController(rootViewController: MoviesController(collectionViewLayout: layout))
+        window?.rootViewController = createNavController(viewController: MoviesController(collectionViewLayout: layout), title: "My Movies", searchControllerText: "Search movies you own...")
         window?.makeKeyAndVisible()
         
         return true

@@ -1,5 +1,5 @@
 //
-//  Extensions.swift
+//  Layout.swift
 //  My Movies
 //
 //  Created by Zackary O'Connor on 1/18/19.

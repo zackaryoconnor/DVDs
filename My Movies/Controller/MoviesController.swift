@@ -10,7 +10,9 @@ import UIKit
 
 class MoviesController: UICollectionViewController {
 
-    private let cellId = "Cell"
+    fileprivate let cellId = "Cell"
+    
+    var myMovies = [Results]()
     
     let searchBar = UISearchController(searchResultsController: nil)
     
@@ -18,7 +20,7 @@ class MoviesController: UICollectionViewController {
         super.viewDidLoad()
         setupView()
     }
-
+    
     func setupView() {
         collectionView.backgroundColor = .white
         collectionView.register(MoviesCell.self, forCellWithReuseIdentifier: cellId)
@@ -26,48 +28,31 @@ class MoviesController: UICollectionViewController {
     }
     
     func setupNavBar() {
-        navigationController?.navigationBar.tintColor = .black
-        navigationController?.navigationBar.prefersLargeTitles = true
-        navigationItem.title = "Movies"
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(handleAddNewMovie))
         navigationItem.hidesSearchBarWhenScrolling = false
-        setupSearchBar()
     }
     
-    func setupSearchBar() {
-        searchBar.searchBar.placeholder = "Search movies you own..."
-        searchBar.searchBar.tintColor = .black
-//        searchBar.searchResultsUpdater = self
-        searchBar.obscuresBackgroundDuringPresentation = false
-        navigationItem.searchController = searchBar
-        definesPresentationContext = true
-    }
     
     @objc func handleAddNewMovie() {
-        let addNewMovieSearchController = AddNewMovieController(collectionViewLayout: UICollectionViewFlowLayout())
-        let navBarController = UINavigationController(rootViewController: addNewMovieSearchController)
-        present(navBarController, animated: true, completion: nil)
+        let addNewMovieSearchController = createNavController(viewController: AddNewMovieController(collectionViewLayout: UICollectionViewFlowLayout()), title: "Search", searchControllerText: "Search for a movie...")
+        present(addNewMovieSearchController, animated: true, completion: nil)
     }
 }
 
 
-extension MoviesController {
+extension MoviesController: UICollectionViewDelegateFlowLayout{
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        
-        return 2
+        return myMovies.count
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as? MoviesCell {
-            return cell
-        }
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! MoviesCell
         
-        return UICollectionViewCell()
+        cell.movie = myMovies[indexPath.item]
+        
+        return cell
     }
-}
-
-
-extension MoviesController: UICollectionViewDelegateFlowLayout {
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: view.frame.width / 2 - 24, height: 300)
     }

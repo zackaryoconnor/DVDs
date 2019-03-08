@@ -9,16 +9,24 @@
 import UIKit
 
 class AddNewMovieCell: UICollectionViewCell {
+    
+    var movie: Results! {
+        didSet {
+            movieCoverImageView.loadImageUsingUrlString(urlstring: movieCoverImageUrl + movie.posterPath)
+            movieTitleLabel.text = movie.title
+            yearReleasedLabel.text = "(\(movie.releaseDate))"
+        }
+    }
+    
     let activitityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
         indicator.translatesAutoresizingMaskIntoConstraints = false
         return indicator
     }()
     
-    let movieCoverImageView = ImageViews(image: "")
-    let movieTitleLabel = Labels(text: "test", textColor: .black, fontSize: 18, fontWeight: .medium, textAlignment: .left, numberOfLines: 2)
-    let yearReleasedLabel = Labels(text: "09-03-2010", textColor: .lightGray, fontSize: 16, fontWeight: .regular, textAlignment: .left, numberOfLines: 1)
-    
+    let movieCoverImageView = UIImageView(image: "", cornerRadius: 8)
+    let movieTitleLabel = UILabel(text: "test", textColor: .black, fontSize: 18, fontWeight: .medium, textAlignment: .left, numberOfLines: 2)
+    let yearReleasedLabel = UILabel(text: "09-03-2010", textColor: .lightGray, fontSize: 16, fontWeight: .regular, textAlignment: .left, numberOfLines: 1)
     
     override init(frame: CGRect) {
         super.init(frame: frame)

@@ -9,8 +9,18 @@
 import UIKit
 
 class MoviesCell: UICollectionViewCell {
-    let movieCoverImageView = ImageViews(image: "")
-    let movieTitleLabel = Labels(text: "test", textColor: .black, fontSize: 24, fontWeight: .semibold, textAlignment: .center, numberOfLines: 2)
+    
+    var movie: Results! {
+        didSet {
+            let moviesController = MoviesController()
+            
+            movieCoverImageView.loadImageUsingUrlString(urlstring: movieCoverImageUrl + (moviesController.myMovies.first?.posterPath)!)
+//            cell.movieTitleLabel.text = myMovies?.title
+        }
+    }
+    
+    let movieCoverImageView = UIImageView(image: "", cornerRadius: 8)
+    let movieTitleLabel = UILabel(text: "test", textColor: .black, fontSize: 24, fontWeight: .semibold, textAlignment: .center, numberOfLines: 2)
     
     override init(frame: CGRect) {
         super.init(frame: frame)

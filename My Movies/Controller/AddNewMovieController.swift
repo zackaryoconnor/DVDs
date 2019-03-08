@@ -9,11 +9,10 @@
 import UIKit
 
 class AddNewMovieController: UICollectionViewController {
-    private let cellId = "Cell"
+    fileprivate let cellId = "Cell"
     private var MovieVC: MoviesController!
     
     var searchController: UISearchController?
-    var resultsController: IsSearchingController?
     
     var popularMovies = [Results]()
     var movies = [Results]()
@@ -36,32 +35,24 @@ class AddNewMovieController: UICollectionViewController {
         collectionView.register(AddNewMovieCell.self, forCellWithReuseIdentifier: cellId)
         
         setupNavBar()
-        downloadJson(fromUrl: moviesUrl)
+        
+        Service.shared.fetchMovies(url: moviesUrl) { (results, error) in
+            self.popularMovies = results
+            DispatchQueue.main.async {
+                self.activitityIndicator.isHidden = true
+                self.activitityIndicator.stopAnimating()
+                self.collectionView.reloadData()
+            }
+        }
+        
         setupActivityIndicatorView()
     }
     
     func setupNavBar() {
-        setupSearchBar()
-        
-        navigationController?.navigationBar.tintColor = .black
-        navigationController?.navigationBar.prefersLargeTitles = true
-        
-        navigationItem.title = "Search"
         navigationItem.hidesSearchBarWhenScrolling = false
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(handleDismissController))
     }
     
-    func setupSearchBar() {
-        resultsController = IsSearchingController()
-        searchController = UISearchController(searchResultsController: resultsController)
-        
-        searchController?.searchBar.placeholder = "Search for a movie..."
-        searchController?.searchBar.tintColor = .black
-        searchController?.searchResultsUpdater = resultsController
-        searchController?.obscuresBackgroundDuringPresentation = true
-        navigationItem.searchController = searchController
-        definesPresentationContext = true
-    }
     
     func setupActivityIndicatorView() {
         view.addSubview(activitityIndicator)
@@ -75,53 +66,34 @@ class AddNewMovieController: UICollectionViewController {
     @objc func handleDismissController() {
         dismiss(animated: true, completion: nil)
     }
-    
-    // get api data
-    func downloadJson(fromUrl: String) {
-        guard let url = URL(string: fromUrl) else { return }
-        
-        URLSession.shared.dataTask(with: url) { (data, response, error) in
-            guard let data = data else { return }
-            
-            do {
-                let decoder = JSONDecoder()
-                decoder.keyDecodingStrategy = .convertFromSnakeCase
-                let json = try JSONDecoder().decode(WebsiteResultData.self, from: data)
-                DispatchQueue.main.async {
-                    self.popularMovies.append(contentsOf: json.results)
-                    self.activitityIndicator.isHidden = true
-                    self.activitityIndicator.stopAnimating()
-                    self.collectionView.reloadData()
-                }
-            } catch _ {
-                print("error")
-            }
-            } .resume()
-    }
 }
 
 
-extension AddNewMovieController {
+extension AddNewMovieController: UICollectionViewDelegateFlowLayout  {
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return popularMovies.count
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as? AddNewMovieCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! AddNewMovieCell
         
-        let movie = self.popularMovies[indexPath.item]
-        cell?.movieCoverImageView.loadImageUsingUrlString(urlstring: movieCoverImageUrl + movie.posterPath)
-        cell?.movieTitleLabel.text = movie.title
-        cell?.yearReleasedLabel.text = "(\(movie.releaseDate))"
+        cell.movie = self.popularMovies[indexPath.item]
         
-        return cell!
+        return cell
     }
     
-    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {}
-}
-
-// UICollectionViewDelegateFlowLayout
-extension AddNewMovieController: UICollectionViewDelegateFlowLayout {
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        let selectedMovie = popularMovies[indexPath.item]
+        print("selected movie - \(selectedMovie.title) -")
+        
+        let layout = UICollectionViewFlowLayout()
+        let moviesController = MoviesController(collectionViewLayout: layout)
+        moviesController.myMovies.append(selectedMovie)
+        handleDismissController()
+//        show(moviesController, sender: self)
+    }
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: view.frame.width, height: 100)
     }
@@ -138,4 +110,3 @@ extension AddNewMovieController: UICollectionViewDelegateFlowLayout {
         return 0
     }
 }
-

@@ -12,31 +12,34 @@ class MoviesCell: UICollectionViewCell {
     
     var movie: Results! {
         didSet {
-            let moviesController = MoviesController()
+            guard let posterPath = movie.posterPath else { return }
             
-            movieCoverImageView.loadImageUsingUrlString(urlstring: movieCoverImageUrl + (moviesController.myMovies.first?.posterPath)!)
-//            cell.movieTitleLabel.text = myMovies?.title
+            movieCoverImageView.loadImageUsingUrlString(urlstring: movieCoverImageUrl + posterPath)
+            movieTitleLabel.text = movie.title
         }
     }
     
     let movieCoverImageView = UIImageView(image: "", cornerRadius: 8)
-    let movieTitleLabel = UILabel(text: "test", textColor: .black, fontSize: 24, fontWeight: .semibold, textAlignment: .center, numberOfLines: 2)
+    let movieTitleLabel = UILabel(text: "", textColor: .black, fontSize: 24, fontWeight: .semibold, textAlignment: .left, numberOfLines: 0)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setupCell()
-    }
-    
-    func setupCell() {
-        movieCoverImageView.backgroundColor = .lightGray
-        [movieCoverImageView, movieTitleLabel].forEach { addSubview($0) }
         
-        movieCoverImageView.addAnchors(top: topAnchor, leading: leadingAnchor, bottom: nil, trailing: trailingAnchor, padding: .zero, size: .init(width: frame.width, height: 225))
+        movieCoverImageView.constrainWidth(constant: frame.width)
+        movieCoverImageView.constrainHeight(constant: 235)
         
-        movieTitleLabel.addAnchors(top: movieCoverImageView.bottomAnchor, leading: leadingAnchor, bottom: bottomAnchor, trailing: trailingAnchor, padding: .init(top: 8, left: 0, bottom: 0, right: 0))
+        let stackView = UIStackView(arrangedSubviews: [
+            movieCoverImageView,
+            movieTitleLabel
+            ])
+        
+        addSubview(stackView)
+        stackView.axis = .vertical
+        stackView.fillSuperview()
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
+

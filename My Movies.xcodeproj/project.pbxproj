@@ -14,11 +14,12 @@
 		F3D9FE6421F2791000B864AA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F3D9FE6321F2791000B864AA /* Assets.xcassets */; };
 		F3D9FE6721F2791000B864AA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F3D9FE6521F2791000B864AA /* LaunchScreen.storyboard */; };
 		F3D9FE6F21F27C1B00B864AA /* MoviesCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9FE6E21F27C1B00B864AA /* MoviesCell.swift */; };
-		F3D9FE7721F27EDB00B864AA /* Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9FE7621F27EDB00B864AA /* Layout.swift */; };
 		F3D9FE7921F287D300B864AA /* AddNewMovieController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9FE7821F287D300B864AA /* AddNewMovieController.swift */; };
 		F3D9FE7B21F287E200B864AA /* AddNewMovieCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9FE7A21F287E200B864AA /* AddNewMovieCell.swift */; };
 		F3D9FE8221F28D9400B864AA /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9FE8121F28D9400B864AA /* Constants.swift */; };
 		F3D9FE8421F28E1B00B864AA /* Results.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9FE8321F28E1B00B864AA /* Results.swift */; };
+		F3FC3955224DAE7800B2F51F /* UIView+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3FC3954224DAE7800B2F51F /* UIView+Layout.swift */; };
+		F3FC3957224DAF5F00B2F51F /* BaseListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3FC3956224DAF5F00B2F51F /* BaseListController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,11 +32,12 @@
 		F3D9FE6621F2791000B864AA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F3D9FE6821F2791000B864AA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F3D9FE6E21F27C1B00B864AA /* MoviesCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesCell.swift; sourceTree = "<group>"; };
-		F3D9FE7621F27EDB00B864AA /* Layout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Layout.swift; sourceTree = "<group>"; };
 		F3D9FE7821F287D300B864AA /* AddNewMovieController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNewMovieController.swift; sourceTree = "<group>"; };
 		F3D9FE7A21F287E200B864AA /* AddNewMovieCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNewMovieCell.swift; sourceTree = "<group>"; };
 		F3D9FE8121F28D9400B864AA /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		F3D9FE8321F28E1B00B864AA /* Results.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Results.swift; sourceTree = "<group>"; };
+		F3FC3954224DAE7800B2F51F /* UIView+Layout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Layout.swift"; sourceTree = "<group>"; };
+		F3FC3956224DAF5F00B2F51F /* BaseListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseListController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -49,6 +51,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		F3713ECA2234DBF600C40A92 /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				F35C56082232272100885215 /* Service.swift */,
+			);
+			path = Service;
+			sourceTree = "<group>";
+		};
 		F3D9FE5021F2790E00B864AA = {
 			isa = PBXGroup;
 			children = (
@@ -69,8 +79,8 @@
 			isa = PBXGroup;
 			children = (
 				F3D9FE5C21F2790E00B864AA /* AppDelegate.swift */,
-				F3D9FE8021F28D4C00B864AA /* Supporting Files */,
 				F3D9FE7F21F28D1800B864AA /* Helpers */,
+				F3713ECA2234DBF600C40A92 /* Service */,
 				F3D9FE7E21F28D0F00B864AA /* Model */,
 				F3D9FE7D21F28D0800B864AA /* View */,
 				F3D9FE7C21F28CFD00B864AA /* Controller */,
@@ -84,6 +94,7 @@
 		F3D9FE7C21F28CFD00B864AA /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				F3FC3956224DAF5F00B2F51F /* BaseListController.swift */,
 				F3D9FE5E21F2790E00B864AA /* MoviesController.swift */,
 				F3D9FE7821F287D300B864AA /* AddNewMovieController.swift */,
 			);
@@ -103,7 +114,6 @@
 			isa = PBXGroup;
 			children = (
 				F3D9FE8321F28E1B00B864AA /* Results.swift */,
-				F35C56082232272100885215 /* Service.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -111,18 +121,11 @@
 		F3D9FE7F21F28D1800B864AA /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				F3D9FE7621F27EDB00B864AA /* Layout.swift */,
+				F3FC3954224DAE7800B2F51F /* UIView+Layout.swift */,
 				F3D9FE8121F28D9400B864AA /* Constants.swift */,
 				F35C560622321F8D00885215 /* Extensions.swift */,
 			);
 			path = Helpers;
-			sourceTree = "<group>";
-		};
-		F3D9FE8021F28D4C00B864AA /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "Supporting Files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -157,6 +160,7 @@
 				TargetAttributes = {
 					F3D9FE5821F2790E00B864AA = {
 						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1020;
 					};
 				};
 			};
@@ -199,11 +203,12 @@
 				F3D9FE6F21F27C1B00B864AA /* MoviesCell.swift in Sources */,
 				F3D9FE7B21F287E200B864AA /* AddNewMovieCell.swift in Sources */,
 				F3D9FE5D21F2790E00B864AA /* AppDelegate.swift in Sources */,
+				F3FC3955224DAE7800B2F51F /* UIView+Layout.swift in Sources */,
 				F35C56092232272100885215 /* Service.swift in Sources */,
 				F35C560722321F8D00885215 /* Extensions.swift in Sources */,
 				F3D9FE8421F28E1B00B864AA /* Results.swift in Sources */,
-				F3D9FE7721F27EDB00B864AA /* Layout.swift in Sources */,
 				F3D9FE7921F287D300B864AA /* AddNewMovieController.swift in Sources */,
+				F3FC3957224DAF5F00B2F51F /* BaseListController.swift in Sources */,
 				F3D9FE8221F28D9400B864AA /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -351,7 +356,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.zackaryoconnor.My-Movies";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -369,7 +374,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.zackaryoconnor.My-Movies";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

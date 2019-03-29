@@ -8,15 +8,17 @@
 
 import UIKit
 
-class AddNewMovieController: UICollectionViewController {
+class AddNewMovieController: BaseListController {
+    
     fileprivate let cellId = "Cell"
-    private var MovieVC: MoviesController!
     
-    var searchController: UISearchController?
+    fileprivate var MovieVC: MoviesController!
     
-    var popularMovies = [Results]()
-    var movies = [Results]()
-    var filteredMovies = [Results]()
+    fileprivate let searchController = UISearchController(searchResultsController: nil)
+    
+    fileprivate var popularMovies = [Results]()
+    
+    var timer: Timer?
     
     let activitityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
@@ -26,35 +28,25 @@ class AddNewMovieController: UICollectionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupView()
-    }
-    
-    // setup views
-    func setupView() {
-        collectionView.backgroundColor = .white
+        
         collectionView.register(AddNewMovieCell.self, forCellWithReuseIdentifier: cellId)
-        
-        setupNavBar()
-        
-        Service.shared.fetchMovies(url: moviesUrl) { (results, error) in
-            self.popularMovies = results
-            DispatchQueue.main.async {
-                self.activitityIndicator.isHidden = true
-                self.activitityIndicator.stopAnimating()
-                self.collectionView.reloadData()
-            }
-        }
-        
-        setupActivityIndicatorView()
-    }
-    
-    func setupNavBar() {
-        navigationItem.hidesSearchBarWhenScrolling = false
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(handleDismissController))
+        
+        setupSearchBar()
+        setupActivityIndicatorView()
+        fetchPopularMovies()
     }
     
+    fileprivate func setupSearchBar() {
+        definesPresentationContext = true
+        navigationItem.searchController = self.searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
+        searchController.dimsBackgroundDuringPresentation = false
+        searchController.searchBar.delegate = self
+        searchController.searchBar.tintColor = .black
+    }
     
-    func setupActivityIndicatorView() {
+    fileprivate func setupActivityIndicatorView() {
         view.addSubview(activitityIndicator)
         activitityIndicator.isHidden = false
         activitityIndicator.startAnimating()
@@ -62,8 +54,18 @@ class AddNewMovieController: UICollectionViewController {
         activitityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
     }
     
-    // actions
-    @objc func handleDismissController() {
+    fileprivate func fetchPopularMovies() {
+        Service.shared.fetchMovies(url: moviesUrl) { (result, error) in
+            self.popularMovies = result?.results ?? []
+            DispatchQueue.main.async {
+                self.activitityIndicator.isHidden = true
+                self.activitityIndicator.stopAnimating()
+                self.collectionView.reloadData()
+            }
+        }
+    }
+    
+    @objc fileprivate func handleDismissController() {
         dismiss(animated: true, completion: nil)
     }
 }
@@ -82,20 +84,8 @@ extension AddNewMovieController: UICollectionViewDelegateFlowLayout  {
         return cell
     }
     
-    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
-        let selectedMovie = popularMovies[indexPath.item]
-        print("selected movie - \(selectedMovie.title) -")
-        
-        let layout = UICollectionViewFlowLayout()
-        let moviesController = MoviesController(collectionViewLayout: layout)
-        moviesController.myMovies.append(selectedMovie)
-        handleDismissController()
-//        show(moviesController, sender: self)
-    }
-    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: view.frame.width, height: 100)
+        return CGSize(width: view.frame.width, height: 110)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
@@ -108,5 +98,39 @@ extension AddNewMovieController: UICollectionViewDelegateFlowLayout  {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 0
+    }
+}
+
+
+extension AddNewMovieController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        timer?.invalidate()
+
+        timer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: false, block: { (_) in
+            
+            let searchTerm = searchText
+            let finalSearchTerm = searchTerm.replacingOccurrences(of: " ", with: "%20")
+            
+            if searchText != "" {
+                Service.shared.fetchSearchedMovie(searchTerm: finalSearchTerm) { (result, error) in
+                    
+                    if let error = error {
+                        print("Failed to fetch apps:", error)
+                        return
+                    }
+                    
+                    self.popularMovies = result?.results ?? []
+                    DispatchQueue.main.async {
+                        self.collectionView.reloadData()
+                    }
+                }
+            } else {
+                self.fetchPopularMovies()
+            }
+        })
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        fetchPopularMovies()
     }
 }

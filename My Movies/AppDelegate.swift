@@ -36,10 +36,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
-        let layout = UICollectionViewFlowLayout()
-        
         window = UIWindow(frame: UIScreen.main.bounds)
-        window?.rootViewController = createNavController(viewController: MoviesController(collectionViewLayout: layout), title: "My Movies", searchControllerText: "Search movies you own...")
+        window?.rootViewController = createNavController(viewController: MoviesController(), title: "My Movies", searchControllerText: "Search movies you own...")
         window?.makeKeyAndVisible()
         
         return true

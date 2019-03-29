@@ -8,33 +8,27 @@
 
 import UIKit
 
-class MoviesController: UICollectionViewController {
+class MoviesController: BaseListController {
 
     fileprivate let cellId = "Cell"
     
-    var myMovies = [Results]()
+    fileprivate var myMovies = [Results]()
     
     let searchBar = UISearchController(searchResultsController: nil)
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupView()
-    }
-    
-    func setupView() {
-        collectionView.backgroundColor = .white
+        
         collectionView.register(MoviesCell.self, forCellWithReuseIdentifier: cellId)
-        setupNavBar()
-    }
-    
-    func setupNavBar() {
+        
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(handleAddNewMovie))
-        navigationItem.hidesSearchBarWhenScrolling = false
     }
     
     
-    @objc func handleAddNewMovie() {
-        let addNewMovieSearchController = createNavController(viewController: AddNewMovieController(collectionViewLayout: UICollectionViewFlowLayout()), title: "Search", searchControllerText: "Search for a movie...")
+    @objc fileprivate func handleAddNewMovie() {
+        let addNewMovieController = AddNewMovieController()
+        
+        let addNewMovieSearchController = createNavController(viewController: addNewMovieController, title: "Search", searchControllerText: "Search for a movie...")
         present(addNewMovieSearchController, animated: true, completion: nil)
     }
 }

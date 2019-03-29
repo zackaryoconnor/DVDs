@@ -35,3 +35,39 @@ extension UIButton {
         self.setTitle(title, for: .normal)
     }
 }
+
+
+extension UIImageView {
+    func loadImageUsingUrlString(urlstring: String) {
+        let url = URL(string: urlstring)
+        URLSession.shared.dataTask(with: url!) { (data, response, error) in
+            if error != nil {
+                print(error as Any)
+                return
+            }
+            
+            DispatchQueue.main.async {
+                self.image = UIImage(data: data!)
+            }
+            }.resume()
+    }
+}
+
+
+extension UICollectionView {
+    func setEmptyMessage(_ message: String) {
+        let messageLabel = UILabel(frame: CGRect(x: 0, y: 0, width: bounds.size.width, height: self.bounds.size.height))
+        messageLabel.text = message
+        messageLabel.textColor = .black
+        messageLabel.numberOfLines = 0
+        messageLabel.textAlignment = .center
+        messageLabel.font = UIFont.systemFont(ofSize: 24, weight: .medium)
+        messageLabel.sizeToFit()
+        
+        self.backgroundView = messageLabel
+    }
+    
+    func restore() {
+        self.backgroundView = nil
+    }
+}

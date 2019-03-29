@@ -17,9 +17,9 @@ let movieCoverImageUrl = "https://image.tmdb.org/t/p/w500/"
 
 let moviesUrl = "https://api.themoviedb.org/3/movie/popular?api_key=\(apiKey)\(language)"
 
-let baseSearchUrl = "https://api.themoviedb.org/3/search/movie?api_key=\(apiKey)\(language)"
+let baseSearchUrl = "https://api.themoviedb.org/3/search/movie?api_key=\(apiKey)\(language)\(query)"
 
 func updateSearchUrl(with searchQuery: String) -> String {
-    let isSearchingUrl = baseSearchUrl + query + searchQuery + includeAdultContent
+    let isSearchingUrl = baseSearchUrl + searchQuery + includeAdultContent
     return isSearchingUrl
 }

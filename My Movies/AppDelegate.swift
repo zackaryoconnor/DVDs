@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import Firebase
 
-public func createNavController(viewController: UIViewController, title: String, searchControllerText: String) -> UIViewController {
+public func baseNavController(viewController: UIViewController, title: String, searchControllerText: String) -> UIViewController {
     
     let navigtionController = UINavigationController(rootViewController: viewController)
     let searchController = UISearchController(searchResultsController: nil)
@@ -36,8 +37,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
+        FirebaseApp.configure()
+        
         window = UIWindow(frame: UIScreen.main.bounds)
-        window?.rootViewController = createNavController(viewController: MoviesController(), title: "My Movies", searchControllerText: "Search movies you own...")
+        window?.rootViewController = baseNavController(viewController: MoviesController(), title: "My Movies", searchControllerText: "Search movies you own...")
         window?.makeKeyAndVisible()
         
         return true

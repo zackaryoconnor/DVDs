@@ -7,21 +7,30 @@
 //
 
 import UIKit
+import Firebase
+
+
+protocol PassMovieDelegate {
+    func passMovie(movie: SavedMovies)
+}
+
 
 class AddNewMovieController: BaseListController {
+ 
+    var delegate: PassMovieDelegate?
     
     fileprivate let cellId = "Cell"
     
     fileprivate var MovieVC: MoviesController!
     
-    fileprivate let searchController = UISearchController(searchResultsController: nil)
+    let searchController = UISearchController(searchResultsController: nil)
     
-    fileprivate var popularMovies = [Results]()
+    lazy fileprivate var popularMovies = [Results]()
     
     var timer: Timer?
     
     let activitityIndicator: UIActivityIndicatorView = {
-        let indicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
+        let indicator = UIActivityIndicatorView(style: .gray)
         indicator.translatesAutoresizingMaskIntoConstraints = false
         return indicator
     }()
@@ -31,27 +40,22 @@ class AddNewMovieController: BaseListController {
         
         collectionView.register(AddNewMovieCell.self, forCellWithReuseIdentifier: cellId)
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(handleDismissController))
-        
-        setupSearchBar()
-        setupActivityIndicatorView()
-        fetchPopularMovies()
-    }
-    
-    fileprivate func setupSearchBar() {
-        definesPresentationContext = true
         navigationItem.searchController = self.searchController
         navigationItem.hidesSearchBarWhenScrolling = false
-        searchController.dimsBackgroundDuringPresentation = false
+        
         searchController.searchBar.delegate = self
+        searchController.dimsBackgroundDuringPresentation = false
         searchController.searchBar.tintColor = .black
+        
+        setupActivityIndicatorView()
+        fetchPopularMovies()
     }
     
     fileprivate func setupActivityIndicatorView() {
         view.addSubview(activitityIndicator)
         activitityIndicator.isHidden = false
         activitityIndicator.startAnimating()
-        activitityIndicator.topAnchor.constraint(equalTo: view.topAnchor, constant: UIScreen.main.bounds.height / 2).isActive = true
-        activitityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        activitityIndicator.centerInSuperview()
     }
     
     fileprivate func fetchPopularMovies() {
@@ -98,6 +102,20 @@ extension AddNewMovieController: UICollectionViewDelegateFlowLayout  {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 0
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let selectedMovie = self.popularMovies[indexPath.item]
+        
+        Database.database().reference().child("movies").childByAutoId().setValue(["title": selectedMovie.title as AnyObject, "posterPath": selectedMovie.posterPath as AnyObject, "id": selectedMovie.id as AnyObject])
+        
+        popularMovies.remove(at: indexPath.row)
+        collectionView.reloadData()
+        
+        delegate?.passMovie(movie: SavedMovies.init(title: selectedMovie.title ?? "", posterPath: selectedMovie.posterPath ?? ""))
+        
+        popularMovies.remove(at: indexPath.item)
+        collectionView.reloadData()
     }
 }
 

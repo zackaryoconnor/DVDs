@@ -24,4 +24,3 @@ struct Results: Decodable {
         case id, title
     }
 }
-

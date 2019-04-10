@@ -51,6 +51,9 @@ class MoviesController: BaseListController {
     }
     
     fileprivate func fetchMovies() {
+        
+        self.collectionView.isHidden = true
+        
         Database.database().reference().child("movies").observe(.value, with: { (snapshot) in
           
             var tempArray = [SavedMovies]()
@@ -68,8 +71,8 @@ class MoviesController: BaseListController {
             self.activitityIndicator.isHidden = true
             self.activitityIndicator.stopAnimating()
             self.myMovies = tempArray
+            self.collectionView.isHidden = false
             self.collectionView.reloadData()
-            print(tempArray)
         })
     }
     
@@ -100,6 +103,12 @@ class MoviesController: BaseListController {
 
 extension MoviesController: UICollectionViewDelegateFlowLayout{
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        
+        if (self.myMovies.count == 0) {
+            self.collectionView.setEmptyMessage("\n\nClick the '+' to add a movie \nto your collection.")
+        } else {
+            self.collectionView.restore()
+        }
         
         if isFiltering() {
             return filteredMovies.count

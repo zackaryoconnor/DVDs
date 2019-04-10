@@ -11,7 +11,7 @@
 		F35C560722321F8D00885215 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35C560622321F8D00885215 /* Extensions.swift */; };
 		F35C56092232272100885215 /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35C56082232272100885215 /* Service.swift */; };
 		F3773C1D225E91BD00C1341E /* SavedMovies.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3773C1C225E91BD00C1341E /* SavedMovies.swift */; };
-		F3773C1F225E93B100C1341E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F3773C1E225E93B100C1341E /* GoogleService-Info.plist */; };
+		F3773C21225EA46F00C1341E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F3773C20225EA46F00C1341E /* GoogleService-Info.plist */; };
 		F3D9FE5D21F2790E00B864AA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9FE5C21F2790E00B864AA /* AppDelegate.swift */; };
 		F3D9FE5F21F2790E00B864AA /* MoviesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9FE5E21F2790E00B864AA /* MoviesController.swift */; };
 		F3D9FE6421F2791000B864AA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F3D9FE6321F2791000B864AA /* Assets.xcassets */; };
@@ -32,7 +32,7 @@
 		F35C560622321F8D00885215 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		F35C56082232272100885215 /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
 		F3773C1C225E91BD00C1341E /* SavedMovies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedMovies.swift; sourceTree = "<group>"; };
-		F3773C1E225E93B100C1341E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
+		F3773C20225EA46F00C1341E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 		F3D9FE5921F2790E00B864AA /* My Movies.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "My Movies.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F3D9FE5C21F2790E00B864AA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F3D9FE5E21F2790E00B864AA /* MoviesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesController.swift; sourceTree = "<group>"; };
@@ -106,7 +106,7 @@
 				F3D9FE6321F2791000B864AA /* Assets.xcassets */,
 				F3D9FE6521F2791000B864AA /* LaunchScreen.storyboard */,
 				F3D9FE6821F2791000B864AA /* Info.plist */,
-				F3773C1E225E93B100C1341E /* GoogleService-Info.plist */,
+				F3773C20225EA46F00C1341E /* GoogleService-Info.plist */,
 			);
 			path = "My Movies";
 			sourceTree = "<group>";
@@ -222,7 +222,7 @@
 			files = (
 				F3D9FE6721F2791000B864AA /* LaunchScreen.storyboard in Resources */,
 				F3D9FE6421F2791000B864AA /* Assets.xcassets in Resources */,
-				F3773C1F225E93B100C1341E /* GoogleService-Info.plist in Resources */,
+				F3773C21225EA46F00C1341E /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

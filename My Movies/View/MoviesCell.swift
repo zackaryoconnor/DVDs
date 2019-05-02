@@ -18,7 +18,7 @@ class MoviesCell: UICollectionViewCell {
     }
     
     let movieCoverImageView = UIImageView(image: "", cornerRadius: 8)
-    let movieTitleLabel = UILabel(text: "", textColor: .black, fontSize: 18, fontWeight: .medium, textAlignment: .left, numberOfLines: 1)
+    let movieTitleLabel = UILabel(text: "", textColor: .black, fontSize: 17, fontWeight: .medium, textAlignment: .left, numberOfLines: 1)
     let deleteButton = UIButton(title: "X")
     
     override init(frame: CGRect) {
@@ -31,6 +31,8 @@ class MoviesCell: UICollectionViewCell {
         deleteButton.layer.cornerRadius = deleteButtonSize / 2
         deleteButton.setTitleColor(.white, for: .normal)
         
+        movieCoverImageView.layer.borderColor = UIColor.lightGray.cgColor
+        movieCoverImageView.layer.borderWidth = 0.5
         movieCoverImageView.constrainWidth(constant: frame.width)
         movieCoverImageView.constrainHeight(constant: 246)
         

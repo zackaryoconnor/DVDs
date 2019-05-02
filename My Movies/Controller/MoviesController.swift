@@ -11,13 +11,15 @@ import Firebase
 import FirebaseDatabase
 
 class MoviesController: BaseListController {
-
+    
     fileprivate let cellId = "Cell"
     
     lazy var myMovies = [SavedMovies]()
     lazy var filteredMovies = [SavedMovies]()
     
-    let searchBar = UISearchController(searchResultsController: nil)
+    var timer: Timer?
+    
+    let searchController = UISearchController(searchResultsController: nil)
     
     let activitityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: .gray)
@@ -29,15 +31,17 @@ class MoviesController: BaseListController {
         super.viewDidLoad()
         
         collectionView.register(MoviesCell.self, forCellWithReuseIdentifier: cellId)
+        collectionView.isUserInteractionEnabled = true
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(handleAddNewMovie))
+        navigationItem.hidesSearchBarWhenScrolling = true
+        navigationItem.searchController = searchController
         
-        searchBar.searchBar.placeholder = "Search movies you own..."
-        searchBar.searchBar.tintColor = .black
-        searchBar.searchResultsUpdater = self
-        searchBar.obscuresBackgroundDuringPresentation = false
-        navigationItem.searchController = searchBar
-        definesPresentationContext = true
+        searchController.searchBar.placeholder = "Search movies you own..."
+        searchController.searchBar.tintColor = .black
+        searchController.searchResultsUpdater = self
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.definesPresentationContext = true
         
         setupActivityIndicatorView()
         fetchMovies()
@@ -61,10 +65,11 @@ class MoviesController: BaseListController {
             for child in snapshot.children {
                 if let childSnapshot = child as? DataSnapshot,
                     let dict = childSnapshot.value as? [String : Any],
+                    let id = dict["id"] as? Int,
                     let title = dict["title"] as? String,
                     let posterPath = dict["posterPath"] as? String {
-                    
-                    let movie = SavedMovies(title: title, posterPath: posterPath)
+
+                    let movie = SavedMovies(id: id, title: title, posterPath: posterPath)
                     tempArray.append(movie)
                 }
             }
@@ -80,12 +85,13 @@ class MoviesController: BaseListController {
         let addNewMovieController = AddNewMovieController()
         addNewMovieController.delegate = self
         
-        let addNewMovieSearchController = baseNavController(viewController: addNewMovieController, title: "Search", searchControllerText: "Search for a movie...")
+        let addNewMovieSearchController = baseNavController(viewController: addNewMovieController, title: "Search", searchControllerText: "")
+        
         present(addNewMovieSearchController, animated: true, completion: nil)
     }
     
     func searchBarIsEmpty() -> Bool {
-        return searchBar.searchBar.text?.isEmpty ?? true
+        return searchController.searchBar.text?.isEmpty ?? true
     }
     
     func filterContentForSearchText(_ searchText: String, scope: String = "All") {
@@ -96,7 +102,7 @@ class MoviesController: BaseListController {
     }
     
     func isFiltering() -> Bool {
-        return searchBar.isActive && !searchBarIsEmpty()
+        return searchController.isActive && !searchBarIsEmpty()
     }
 }
 
@@ -105,7 +111,12 @@ extension MoviesController: UICollectionViewDelegateFlowLayout{
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
         if (self.myMovies.count == 0) {
-            self.collectionView.setEmptyMessage("\n\nClick the '+' to add a movie \nto your collection.")
+            self.collectionView.setEmptyMessage(#"""
+
+Click the '+' to add a movie
+to your collection.
+"""#)
+            
         } else {
             self.collectionView.restore()
         }
@@ -136,7 +147,7 @@ extension MoviesController: UICollectionViewDelegateFlowLayout{
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: view.frame.width / 2 - 24, height: 300)
+        return CGSize(width: view.frame.width / 2 - 24, height: 275)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
@@ -155,6 +166,7 @@ extension MoviesController: UICollectionViewDelegateFlowLayout{
 
 extension MoviesController: PassMovieDelegate {
     func passMovie(movie: SavedMovies) {
+        
         self.myMovies.append(movie)
         self.collectionView.reloadData()
     }
@@ -163,6 +175,11 @@ extension MoviesController: PassMovieDelegate {
 
 extension MoviesController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
-        filterContentForSearchText(searchController.searchBar.text!)
+        
+        timer?.invalidate()
+        
+        timer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: false, block: { (_) in
+            self.filterContentForSearchText(searchController.searchBar.text!)
+        })
     }
 }

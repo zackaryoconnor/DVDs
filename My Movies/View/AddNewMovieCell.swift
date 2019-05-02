@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class AddNewMovieCell: UICollectionViewCell {
     
@@ -19,6 +20,31 @@ class AddNewMovieCell: UICollectionViewCell {
             yearReleasedLabel.text = "(\(movie.releaseDate ?? ""))"
         }
     }
+    
+    
+    
+    
+    
+    
+//    override var isSelected: Bool {
+//        didSet {
+//            Database.database().reference().child("movies").observe(.value, with: { (snapshot) in
+//                
+//                if snapshot.exists() {
+//                    
+//                    self.movieTitleLabel.textColor = .red
+//                    
+//                }
+//            })
+//        }
+//    }
+//    
+    
+    
+    
+    
+    
+    
     
     let movieCoverImageView = UIImageView(image: "", cornerRadius: 4)
     let movieTitleLabel = UILabel(text: "", textColor: .black, fontSize: 18, fontWeight: .medium, textAlignment: .left, numberOfLines: 2)

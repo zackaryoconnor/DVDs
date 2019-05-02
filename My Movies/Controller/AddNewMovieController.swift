@@ -27,6 +27,8 @@ class AddNewMovieController: BaseListController {
     
     lazy fileprivate var popularMovies = [Results]()
     
+    var selectedMovie: Results?
+    
     var timer: Timer?
     
     let activitityIndicator: UIActivityIndicatorView = {
@@ -46,6 +48,7 @@ class AddNewMovieController: BaseListController {
         searchController.searchBar.delegate = self
         searchController.dimsBackgroundDuringPresentation = false
         searchController.searchBar.tintColor = .black
+        searchController.searchBar.placeholder = "Search for movie..."
         
         setupActivityIndicatorView()
         fetchPopularMovies()
@@ -105,17 +108,33 @@ extension AddNewMovieController: UICollectionViewDelegateFlowLayout  {
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
         let selectedMovie = self.popularMovies[indexPath.item]
+        self.selectedMovie = selectedMovie
         
-        Database.database().reference().child("movies").childByAutoId().setValue(["title": selectedMovie.title as AnyObject, "posterPath": selectedMovie.posterPath as AnyObject, "id": selectedMovie.id as AnyObject])
+        Database.database().reference().child("movies").observe(.value, with: { (snapshot) in
+
+            if !snapshot.hasChild(selectedMovie.title ?? "") {
+                Database.database().reference().child("movies").child(selectedMovie.title ?? "").setValue(["title": selectedMovie.title as AnyObject, "posterPath": selectedMovie.posterPath as AnyObject, "id": selectedMovie.id as AnyObject])
+                
+                self.popularMovies.remove(at: indexPath.row)
+                collectionView.reloadData()
+                
+                self.delegate?.passMovie(movie: SavedMovies.init(id: selectedMovie.id!, title: selectedMovie.title ?? "", posterPath: selectedMovie.posterPath ?? ""))
+                
+                self.popularMovies.remove(at: indexPath.item)
+                collectionView.reloadData()
+                
+            } else {
+                let cell = AddNewMovieCell()
+                cell.movieTitleLabel.textColor = .red
+            }
+            
+        }) { (error) in
+            print(error.localizedDescription)
+        }
         
-        popularMovies.remove(at: indexPath.row)
-        collectionView.reloadData()
         
-        delegate?.passMovie(movie: SavedMovies.init(title: selectedMovie.title ?? "", posterPath: selectedMovie.posterPath ?? ""))
-        
-        popularMovies.remove(at: indexPath.item)
-        collectionView.reloadData()
     }
 }
 

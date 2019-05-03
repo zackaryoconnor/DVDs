@@ -23,13 +23,13 @@ class AddNewMovieController: BaseListController {
     
     fileprivate var MovieVC: MoviesController!
     
-    let searchController = UISearchController(searchResultsController: nil)
+    fileprivate let searchController = UISearchController(searchResultsController: nil)
     
     lazy fileprivate var popularMovies = [Results]()
     
     var selectedMovie: Results?
     
-    var timer: Timer?
+    fileprivate var timer: Timer?
     
     let activitityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: .gray)
@@ -53,6 +53,7 @@ class AddNewMovieController: BaseListController {
         setupActivityIndicatorView()
         fetchPopularMovies()
     }
+    
     
     fileprivate func setupActivityIndicatorView() {
         view.addSubview(activitityIndicator)
@@ -99,13 +100,9 @@ extension AddNewMovieController: UICollectionViewDelegateFlowLayout  {
         return UIEdgeInsets(top: 0, left: 16, bottom: 16, right: 16)
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 0
-    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat { return 0 }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 0
-    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat { return 0 }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
@@ -113,7 +110,7 @@ extension AddNewMovieController: UICollectionViewDelegateFlowLayout  {
         self.selectedMovie = selectedMovie
         
         Database.database().reference().child("movies").observe(.value, with: { (snapshot) in
-
+            
             if !snapshot.hasChild(selectedMovie.title ?? "") {
                 Database.database().reference().child("movies").child(selectedMovie.title ?? "").setValue(["title": selectedMovie.title as AnyObject, "posterPath": selectedMovie.posterPath as AnyObject, "id": selectedMovie.id as AnyObject])
                 
@@ -122,20 +119,18 @@ extension AddNewMovieController: UICollectionViewDelegateFlowLayout  {
                 
                 self.delegate?.passMovie(movie: SavedMovies.init(id: selectedMovie.id!, title: selectedMovie.title ?? "", posterPath: selectedMovie.posterPath ?? ""))
                 
-                self.popularMovies.remove(at: indexPath.item)
+                self.popularMovies.remove(at: indexPath.item) // fix issue where a single movie crashes due to Index out of range
                 collectionView.reloadData()
                 
-            } else {
-                let cell = AddNewMovieCell()
-                cell.movieTitleLabel.textColor = .red
+                self.searchController.searchBar.text = ""
+                self.fetchPopularMovies()
+                
             }
-            
         }) { (error) in
             print(error.localizedDescription)
         }
-        
-        
     }
+    
 }
 
 

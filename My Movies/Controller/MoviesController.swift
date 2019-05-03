@@ -140,7 +140,7 @@ to your collection.
             filteredMovie = myMovies[indexPath.item]
         }
         
-        cell.movieCoverImageView.loadImageUsingUrlString(urlstring: movieCoverImageUrl + filteredMovie.posterPath)
+        cell.movieCoverImageView.loadImageUsingUrlString(urlString: movieCoverImageUrl + filteredMovie.posterPath)
         cell.movieTitleLabel.text = filteredMovie.title
         
         return cell

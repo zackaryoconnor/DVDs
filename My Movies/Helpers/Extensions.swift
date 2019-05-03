@@ -37,19 +37,43 @@ extension UIButton {
 }
 
 
+let imageCache = NSCache<AnyObject, AnyObject>()
+var imageUrlString: String?
+
 extension UIImageView {
-    func loadImageUsingUrlString(urlstring: String) {
-        let url = URL(string: urlstring)
-        URLSession.shared.dataTask(with: url!) { (data, response, error) in
-            if error != nil {
-                print(error as Any)
+    
+        func loadImageUsingUrlString(urlString: String) {
+            
+            imageUrlString = urlString
+            
+            let url = URL(string: urlString)
+
+            image = nil
+            
+            if let imageFromCache = imageCache.object(forKey: urlString as AnyObject) as? UIImage {
+                
+                if imageUrlString == urlString {
+                    self.image = imageFromCache
+                }
+                
                 return
             }
             
-            DispatchQueue.main.async {
-                self.image = UIImage(data: data!)
-            }
-            }.resume()
+            URLSession.shared.dataTask(with: url!) { (data, response, error) in
+                if error != nil {
+                    print(error as Any)
+                    return
+                }
+                
+                DispatchQueue.main.async {
+                    
+                    let imageToCache = UIImage(data: data!)
+                    
+                    imageCache.setObject(imageToCache!, forKey: urlString as AnyObject)
+                    
+                    self.image = UIImage(data: data!)
+                }
+                }.resume()
     }
 }
 

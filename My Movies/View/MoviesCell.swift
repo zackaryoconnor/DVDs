@@ -12,7 +12,7 @@ class MoviesCell: UICollectionViewCell {
     
     var movie: SavedMovies! {
         didSet {
-            movieCoverImageView.loadImageUsingUrlString(urlstring: movieCoverImageUrl + movie.posterPath)
+            movieCoverImageView.loadImageUsingUrlString(urlString: movieCoverImageUrl + movie.posterPath)
             movieTitleLabel.text = movie.title
         }
     }
@@ -31,7 +31,7 @@ class MoviesCell: UICollectionViewCell {
         deleteButton.layer.cornerRadius = deleteButtonSize / 2
         deleteButton.setTitleColor(.white, for: .normal)
         
-        movieCoverImageView.layer.borderColor = UIColor.lightGray.cgColor
+        movieCoverImageView.layer.borderColor = UIColor(red:0.80, green:0.80, blue:0.81, alpha:1.00).cgColor
         movieCoverImageView.layer.borderWidth = 0.5
         movieCoverImageView.constrainWidth(constant: frame.width)
         movieCoverImageView.constrainHeight(constant: 246)

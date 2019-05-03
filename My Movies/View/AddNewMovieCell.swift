@@ -15,36 +15,12 @@ class AddNewMovieCell: UICollectionViewCell {
         didSet {
             guard let posterPath = movie.posterPath else { return }
             
-            movieCoverImageView.loadImageUsingUrlString(urlstring: movieCoverImageUrl + posterPath)
+            
+            movieCoverImageView.loadImageUsingUrlString(urlString: movieCoverImageUrl + posterPath)
             movieTitleLabel.text = movie.title
             yearReleasedLabel.text = "(\(movie.releaseDate ?? ""))"
         }
     }
-    
-    
-    
-    
-    
-    
-//    override var isSelected: Bool {
-//        didSet {
-//            Database.database().reference().child("movies").observe(.value, with: { (snapshot) in
-//                
-//                if snapshot.exists() {
-//                    
-//                    self.movieTitleLabel.textColor = .red
-//                    
-//                }
-//            })
-//        }
-//    }
-//    
-    
-    
-    
-    
-    
-    
     
     let movieCoverImageView = UIImageView(image: "", cornerRadius: 4)
     let movieTitleLabel = UILabel(text: "", textColor: .black, fontSize: 18, fontWeight: .medium, textAlignment: .left, numberOfLines: 2)

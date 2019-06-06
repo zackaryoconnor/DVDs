@@ -17,21 +17,13 @@ class MoviesCell: UICollectionViewCell {
         }
     }
     
-    let movieCoverImageView = UIImageView(image: "", cornerRadius: 8)
+    let movieCoverImageView = UIImageView(image: "", cornerRadius: 6)
     let movieTitleLabel = UILabel(text: "", textColor: .black, fontSize: 17, fontWeight: .medium, textAlignment: .left, numberOfLines: 1)
-    let deleteButton = UIButton(title: "X")
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        let deleteButtonSize: CGFloat = 32
-        deleteButton.backgroundColor = .red
-        deleteButton.constrainWidth(constant: deleteButtonSize)
-        deleteButton.constrainHeight(constant: deleteButtonSize)
-        deleteButton.layer.cornerRadius = deleteButtonSize / 2
-        deleteButton.setTitleColor(.white, for: .normal)
-        
-        movieCoverImageView.layer.borderColor = UIColor(red:0.80, green:0.80, blue:0.81, alpha:1.00).cgColor
+        movieCoverImageView.layer.borderColor = UIColor(red:0.80, green:0.80, blue:0.81, alpha:0.75).cgColor
         movieCoverImageView.layer.borderWidth = 0.5
         movieCoverImageView.constrainWidth(constant: frame.width)
         movieCoverImageView.constrainHeight(constant: 246)
@@ -44,12 +36,6 @@ class MoviesCell: UICollectionViewCell {
         addSubview(stackView)
         stackView.axis = .vertical
         stackView.fillSuperview()
-        
-        addSubview(deleteButton)
-        deleteButton.anchor(top: topAnchor, leading: leadingAnchor, bottom: nil, trailing: nil, padding: .init(top: -12, left: -12, bottom: 0, right: 0))
-        deleteButton.isHidden = true
-        deleteButton.isEnabled = false
-        
     }
     
     required init?(coder aDecoder: NSCoder) {

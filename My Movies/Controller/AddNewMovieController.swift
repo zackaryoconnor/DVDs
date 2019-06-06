@@ -28,6 +28,7 @@ class AddNewMovieController: BaseListController {
     lazy fileprivate var popularMovies = [Results]()
     
     var selectedMovie: Results?
+    var index: IndexPath?
     
     fileprivate var timer: Timer?
     
@@ -41,6 +42,8 @@ class AddNewMovieController: BaseListController {
         super.viewDidLoad()
         
         collectionView.register(AddNewMovieCell.self, forCellWithReuseIdentifier: cellId)
+        collectionView.allowsMultipleSelection = true
+        
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(handleDismissController))
         navigationItem.searchController = self.searchController
         navigationItem.hidesSearchBarWhenScrolling = false
@@ -49,11 +52,10 @@ class AddNewMovieController: BaseListController {
         searchController.dimsBackgroundDuringPresentation = false
         searchController.searchBar.tintColor = .black
         searchController.searchBar.placeholder = "Search for movie..."
-        
+
         setupActivityIndicatorView()
         fetchPopularMovies()
     }
-    
     
     fileprivate func setupActivityIndicatorView() {
         view.addSubview(activitityIndicator)
@@ -109,26 +111,26 @@ extension AddNewMovieController: UICollectionViewDelegateFlowLayout  {
         let selectedMovie = self.popularMovies[indexPath.item]
         self.selectedMovie = selectedMovie
         
-        Database.database().reference().child("movies").observe(.value, with: { (snapshot) in
+        firebaseReference.observe(.value, with: { (snapshot) in
             
             if !snapshot.hasChild(selectedMovie.title ?? "") {
-                Database.database().reference().child("movies").child(selectedMovie.title ?? "").setValue(["title": selectedMovie.title as AnyObject, "posterPath": selectedMovie.posterPath as AnyObject, "id": selectedMovie.id as AnyObject])
+                firebaseReference.child(selectedMovie.title ?? "").setValue(["title": selectedMovie.title as AnyObject, "posterPath": selectedMovie.posterPath as AnyObject, "id": selectedMovie.id as AnyObject])
                 
-                self.popularMovies.remove(at: indexPath.row)
-                collectionView.reloadData()
+                if indexPath.item > 1 {
+                    self.popularMovies.remove(at: indexPath.item)
+                    collectionView.reloadData()
+                }
                 
                 self.delegate?.passMovie(movie: SavedMovies.init(id: selectedMovie.id!, title: selectedMovie.title ?? "", posterPath: selectedMovie.posterPath ?? ""))
-                
-                self.popularMovies.remove(at: indexPath.item) // fix issue where a single movie crashes due to Index out of range
                 collectionView.reloadData()
                 
                 self.searchController.searchBar.text = ""
                 self.fetchPopularMovies()
-                
             }
         }) { (error) in
             print(error.localizedDescription)
         }
+        
     }
     
 }

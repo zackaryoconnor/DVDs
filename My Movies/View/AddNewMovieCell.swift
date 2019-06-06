@@ -10,17 +10,33 @@ import UIKit
 import Firebase
 
 class AddNewMovieCell: UICollectionViewCell {
-    
     var movie: Results! {
         didSet {
             guard let posterPath = movie.posterPath else { return }
-            
             
             movieCoverImageView.loadImageUsingUrlString(urlString: movieCoverImageUrl + posterPath)
             movieTitleLabel.text = movie.title
             yearReleasedLabel.text = "(\(movie.releaseDate ?? ""))"
         }
+        
     }
+    
+    
+    override var isSelected: Bool {
+        didSet {
+            
+            if isSelected == true {
+                movieTitleLabel.textColor = .red
+                isUserInteractionEnabled = false
+            } else {
+                movieTitleLabel.textColor = .black
+            }
+            
+        }
+        
+    }
+    
+    
     
     let movieCoverImageView = UIImageView(image: "", cornerRadius: 4)
     let movieTitleLabel = UILabel(text: "", textColor: .black, fontSize: 18, fontWeight: .medium, textAlignment: .left, numberOfLines: 2)
@@ -54,4 +70,3 @@ class AddNewMovieCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 }
-

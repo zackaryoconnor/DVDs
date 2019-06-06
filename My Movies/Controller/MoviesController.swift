@@ -12,6 +12,12 @@ import FirebaseDatabase
 
 class MoviesController: BaseListController {
     
+    let activitityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .gray)
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        return indicator
+    }()
+    
     fileprivate let cellId = "Cell"
     
     lazy var myMovies = [SavedMovies]()
@@ -19,13 +25,16 @@ class MoviesController: BaseListController {
     
     var timer: Timer?
     
+    var startingFrame: CGRect?
+    var movieDetailController: MovieDetailController!
+    
     let searchController = UISearchController(searchResultsController: nil)
     
-    let activitityIndicator: UIActivityIndicatorView = {
-        let indicator = UIActivityIndicatorView(style: .gray)
-        indicator.translatesAutoresizingMaskIntoConstraints = false
-        return indicator
-    }()
+    var topConstraint: NSLayoutConstraint?
+    var leadingConstraint: NSLayoutConstraint?
+    var widthConstraint: NSLayoutConstraint?
+    var heightConstraint: NSLayoutConstraint?
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -58,7 +67,7 @@ class MoviesController: BaseListController {
         
         self.collectionView.isHidden = true
         
-        Database.database().reference().child("movies").observe(.value, with: { (snapshot) in
+        firebaseReference.observe(.value, with: { (snapshot) in
           
             var tempArray = [SavedMovies]()
             
@@ -70,14 +79,18 @@ class MoviesController: BaseListController {
                     let posterPath = dict["posterPath"] as? String {
 
                     let movie = SavedMovies(id: id, title: title, posterPath: posterPath)
+                    
                     tempArray.append(movie)
                 }
             }
+            
             self.activitityIndicator.isHidden = true
             self.activitityIndicator.stopAnimating()
             self.myMovies = tempArray
             self.collectionView.isHidden = false
             self.collectionView.reloadData()
+            
+            let moviePoster = Database.database().reference(withPath: "posterPath")
         })
     }
     
@@ -104,7 +117,11 @@ class MoviesController: BaseListController {
     func isFiltering() -> Bool {
         return searchController.isActive && !searchBarIsEmpty()
     }
+    
 }
+
+
+
 
 
 extension MoviesController: UICollectionViewDelegateFlowLayout{
@@ -134,15 +151,18 @@ to your collection.
         cell.movie = myMovies[indexPath.item]
         
         let filteredMovie: SavedMovies
+        
         if isFiltering() {
             filteredMovie = filteredMovies[indexPath.item]
         } else {
             filteredMovie = myMovies[indexPath.item]
         }
         
+        
+        
         cell.movieCoverImageView.loadImageUsingUrlString(urlString: movieCoverImageUrl + filteredMovie.posterPath)
         cell.movieTitleLabel.text = filteredMovie.title
-        
+
         return cell
     }
     
@@ -161,6 +181,7 @@ to your collection.
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 8
     }
+    
 }
 
 
@@ -182,4 +203,5 @@ extension MoviesController: UISearchResultsUpdating {
             self.filterContentForSearchText(searchController.searchBar.text!)
         })
     }
+    
 }

@@ -12,6 +12,8 @@
 		F35C56092232272100885215 /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35C56082232272100885215 /* Service.swift */; };
 		F3773C1D225E91BD00C1341E /* SavedMovies.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3773C1C225E91BD00C1341E /* SavedMovies.swift */; };
 		F3773C23225FE15D00C1341E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F3773C22225FE15D00C1341E /* GoogleService-Info.plist */; };
+		F3919331228230DE00F98DDE /* MovieDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3919330228230DE00F98DDE /* MovieDetailController.swift */; };
+		F3919333228230FD00F98DDE /* MovieDetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3919332228230FD00F98DDE /* MovieDetailCell.swift */; };
 		F3D9FE5D21F2790E00B864AA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9FE5C21F2790E00B864AA /* AppDelegate.swift */; };
 		F3D9FE5F21F2790E00B864AA /* MoviesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9FE5E21F2790E00B864AA /* MoviesController.swift */; };
 		F3D9FE6421F2791000B864AA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F3D9FE6321F2791000B864AA /* Assets.xcassets */; };
@@ -33,6 +35,8 @@
 		F35C56082232272100885215 /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
 		F3773C1C225E91BD00C1341E /* SavedMovies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedMovies.swift; sourceTree = "<group>"; };
 		F3773C22225FE15D00C1341E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
+		F3919330228230DE00F98DDE /* MovieDetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailController.swift; sourceTree = "<group>"; };
+		F3919332228230FD00F98DDE /* MovieDetailCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailCell.swift; sourceTree = "<group>"; };
 		F3970C84227681FB008FCE78 /* My Movies.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "My Movies.entitlements"; sourceTree = "<group>"; };
 		F3D9FE5921F2790E00B864AA /* My Movies.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "My Movies.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F3D9FE5C21F2790E00B864AA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -118,6 +122,7 @@
 			children = (
 				F3FC3956224DAF5F00B2F51F /* BaseListController.swift */,
 				F3D9FE5E21F2790E00B864AA /* MoviesController.swift */,
+				F3919330228230DE00F98DDE /* MovieDetailController.swift */,
 				F3D9FE7821F287D300B864AA /* AddNewMovieController.swift */,
 			);
 			path = Controller;
@@ -127,6 +132,7 @@
 			isa = PBXGroup;
 			children = (
 				F3D9FE6E21F27C1B00B864AA /* MoviesCell.swift */,
+				F3919332228230FD00F98DDE /* MovieDetailCell.swift */,
 				F3D9FE7A21F287E200B864AA /* AddNewMovieCell.swift */,
 			);
 			path = View;
@@ -309,12 +315,14 @@
 				F3D9FE5D21F2790E00B864AA /* AppDelegate.swift in Sources */,
 				F3FC3955224DAE7800B2F51F /* UIView+Layout.swift in Sources */,
 				F35C56092232272100885215 /* Service.swift in Sources */,
+				F3919331228230DE00F98DDE /* MovieDetailController.swift in Sources */,
 				F35C560722321F8D00885215 /* Extensions.swift in Sources */,
 				F3D9FE8421F28E1B00B864AA /* Results.swift in Sources */,
 				F3D9FE7921F287D300B864AA /* AddNewMovieController.swift in Sources */,
 				F3FC3957224DAF5F00B2F51F /* BaseListController.swift in Sources */,
 				F3773C1D225E91BD00C1341E /* SavedMovies.swift in Sources */,
 				F3D9FE8221F28D9400B864AA /* Constants.swift in Sources */,
+				F3919333228230FD00F98DDE /* MovieDetailCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -14,9 +14,7 @@ struct WebsiteResultData: Decodable {
 
 struct Results: Decodable {
     let id: Int?
-    let posterPath: String?
-    let title: String?
-    let releaseDate: String?
+    let posterPath, title, releaseDate: String?
     
     private enum CodingKeys: String, CodingKey {
         case posterPath = "poster_path"

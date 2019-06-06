@@ -7,6 +7,9 @@
 //
 
 import Foundation
+import Firebase
+
+let firebaseReference = Database.database().reference().child("movies")
 
 fileprivate let apiKey = "c74a05860eaa0b6c8f22aa1b8342691c"
 let query = "&query="

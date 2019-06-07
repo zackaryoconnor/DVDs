@@ -27,6 +27,8 @@ class AddNewMovieController: BaseListController {
     
     lazy fileprivate var popularMovies = [Results]()
     
+    lazy var isTextColorChanged = false
+    
     var selectedMovie: Results?
     var index: IndexPath?
     
@@ -102,12 +104,11 @@ extension AddNewMovieController: UICollectionViewDelegateFlowLayout  {
         return UIEdgeInsets(top: 0, left: 16, bottom: 16, right: 16)
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat { return 0 }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat { return 0 }
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat { return 0 }
+//
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat { return 0 }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
         let selectedMovie = self.popularMovies[indexPath.item]
         self.selectedMovie = selectedMovie
         
@@ -130,7 +131,6 @@ extension AddNewMovieController: UICollectionViewDelegateFlowLayout  {
         }) { (error) in
             print(error.localizedDescription)
         }
-        
     }
     
 }

@@ -43,6 +43,7 @@ class MoviesController: BaseListController {
         collectionView.isUserInteractionEnabled = true
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(handleAddNewMovie))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Log Out", style: .plain, target: self, action: #selector(handleLogOut))
         navigationItem.hidesSearchBarWhenScrolling = true
         navigationItem.searchController = searchController
         
@@ -52,6 +53,10 @@ class MoviesController: BaseListController {
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.definesPresentationContext = true
         
+        if Auth.auth().currentUser?.uid == nil {
+            perform(#selector(handleLogOut), with: nil, afterDelay: 0)
+        }
+
         setupActivityIndicatorView()
         fetchMovies()
     }
@@ -64,7 +69,6 @@ class MoviesController: BaseListController {
     }
     
     fileprivate func fetchMovies() {
-        
         self.collectionView.isHidden = true
         
         firebaseReference.observe(.value, with: { (snapshot) in
@@ -94,6 +98,7 @@ class MoviesController: BaseListController {
         })
     }
     
+    
     @objc fileprivate func handleAddNewMovie() {
         let addNewMovieController = AddNewMovieController()
         addNewMovieController.delegate = self
@@ -103,9 +108,22 @@ class MoviesController: BaseListController {
         present(addNewMovieSearchController, animated: true, completion: nil)
     }
     
+    
+    @objc fileprivate func handleLogOut() {
+        do {
+            try Auth.auth().signOut()
+        } catch let signOutError {
+            print(signOutError)
+        }
+
+        present(SignUpController(), animated: true, completion: nil)
+    }
+    
+    
     func searchBarIsEmpty() -> Bool {
         return searchController.searchBar.text?.isEmpty ?? true
     }
+    
     
     func filterContentForSearchText(_ searchText: String, scope: String = "All") {
         filteredMovies = myMovies.filter({(movie : SavedMovies) -> Bool in
@@ -113,6 +131,7 @@ class MoviesController: BaseListController {
         })
         collectionView.reloadData()
     }
+    
     
     func isFiltering() -> Bool {
         return searchController.isActive && !searchBarIsEmpty()

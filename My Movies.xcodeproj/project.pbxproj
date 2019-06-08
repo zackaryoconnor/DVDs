@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		B37CDDCAA18BF0E1EF26DF07 /* Pods_My_Movies.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA0F96DB2A7058B5ECA9B853 /* Pods_My_Movies.framework */; };
+		F3469A8322AB07DE00E1DB20 /* LogInController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3469A8222AB07DE00E1DB20 /* LogInController.swift */; };
+		F3469A8522AB16EA00E1DB20 /* SignUpController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3469A8422AB16EA00E1DB20 /* SignUpController.swift */; };
 		F35C560722321F8D00885215 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35C560622321F8D00885215 /* Extensions.swift */; };
 		F35C56092232272100885215 /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35C56082232272100885215 /* Service.swift */; };
 		F3773C1D225E91BD00C1341E /* SavedMovies.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3773C1C225E91BD00C1341E /* SavedMovies.swift */; };
@@ -31,6 +33,8 @@
 		477D256E936B88304336D4EE /* Pods-My Movies.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-My Movies.release.xcconfig"; path = "Pods/Target Support Files/Pods-My Movies/Pods-My Movies.release.xcconfig"; sourceTree = "<group>"; };
 		7BD5226242D983D332869CEA /* Pods-My Movies.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-My Movies.debug.xcconfig"; path = "Pods/Target Support Files/Pods-My Movies/Pods-My Movies.debug.xcconfig"; sourceTree = "<group>"; };
 		DA0F96DB2A7058B5ECA9B853 /* Pods_My_Movies.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_My_Movies.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F3469A8222AB07DE00E1DB20 /* LogInController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogInController.swift; sourceTree = "<group>"; };
+		F3469A8422AB16EA00E1DB20 /* SignUpController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpController.swift; sourceTree = "<group>"; };
 		F35C560622321F8D00885215 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		F35C56082232272100885215 /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
 		F3773C1C225E91BD00C1341E /* SavedMovies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedMovies.swift; sourceTree = "<group>"; };
@@ -124,6 +128,8 @@
 				F3D9FE5E21F2790E00B864AA /* MoviesController.swift */,
 				F3919330228230DE00F98DDE /* MovieDetailController.swift */,
 				F3D9FE7821F287D300B864AA /* AddNewMovieController.swift */,
+				F3469A8222AB07DE00E1DB20 /* LogInController.swift */,
+				F3469A8422AB16EA00E1DB20 /* SignUpController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -316,9 +322,11 @@
 				F3FC3955224DAE7800B2F51F /* UIView+Layout.swift in Sources */,
 				F35C56092232272100885215 /* Service.swift in Sources */,
 				F3919331228230DE00F98DDE /* MovieDetailController.swift in Sources */,
+				F3469A8322AB07DE00E1DB20 /* LogInController.swift in Sources */,
 				F35C560722321F8D00885215 /* Extensions.swift in Sources */,
 				F3D9FE8421F28E1B00B864AA /* Results.swift in Sources */,
 				F3D9FE7921F287D300B864AA /* AddNewMovieController.swift in Sources */,
+				F3469A8522AB16EA00E1DB20 /* SignUpController.swift in Sources */,
 				F3FC3957224DAF5F00B2F51F /* BaseListController.swift in Sources */,
 				F3773C1D225E91BD00C1341E /* SavedMovies.swift in Sources */,
 				F3D9FE8221F28D9400B864AA /* Constants.swift in Sources */,

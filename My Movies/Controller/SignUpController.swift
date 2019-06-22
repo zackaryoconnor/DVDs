@@ -132,7 +132,7 @@ class SignUpController: UIViewController {
                     print(error)
                     return
                 }
-                self.dismiss(animated: true, completion: nil)
+                self.presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil)
             })
         }
     }
@@ -141,7 +141,7 @@ class SignUpController: UIViewController {
     @objc func handleLogInButtonPressed() {
         emailTextField.text = ""
         passwordTextField.text = ""
-        present(LogInController(), animated: true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
     
 }

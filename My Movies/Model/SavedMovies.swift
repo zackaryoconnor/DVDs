@@ -8,7 +8,7 @@
 
 import UIKit
 
-struct SavedMovies: Decodable {
+struct SavedMovies {
     let id: Int
     let title, posterPath: String
 }

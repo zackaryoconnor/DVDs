@@ -38,9 +38,10 @@ extension UIButton {
 
 
 extension UIStackView {
-    convenience init(arrangedSubviews: [UIView], customSpacing: CGFloat = 0) {
+    convenience init(arrangedSubviews: [UIView], customSpacing: CGFloat = 0, axis: NSLayoutConstraint.Axis = .vertical) {
         self.init(arrangedSubviews: arrangedSubviews)
         self.spacing = customSpacing
+        self.axis = axis
     }
 }
 

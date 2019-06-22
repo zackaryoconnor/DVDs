@@ -21,7 +21,7 @@ class MoviesController: BaseListController {
     fileprivate let cellId = "Cell"
     
     lazy var myMovies = [SavedMovies]()
-    lazy var filteredMovies = [SavedMovies]()
+    var filteredMovies = [SavedMovies]()
     
     var timer: Timer?
     
@@ -58,7 +58,8 @@ class MoviesController: BaseListController {
         }
 
         setupActivityIndicatorView()
-        fetchMovies()
+//        fetchMovies()
+        fetchUsersMovies()
     }
     
     fileprivate func setupActivityIndicatorView() {
@@ -68,35 +69,84 @@ class MoviesController: BaseListController {
         activitityIndicator.centerInSuperview()
     }
     
-    fileprivate func fetchMovies() {
+    
+    
+    
+    
+    
+    
+    func fetchUsersMovies() {
         self.collectionView.isHidden = true
         
-        firebaseReference.observe(.value, with: { (snapshot) in
-          
-            var tempArray = [SavedMovies]()
-            
-            for child in snapshot.children {
-                if let childSnapshot = child as? DataSnapshot,
-                    let dict = childSnapshot.value as? [String : Any],
-                    let id = dict["id"] as? Int,
-                    let title = dict["title"] as? String,
-                    let posterPath = dict["posterPath"] as? String {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        
+        firebaseReference.child("account-movies").child(uid).observe(.childAdded, with: { (snapshot) in
+            firebaseReference.child("movies").child(snapshot.key).observeSingleEvent(of: .value, with: { (snapshot) in
 
-                    let movie = SavedMovies(id: id, title: title, posterPath: posterPath)
-                    
-                    tempArray.append(movie)
+                for child in snapshot.children {
+                    if let childSnapshot = child as? DataSnapshot,
+                        let dict = childSnapshot.value as? [String : Any],
+                        let id = dict["id"] as? Int,
+                        let title = dict["title"] as? String,
+                        let posterPath = dict["posterPath"] as? String {
+                        
+                        let movie = SavedMovies(id: id, title: title, posterPath: posterPath)
+
+                        if uid == uid {
+                            self.myMovies.append(movie)
+                            self.collectionView.reloadData()
+                        }
+                    }
                 }
-            }
-            
-            self.activitityIndicator.isHidden = true
-            self.activitityIndicator.stopAnimating()
-            self.myMovies = tempArray
-            self.collectionView.isHidden = false
-            self.collectionView.reloadData()
-            
-            let moviePoster = Database.database().reference(withPath: "posterPath")
+                
+                self.activitityIndicator.isHidden = true
+                self.activitityIndicator.stopAnimating()
+                self.collectionView.isHidden = false
+                self.collectionView.reloadData()
+            })
         })
+        
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+//    fileprivate func fetchMovies() {
+//        self.collectionView.isHidden = true
+//
+//        guard let uid = Auth.auth().currentUser?.uid else { return }
+//
+//        firebaseReference.child("users").child(uid).child("movies").observe(.value, with: { (snapshot) in
+//
+//            var tempArray = [SavedMovies]()
+//
+//            for child in snapshot.children {
+//                if let childSnapshot = child as? DataSnapshot,
+//                    let dict = childSnapshot.value as? [String : Any],
+//                    let id = dict["id"] as? Int,
+//                    let title = dict["title"] as? String,
+//                    let posterPath = dict["posterPath"] as? String {
+//
+//                    let movie = SavedMovies(id: id, title: title, posterPath: posterPath)
+//
+//                    tempArray.append(movie)
+//                }
+//            }
+//
+//            self.activitityIndicator.isHidden = true
+//            self.activitityIndicator.stopAnimating()
+//            self.myMovies = tempArray
+//            self.collectionView.isHidden = false
+//            self.collectionView.reloadData()
+//
+//            let moviePoster = Database.database().reference(withPath: "posterPath")
+//        })
+//    }
     
     
     @objc fileprivate func handleAddNewMovie() {
@@ -115,8 +165,7 @@ class MoviesController: BaseListController {
         } catch let signOutError {
             print(signOutError)
         }
-
-        present(SignUpController(), animated: true, completion: nil)
+        present(LogInController(), animated: true, completion: nil)
     }
     
     
@@ -164,6 +213,7 @@ to your collection.
         return myMovies.count
     }
     
+    
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! MoviesCell
         
@@ -185,17 +235,21 @@ to your collection.
         return cell
     }
     
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: view.frame.width / 2 - 24, height: 275)
     }
+    
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
     }
     
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 16
     }
+    
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 8
@@ -206,7 +260,6 @@ to your collection.
 
 extension MoviesController: PassMovieDelegate {
     func passMovie(movie: SavedMovies) {
-        
         self.myMovies.append(movie)
         self.collectionView.reloadData()
     }

@@ -83,13 +83,13 @@ class LogInController: UIViewController {
             emailTextField,
             emailSeperatorView
             ], customSpacing: 8)
-        emailStackview.axis = .vertical
+//        emailStackview.axis = .vertical
         
         let passwordStackview = UIStackView(arrangedSubviews: [
             passwordTextField,
             passwordSeperatorView
             ], customSpacing: 8)
-        passwordStackview.axis = .vertical
+//        passwordStackview.axis = .vertical
         
         let textFieldsStackview = UIStackView(arrangedSubviews: [
             emailStackview,
@@ -97,9 +97,8 @@ class LogInController: UIViewController {
             ], customSpacing: 42)
         view.addSubview(textFieldsStackview)
         textFieldsStackview.centerInSuperview()
-        textFieldsStackview.axis = .vertical
+//        textFieldsStackview.axis = .vertical
         textFieldsStackview.constrainWidth(constant: view.frame.width - 32)
-        
         
         let logInButtonsStackview = UIStackView(arrangedSubviews: [
             logInButton,
@@ -107,7 +106,7 @@ class LogInController: UIViewController {
             ], customSpacing: 4)
         view.addSubview(logInButtonsStackview)
         logInButtonsStackview.anchor(top: nil, leading: view.safeAreaLayoutGuide.leadingAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 0, left: 16, bottom: 16, right: 16))
-        logInButtonsStackview.axis = .vertical
+//        logInButtonsStackview.axis = .vertical
     }
     
     
@@ -119,8 +118,7 @@ class LogInController: UIViewController {
                 print(error)
                 return
             }
-            
-            self.presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil)
+            self.dismiss(animated: true, completion: nil)
         }
     }
     
@@ -128,7 +126,12 @@ class LogInController: UIViewController {
     @objc func handleSignUpButtonPressed() {
         emailTextField.text = ""
         passwordTextField.text = ""
-        dismiss(animated: true, completion: nil)
+        present(SignUpController(), animated: true, completion: nil)
     }
     
 }
+
+
+
+
+extension UITextFieldDelegate {}

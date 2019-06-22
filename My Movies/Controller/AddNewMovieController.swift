@@ -112,18 +112,31 @@ extension AddNewMovieController: UICollectionViewDelegateFlowLayout  {
         let selectedMovie = self.popularMovies[indexPath.item]
         self.selectedMovie = selectedMovie
         
-        firebaseReference.observe(.value, with: { (snapshot) in
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        let childRef = firebaseReference.child("movies").childByAutoId()
+        
+        
+        childRef.observe(.value, with: { (snapshot) in
             
             if !snapshot.hasChild(selectedMovie.title ?? "") {
-                firebaseReference.child(selectedMovie.title ?? "").setValue(["title": selectedMovie.title as AnyObject, "posterPath": selectedMovie.posterPath as AnyObject, "id": selectedMovie.id as AnyObject])
+                childRef.child(selectedMovie.title ?? "").setValue(["title": selectedMovie.title as AnyObject, "posterPath": selectedMovie.posterPath as AnyObject, "id": selectedMovie.id as AnyObject])
+                childRef.updateChildValues(["accountId" : uid])
+                
+                childRef.updateChildValues(["accountId" : uid], withCompletionBlock: { (error, ref) in
+                    if error != nil {
+                        print(error)
+                        return
+                    }
+                    guard let movieId = childRef.key else { return }
+                    firebaseReference.child("account-movies").child(uid).updateChildValues([movieId : 1]) // this line is causing the app to add movie twice
+                })
                 
                 if indexPath.item > 1 {
                     self.popularMovies.remove(at: indexPath.item)
                     collectionView.reloadData()
                 }
                 
-                self.delegate?.passMovie(movie: SavedMovies.init(id: selectedMovie.id!, title: selectedMovie.title ?? "", posterPath: selectedMovie.posterPath ?? ""))
-                collectionView.reloadData()
+                self.delegate?.passMovie(movie: SavedMovies.init(id: selectedMovie.id ?? 0, title: selectedMovie.title ?? "", posterPath: selectedMovie.posterPath ?? ""))
                 
                 self.searchController.searchBar.text = ""
                 self.fetchPopularMovies()

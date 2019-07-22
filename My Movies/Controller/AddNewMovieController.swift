@@ -16,29 +16,19 @@ protocol PassMovieDelegate {
 
 
 class AddNewMovieController: BaseListController {
- 
-    var delegate: PassMovieDelegate?
-    
-    fileprivate let cellId = "Cell"
-    
-    fileprivate var MovieVC: MoviesController!
-    
+
+    fileprivate let activitityIndicator = UIActivityIndicatorView(indicatorColor: .darkGray)
     fileprivate let searchController = UISearchController(searchResultsController: nil)
-    
+    fileprivate let cellId = "Cell"
+    fileprivate var MovieVC: MoviesController!
+    fileprivate var timer: Timer?
     lazy fileprivate var popularMovies = [Results]()
-    
     lazy var isTextColorChanged = false
-    
+    var delegate: PassMovieDelegate?
     var selectedMovie: Results?
     var index: IndexPath?
     
-    fileprivate var timer: Timer?
     
-    let activitityIndicator: UIActivityIndicatorView = {
-        let indicator = UIActivityIndicatorView(style: .gray)
-        indicator.translatesAutoresizingMaskIntoConstraints = false
-        return indicator
-    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,6 +36,13 @@ class AddNewMovieController: BaseListController {
         collectionView.register(AddNewMovieCell.self, forCellWithReuseIdentifier: cellId)
         collectionView.allowsMultipleSelection = true
         
+        setupActivityIndicatorView()
+        setUpNavBar()
+        fetchPopularMovies()
+    }
+    
+    
+    fileprivate func setUpNavBar() {
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(handleDismissController))
         navigationItem.searchController = self.searchController
         navigationItem.hidesSearchBarWhenScrolling = false
@@ -54,10 +51,8 @@ class AddNewMovieController: BaseListController {
         searchController.dimsBackgroundDuringPresentation = false
         searchController.searchBar.tintColor = .black
         searchController.searchBar.placeholder = "Search for movie..."
-
-        setupActivityIndicatorView()
-        fetchPopularMovies()
     }
+    
     
     fileprivate func setupActivityIndicatorView() {
         view.addSubview(activitityIndicator)
@@ -65,6 +60,7 @@ class AddNewMovieController: BaseListController {
         activitityIndicator.startAnimating()
         activitityIndicator.centerInSuperview()
     }
+    
     
     fileprivate func fetchPopularMovies() {
         Service.shared.fetchMovies(url: moviesUrl) { (result, error) in
@@ -75,12 +71,17 @@ class AddNewMovieController: BaseListController {
                 self.collectionView.reloadData()
             }
         }
+        
     }
+    
     
     @objc fileprivate func handleDismissController() {
         dismiss(animated: true, completion: nil)
     }
+    
 }
+
+
 
 
 extension AddNewMovieController: UICollectionViewDelegateFlowLayout  {
@@ -88,65 +89,64 @@ extension AddNewMovieController: UICollectionViewDelegateFlowLayout  {
         return popularMovies.count
     }
     
+    
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! AddNewMovieCell
-        
         cell.movie = self.popularMovies[indexPath.item]
-        
         return cell
     }
+    
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: view.frame.width, height: 110)
     }
     
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top: 0, left: 16, bottom: 16, right: 16)
     }
     
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat { return 0 }
-//
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat { return 0 }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let selectedMovie = self.popularMovies[indexPath.item]
         self.selectedMovie = selectedMovie
         
         guard let uid = Auth.auth().currentUser?.uid else { return }
+
         let childRef = firebaseReference.child("movies").childByAutoId()
-        
-        
-        childRef.observe(.value, with: { (snapshot) in
-            
-            if !snapshot.hasChild(selectedMovie.title ?? "") {
-                childRef.child(selectedMovie.title ?? "").setValue(["title": selectedMovie.title as AnyObject, "posterPath": selectedMovie.posterPath as AnyObject, "id": selectedMovie.id as AnyObject])
-                childRef.updateChildValues(["accountId" : uid])
+        if uid == uid {
+            childRef.observe(.value, with: { (snapshot) in
                 
-                childRef.updateChildValues(["accountId" : uid], withCompletionBlock: { (error, ref) in
-                    if error != nil {
-                        print(error)
-                        return
+                if !snapshot.hasChild(selectedMovie.title ?? "") {
+                    childRef.child(selectedMovie.title ?? "").setValue(["title": selectedMovie.title as AnyObject, "posterPath": selectedMovie.posterPath as AnyObject, "id": selectedMovie.id as AnyObject])
+                    childRef.updateChildValues(["accountId" : uid])
+                    
+                   
+                    
+                    if indexPath.item > 1 {
+                        self.popularMovies.remove(at: indexPath.item)
+                        collectionView.reloadData()
                     }
-                    guard let movieId = childRef.key else { return }
-                    firebaseReference.child("account-movies").child(uid).updateChildValues([movieId : 1]) // this line is causing the app to add movie twice
-                })
-                
-                if indexPath.item > 1 {
-                    self.popularMovies.remove(at: indexPath.item)
-                    collectionView.reloadData()
+                    
+                    self.delegate?.passMovie(movie: SavedMovies.init(id: selectedMovie.id ?? 0, title: selectedMovie.title ?? "", posterPath: selectedMovie.posterPath ?? ""))
+                    
+                    self.searchController.searchBar.text = ""
+                    self.fetchPopularMovies()
                 }
                 
-                self.delegate?.passMovie(movie: SavedMovies.init(id: selectedMovie.id ?? 0, title: selectedMovie.title ?? "", posterPath: selectedMovie.posterPath ?? ""))
-                
-                self.searchController.searchBar.text = ""
-                self.fetchPopularMovies()
+            }) { (error) in
+                print(error.localizedDescription)
             }
-        }) { (error) in
-            print(error.localizedDescription)
+            
+            guard let movieId = childRef.key else { return }
+            firebaseReference.child("account-movies").child(uid).updateChildValues([movieId : 1])
         }
+
     }
     
 }
+
+
 
 
 extension AddNewMovieController: UISearchBarDelegate {
@@ -170,14 +170,20 @@ extension AddNewMovieController: UISearchBarDelegate {
                     DispatchQueue.main.async {
                         self.collectionView.reloadData()
                     }
+                    
                 }
+                
             } else {
                 self.fetchPopularMovies()
             }
+            
         })
+        
     }
+    
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         fetchPopularMovies()
     }
+    
 }

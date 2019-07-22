@@ -40,7 +40,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         FirebaseApp.configure()
         
         window = UIWindow(frame: UIScreen.main.bounds)
-        window?.rootViewController = baseNavController(viewController: MoviesController(), title: "My Movies", searchControllerText: "Search movies you own...")
+        window?.rootViewController = baseNavController(viewController: MoviesController(), title: "Library", searchControllerText: "Search movies you own...")
         window?.makeKeyAndVisible()
         
         return true

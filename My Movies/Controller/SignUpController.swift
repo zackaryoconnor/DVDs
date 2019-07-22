@@ -11,89 +11,34 @@ import Firebase
 
 class SignUpController: UIViewController {
     
-    
-    let welcomeLabel: UILabel = {
-        let label = UILabel(text: "Welcome to My Movies...", textColor: .black, fontSize: 54, fontWeight: .black, textAlignment: .left
-            , numberOfLines: 0)
-        return label
-    }()
-    
-    
-    let emailTextField: UITextField = {
-        let textField = UITextField()
-        textField.placeholder = "Email"
-        // change to email keyboard
-        return textField
-    }()
-    
-    
-    let emailSeperatorView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .black
-        view.constrainHeight(constant: 0.5)
-        return view
-    }()
-    
-    
-    let passwordTextField: UITextField = {
-        let textField = UITextField()
-        textField.placeholder = "Password"
-        textField.isSecureTextEntry = true
-        return textField
-    }()
-    
-    
-    let passwordSeperatorView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .black
-        view.constrainHeight(constant: 0.5)
-        return view
-    }()
-    
-    
-    let logInButton: UIButton = {
-        let button = UIButton(title: "Sign Up")
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .black
-        button.layer.cornerRadius = 12
-        button.constrainHeight(constant: 54)
-        button.addTarget(self, action: #selector(handleSignUp), for: .touchUpInside)
-        return button
-    }()
-    
-    
-    let signUpButton: UIButton = {
-        let button = UIButton(title: "Already have an accout? Tap here.")
-        button.setTitleColor(.lightGray, for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .regular)
-        button.addTarget(self, action: #selector(handleLogInButtonPressed), for: .touchUpInside)
-        return button
-    }()
+    let welcomeLabel = UILabel(text: "Welcome to My Movies...", textColor: .black, fontSize: 54, fontWeight: .black, textAlignment: .left, numberOfLines: 0)
+    let emailTextField = UITextField(placeholder: "Email", keyboardType: .emailAddress, returnKeyType: .next, autocorrectionType: .no)
+    let emailSeperatorView = UIView(backgroundColor: .black)
+    let passwordTextField = UITextField(placeholder: "Password", keyboardType: .default, returnKeyType: .go, autocorrectionType: .no)
+    let passwordSeperatorView = UIView(backgroundColor: .black)
+    let signUpButton = UIButton(title: "Sign Up", backgroundColor: .black, setTitleColor: .white, font: .systemFont(ofSize: 17, weight: .medium), cornerRadius: 12)
+    let loginButton = UIButton(title: "Already have an accout? Tap here.", backgroundColor: .clear, setTitleColor: .lightGray, font: .systemFont(ofSize: 14, weight: .regular), cornerRadius: 0)
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .white
-        
+        setupViews()
+    }
+    
+    
+    fileprivate func setupViews() {
         view.addSubview(welcomeLabel)
         welcomeLabel.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.safeAreaLayoutGuide.leadingAnchor, bottom: nil, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 46, left: 16, bottom: 0, right: 16))
         
-        let emailStackview = UIStackView(arrangedSubviews: [
-            emailTextField,
-            emailSeperatorView
-            ], customSpacing: 8)
-        emailStackview.axis = .vertical
-        
-        let passwordStackview = UIStackView(arrangedSubviews: [
-            passwordTextField,
-            passwordSeperatorView
-            ], customSpacing: 8)
-        passwordStackview.axis = .vertical
+        emailSeperatorView.constrainHeight(constant: 0.5)
+        passwordTextField.isSecureTextEntry = true
+        passwordSeperatorView.constrainHeight(constant: 0.5)
         
         let textFieldsStackview = UIStackView(arrangedSubviews: [
-            emailStackview,
-            passwordStackview
+            UIStackView(arrangedSubviews: [emailTextField, emailSeperatorView], customSpacing: 8),
+            UIStackView(arrangedSubviews: [passwordTextField, passwordSeperatorView], customSpacing: 8)
             ], customSpacing: 42)
         view.addSubview(textFieldsStackview)
         textFieldsStackview.centerInSuperview()
@@ -101,13 +46,29 @@ class SignUpController: UIViewController {
         textFieldsStackview.constrainWidth(constant: view.frame.width - 32)
         
         
+        signUpButton.layer.cornerRadius = 12
+        signUpButton.constrainHeight(constant: 54)
+        signUpButton.addTarget(self, action: #selector(handleSignUp), for: .touchUpInside)
+        loginButton.addTarget(self, action: #selector(handleLogInButtonPressed), for: .touchUpInside)
+        
         let logInButtonsStackview = UIStackView(arrangedSubviews: [
-            logInButton,
-            signUpButton
+            signUpButton,
+            loginButton
             ], customSpacing: 4)
         view.addSubview(logInButtonsStackview)
         logInButtonsStackview.anchor(top: nil, leading: view.safeAreaLayoutGuide.leadingAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 0, left: 16, bottom: 16, right: 16))
-        logInButtonsStackview.axis = .vertical
+        
+        
+        let swipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(handleTapToDismissKeyboard))
+        swipeGesture.direction = [.up, .down]
+        view.addGestureRecognizer(swipeGesture)
+        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTapToDismissKeyboard)))
+        
+    }
+    
+    
+    @objc fileprivate func handleTapToDismissKeyboard() {
+        view.endEditing(true)
     }
     
     
@@ -116,20 +77,20 @@ class SignUpController: UIViewController {
         
         Auth.auth().createUser(withEmail: email, password: password) { (User, error) in
             if error != nil {
-                print(error)
+                print(error as Any)
                 return
             }
-
+            
             guard let uid = User?.user.uid else { return }
-
+            
             let ref = Database.database().reference(fromURL: "https://my-movies-86ed6.firebaseio.com/")
             let usersReference = ref.child("users").child(uid)
             let values = ["email": email]
             usersReference.updateChildValues(values, withCompletionBlock: {
                 (error, ref) in
-
+                
                 if error != nil {
-                    print(error)
+                    print(error as Any)
                     return
                 }
                 self.presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil)

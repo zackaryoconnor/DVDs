@@ -11,102 +11,62 @@ import Firebase
 
 class LogInController: UIViewController {
     
-    
-    let welcomeLabel: UILabel = {
-        let label = UILabel(text: "Welcome back...", textColor: .black, fontSize: 54, fontWeight: .black, textAlignment: .left
-            , numberOfLines: 0)
-        return label
-    }()
-    
-    
-    let emailTextField: UITextField = {
-        let textField = UITextField()
-        textField.placeholder = "Email"
-        // change to email keyboard
-        return textField
-    }()
-    
-    
+    let welcomeLabel = UILabel(text: "Welcome back...", textColor: .black, fontSize: 54, fontWeight: .black, textAlignment: .left, numberOfLines: 2)
+    let emailTextField = UITextField(placeholder: "Email", keyboardType: .emailAddress, returnKeyType: .next, autocorrectionType: .no)
     let emailSeperatorView: UIView = {
         let view = UIView()
         view.backgroundColor = .black
         view.constrainHeight(constant: 0.5)
         return view
     }()
-    
-    
-    let passwordTextField: UITextField = {
-        let textField = UITextField()
-        textField.placeholder = "Password"
-        textField.isSecureTextEntry = true
-        return textField
-    }()
-    
-    
+    let passwordTextField = UITextField(placeholder: "Password", keyboardType: .default, returnKeyType: .go, autocorrectionType: .no)
     let passwordSeperatorView: UIView = {
         let view = UIView()
         view.backgroundColor = .black
         view.constrainHeight(constant: 0.5)
         return view
     }()
-    
-    
-    let logInButton: UIButton = {
-        let button = UIButton(title: "Log In")
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .black
-        button.layer.cornerRadius = 12
-        button.constrainHeight(constant: 54)
-        button.addTarget(self, action: #selector(handleLogIn), for: .touchUpInside)
-        return button
-    }()
-    
-    
-    let signUpButton: UIButton = {
-        let button = UIButton(title: "Don't have an accout? Tap here.")
-        button.setTitleColor(.lightGray, for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .regular)
-        button.addTarget(self, action: #selector(handleSignUpButtonPressed), for: .touchUpInside)
-        return button
-    }()
+    let logInButton = UIButton(title: "Log In", backgroundColor: .black, setTitleColor: .white, font: .systemFont(ofSize: 17, weight: .medium), cornerRadius: 12)
+    let signUpButton = UIButton(title: "Don't have an accout? Tap here.", backgroundColor: .clear, setTitleColor: .lightGray, font: .systemFont(ofSize: 14, weight: .regular), cornerRadius: 0)
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .white
-        
+        setupViews()
+    }
+    
+    
+    fileprivate func setupViews() {
         view.addSubview(welcomeLabel)
         welcomeLabel.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.safeAreaLayoutGuide.leadingAnchor, bottom: nil, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 46, left: 16, bottom: 0, right: 16))
         
-        let emailStackview = UIStackView(arrangedSubviews: [
-            emailTextField,
-            emailSeperatorView
-            ], customSpacing: 8)
-//        emailStackview.axis = .vertical
         
-        let passwordStackview = UIStackView(arrangedSubviews: [
-            passwordTextField,
-            passwordSeperatorView
-            ], customSpacing: 8)
-//        passwordStackview.axis = .vertical
+        passwordTextField.isSecureTextEntry = true
         
         let textFieldsStackview = UIStackView(arrangedSubviews: [
-            emailStackview,
-            passwordStackview
+            UIStackView(arrangedSubviews: [emailTextField, emailSeperatorView], customSpacing: 8),
+            UIStackView(arrangedSubviews: [passwordTextField, passwordSeperatorView], customSpacing: 8)
             ], customSpacing: 42)
         view.addSubview(textFieldsStackview)
         textFieldsStackview.centerInSuperview()
-//        textFieldsStackview.axis = .vertical
         textFieldsStackview.constrainWidth(constant: view.frame.width - 32)
         
-        let logInButtonsStackview = UIStackView(arrangedSubviews: [
-            logInButton,
-            signUpButton
-            ], customSpacing: 4)
+        
+        logInButton.constrainHeight(constant: 54)
+        logInButton.addTarget(self, action: #selector(handleLogIn), for: .touchUpInside)
+        signUpButton.addTarget(self, action: #selector(handleSignUpButtonPressed), for: .touchUpInside)
+        
+        let logInButtonsStackview = UIStackView(arrangedSubviews: [logInButton, signUpButton], customSpacing: 4)
         view.addSubview(logInButtonsStackview)
         logInButtonsStackview.anchor(top: nil, leading: view.safeAreaLayoutGuide.leadingAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 0, left: 16, bottom: 16, right: 16))
-//        logInButtonsStackview.axis = .vertical
+        
+        
+        let swipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(handleTapToDismissKeyboard))
+        swipeGesture.direction = [.up, .down]
+        view.addGestureRecognizer(swipeGesture)
+        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTapToDismissKeyboard)))
     }
     
     
@@ -115,7 +75,7 @@ class LogInController: UIViewController {
         
         Auth.auth().signIn(withEmail: email, password: password) { (user, error) in
             if error != nil {
-                print(error)
+                print(error as Any)
                 return
             }
             self.dismiss(animated: true, completion: nil)
@@ -129,9 +89,25 @@ class LogInController: UIViewController {
         present(SignUpController(), animated: true, completion: nil)
     }
     
+    
+    @objc fileprivate func handleTapToDismissKeyboard() {
+        view.endEditing(true)
+    }
+    
 }
 
 
 
 
-extension UITextFieldDelegate {}
+extension LogInController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField == emailTextField {
+            textField.resignFirstResponder()
+            passwordTextField.becomeFirstResponder()
+        } else if textField == passwordTextField {
+            textField.resignFirstResponder()
+            handleLogIn()
+        }
+        return true
+    }
+}

@@ -10,26 +10,18 @@ import UIKit
 import Firebase
 import FirebaseDatabase
 
-class MoviesController: BaseListController {
+class MoviesController: BaseListController, UIGestureRecognizerDelegate {
     
-    let activitityIndicator: UIActivityIndicatorView = {
-        let indicator = UIActivityIndicatorView(style: .gray)
-        indicator.translatesAutoresizingMaskIntoConstraints = false
-        return indicator
-    }()
-    
-    fileprivate let cellId = "Cell"
-    
-    lazy var myMovies = [SavedMovies]()
-    var filteredMovies = [SavedMovies]()
-    
-    var timer: Timer?
-    
-    var startingFrame: CGRect?
-    var movieDetailController: MovieDetailController!
-    
+    let activitityIndicator = UIActivityIndicatorView(indicatorColor: .darkGray)
+    let placeholderText = UILabel(text: "\n\nClick the '+' to add a movie\n to your library.", textColor: .black, fontSize: 24, fontWeight: .medium, textAlignment: .center, numberOfLines: 0)
     let searchController = UISearchController(searchResultsController: nil)
     
+    fileprivate let cellId = "Cell"
+    var myMovies = [SavedMovies]()
+    var filteredMovies = [SavedMovies]()
+    var timer: Timer?
+    var startingFrame: CGRect?
+    var movieDetailController: MovieDetailController!
     var topConstraint: NSLayoutConstraint?
     var leadingConstraint: NSLayoutConstraint?
     var widthConstraint: NSLayoutConstraint?
@@ -39,11 +31,18 @@ class MoviesController: BaseListController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        collectionView.register(MoviesCell.self, forCellWithReuseIdentifier: cellId)
-        collectionView.isUserInteractionEnabled = true
-        
+        setUpNavBar()
+        setupActivityIndicatorView()
+        setupCollectionView()
+        checkIfUserIsLoggedIn()
+        setupPlaceholderTextView()
+    }
+    
+    
+    fileprivate func setUpNavBar() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(handleAddNewMovie))
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Log Out", style: .plain, target: self, action: #selector(handleLogOut))
+        navigationItem.leftBarButtonItem?.tintColor = .red
         navigationItem.hidesSearchBarWhenScrolling = true
         navigationItem.searchController = searchController
         
@@ -52,37 +51,64 @@ class MoviesController: BaseListController {
         searchController.searchResultsUpdater = self
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.definesPresentationContext = true
-        
-        if Auth.auth().currentUser?.uid == nil {
-            perform(#selector(handleLogOut), with: nil, afterDelay: 0)
-        }
-
-        setupActivityIndicatorView()
-//        fetchMovies()
-        fetchUsersMovies()
     }
+    
+    
+    fileprivate func setupCollectionView() {
+        collectionView.register(MoviesCell.self, forCellWithReuseIdentifier: cellId)
+        collectionView.isUserInteractionEnabled = true
+        collectionView.alwaysBounceVertical = true
+        collectionView.isScrollEnabled = false
+        collectionView.isHidden = true
+    }
+    
     
     fileprivate func setupActivityIndicatorView() {
         view.addSubview(activitityIndicator)
-        activitityIndicator.isHidden = false
-        activitityIndicator.startAnimating()
         activitityIndicator.centerInSuperview()
     }
     
     
+    fileprivate func setupPlaceholderTextView() {
+        view.addSubview(placeholderText)
+        placeholderText.centerInSuperview(size: .init(width: view.frame.width - 32, height: 500))
+        placeholderText.isHidden = true
+    }
     
     
+    fileprivate func checkIfUserIsLoggedIn() {
+        if Auth.auth().currentUser?.uid == nil {
+            perform(#selector(handleLogOut), with: nil, afterDelay: 0)
+        } else {
+            checkIfUserHasMovies()
+            fetchUsersMovies()
+        }
+    }
     
     
-    
-    func fetchUsersMovies() {
-        self.collectionView.isHidden = true
+    public func checkIfUserHasMovies() {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
         
+        firebaseReference.child("account-movies").child(uid).observe(.value, with: { (snapshot) in
+            
+            if !snapshot.hasChildren() {
+                self.activitityIndicator.stopAnimating()
+                self.collectionView.isHidden = true
+                self.placeholderText.isHidden = false
+            } else {
+                self.placeholderText.isHidden = true
+            }
+            
+        })
+    }
+    
+    
+    fileprivate func fetchUsersMovies() {
         guard let uid = Auth.auth().currentUser?.uid else { return }
         
         firebaseReference.child("account-movies").child(uid).observe(.childAdded, with: { (snapshot) in
             firebaseReference.child("movies").child(snapshot.key).observeSingleEvent(of: .value, with: { (snapshot) in
-
+                
                 for child in snapshot.children {
                     if let childSnapshot = child as? DataSnapshot,
                         let dict = childSnapshot.value as? [String : Any],
@@ -91,10 +117,8 @@ class MoviesController: BaseListController {
                         let posterPath = dict["posterPath"] as? String {
                         
                         let movie = SavedMovies(id: id, title: title, posterPath: posterPath)
-
                         if uid == uid {
                             self.myMovies.append(movie)
-                            self.collectionView.reloadData()
                         }
                     }
                 }
@@ -102,51 +126,11 @@ class MoviesController: BaseListController {
                 self.activitityIndicator.isHidden = true
                 self.activitityIndicator.stopAnimating()
                 self.collectionView.isHidden = false
+                self.collectionView.isScrollEnabled = true
                 self.collectionView.reloadData()
             })
         })
-        
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-//    fileprivate func fetchMovies() {
-//        self.collectionView.isHidden = true
-//
-//        guard let uid = Auth.auth().currentUser?.uid else { return }
-//
-//        firebaseReference.child("users").child(uid).child("movies").observe(.value, with: { (snapshot) in
-//
-//            var tempArray = [SavedMovies]()
-//
-//            for child in snapshot.children {
-//                if let childSnapshot = child as? DataSnapshot,
-//                    let dict = childSnapshot.value as? [String : Any],
-//                    let id = dict["id"] as? Int,
-//                    let title = dict["title"] as? String,
-//                    let posterPath = dict["posterPath"] as? String {
-//
-//                    let movie = SavedMovies(id: id, title: title, posterPath: posterPath)
-//
-//                    tempArray.append(movie)
-//                }
-//            }
-//
-//            self.activitityIndicator.isHidden = true
-//            self.activitityIndicator.stopAnimating()
-//            self.myMovies = tempArray
-//            self.collectionView.isHidden = false
-//            self.collectionView.reloadData()
-//
-//            let moviePoster = Database.database().reference(withPath: "posterPath")
-//        })
-//    }
     
     
     @objc fileprivate func handleAddNewMovie() {
@@ -154,7 +138,6 @@ class MoviesController: BaseListController {
         addNewMovieController.delegate = self
         
         let addNewMovieSearchController = baseNavController(viewController: addNewMovieController, title: "Search", searchControllerText: "")
-        
         present(addNewMovieSearchController, animated: true, completion: nil)
     }
     
@@ -165,16 +148,19 @@ class MoviesController: BaseListController {
         } catch let signOutError {
             print(signOutError)
         }
-        present(LogInController(), animated: true, completion: nil)
+        present(LogInController(), animated: true)
+//        print(myMovies)
+//        myMovies = [SavedMovies]()
+//        print(myMovies)
     }
     
     
-    func searchBarIsEmpty() -> Bool {
+    fileprivate func searchBarIsEmpty() -> Bool {
         return searchController.searchBar.text?.isEmpty ?? true
     }
     
     
-    func filterContentForSearchText(_ searchText: String, scope: String = "All") {
+    fileprivate func filterContentForSearchText(_ searchText: String, scope: String = "All") {
         filteredMovies = myMovies.filter({(movie : SavedMovies) -> Bool in
             return movie.title.lowercased().contains(searchText.lowercased())
         })
@@ -182,7 +168,7 @@ class MoviesController: BaseListController {
     }
     
     
-    func isFiltering() -> Bool {
+    fileprivate func isFiltering() -> Bool {
         return searchController.isActive && !searchBarIsEmpty()
     }
     
@@ -194,18 +180,6 @@ class MoviesController: BaseListController {
 
 extension MoviesController: UICollectionViewDelegateFlowLayout{
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        
-        if (self.myMovies.count == 0) {
-            self.collectionView.setEmptyMessage(#"""
-
-Click the '+' to add a movie
-to your collection.
-"""#)
-            
-        } else {
-            self.collectionView.restore()
-        }
-        
         if isFiltering() {
             return filteredMovies.count
         }
@@ -216,10 +190,9 @@ to your collection.
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! MoviesCell
+        let filteredMovie: SavedMovies
         
         cell.movie = myMovies[indexPath.item]
-        
-        let filteredMovie: SavedMovies
         
         if isFiltering() {
             filteredMovie = filteredMovies[indexPath.item]
@@ -227,11 +200,9 @@ to your collection.
             filteredMovie = myMovies[indexPath.item]
         }
         
-        
-        
         cell.movieCoverImageView.loadImageUsingUrlString(urlString: movieCoverImageUrl + filteredMovie.posterPath)
         cell.movieTitleLabel.text = filteredMovie.title
-
+        
         return cell
     }
     
@@ -258,19 +229,22 @@ to your collection.
 }
 
 
+
+
 extension MoviesController: PassMovieDelegate {
     func passMovie(movie: SavedMovies) {
         self.myMovies.append(movie)
         self.collectionView.reloadData()
     }
+    
 }
+
+
 
 
 extension MoviesController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
-        
         timer?.invalidate()
-        
         timer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: false, block: { (_) in
             self.filterContentForSearchText(searchController.searchBar.text!)
         })

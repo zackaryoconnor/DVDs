@@ -30,9 +30,33 @@ extension UIImageView {
 }
 
 extension UIButton {
-    convenience init(title: String) {
+    convenience init(title: String, backgroundColor: UIColor, setTitleColor: UIColor, font: UIFont, cornerRadius: CGFloat) {
         self.init(type: .system)
         self.setTitle(title, for: .normal)
+        self.backgroundColor = backgroundColor
+        self.setTitleColor(setTitleColor, for: .normal)
+        self.titleLabel?.font = font
+        self.layer.cornerRadius = cornerRadius
+    }
+}
+
+
+extension UITextField {
+    convenience init(placeholder: String, keyboardType: UIKeyboardType, returnKeyType: UIReturnKeyType, autocorrectionType: UITextAutocorrectionType) {
+        self.init(frame: .zero)
+        self.placeholder = placeholder
+        self.keyboardType = keyboardType
+        self.returnKeyType = returnKeyType
+        self.enablesReturnKeyAutomatically = true
+        self.autocorrectionType = autocorrectionType
+    }
+}
+
+
+extension UIView {
+    convenience init(backgroundColor: UIColor) {
+        self.init(frame: .zero)
+        self.backgroundColor = backgroundColor
     }
 }
 
@@ -46,62 +70,65 @@ extension UIStackView {
 }
 
 
+extension UIActivityIndicatorView {
+    convenience init(indicatorColor: UIColor) {
+        self.init(style: .whiteLarge)
+        self.color = .darkGray
+        self.isHidden = false
+        self.startAnimating()
+    }
+}
+
+
+extension UIViewController {
+    func displayAlertController(title: String, message: String) {
+        DispatchQueue.main.async {
+            let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+}
+
+
+
 
 let imageCache = NSCache<AnyObject, AnyObject>()
 var imageUrlString: String?
 
 extension UIImageView {
     
-        func loadImageUsingUrlString(urlString: String) {
+    func loadImageUsingUrlString(urlString: String) {
+        
+        imageUrlString = urlString
+        
+        let url = URL(string: urlString)
+        
+        image = nil
+        
+        if let imageFromCache = imageCache.object(forKey: urlString as AnyObject) as? UIImage {
             
-            imageUrlString = urlString
+            if imageUrlString == urlString {
+                self.image = imageFromCache
+            }
             
-            let url = URL(string: urlString)
-
-            image = nil
-            
-            if let imageFromCache = imageCache.object(forKey: urlString as AnyObject) as? UIImage {
-                
-                if imageUrlString == urlString {
-                    self.image = imageFromCache
-                }
-                
+            return
+        }
+        
+        URLSession.shared.dataTask(with: url!) { (data, response, error) in
+            if error != nil {
+                print(error as Any)
                 return
             }
             
-            URLSession.shared.dataTask(with: url!) { (data, response, error) in
-                if error != nil {
-                    print(error as Any)
-                    return
-                }
+            DispatchQueue.main.async {
                 
-                DispatchQueue.main.async {
-                    
-                    let imageToCache = UIImage(data: data!)
-                    
-                    imageCache.setObject(imageToCache!, forKey: urlString as AnyObject)
-                    
-                    self.image = UIImage(data: data!)
-                }
-                }.resume()
-    }
-}
-
-
-extension UICollectionView {
-    func setEmptyMessage(_ message: String) {
-        let messageLabel = UILabel(frame: CGRect(x: 0, y: 0, width: bounds.size.width, height: self.bounds.size.height))
-        messageLabel.text = message
-        messageLabel.textColor = .black
-        messageLabel.numberOfLines = 0
-        messageLabel.textAlignment = .center
-        messageLabel.font = UIFont.systemFont(ofSize: 24, weight: .medium)
-        messageLabel.sizeToFit()
-        
-        self.backgroundView = messageLabel
-    }
-    
-    func restore() {
-        self.backgroundView = nil
+                let imageToCache = UIImage(data: data!)
+                
+                imageCache.setObject(imageToCache!, forKey: urlString as AnyObject)
+                
+                self.image = UIImage(data: data!)
+            }
+            }.resume()
     }
 }

@@ -15,11 +15,14 @@ class BaseListController: UICollectionViewController {
         
         navigationItem.hidesSearchBarWhenScrolling = false
         collectionView.backgroundColor = .white
+        navigationController?.navigationBar.barTintColor = .white
     }
+    
     
     init() {
         super.init(collectionViewLayout: UICollectionViewFlowLayout())
     }
+    
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

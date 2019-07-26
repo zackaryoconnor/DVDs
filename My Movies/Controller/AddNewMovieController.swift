@@ -9,14 +9,9 @@
 import UIKit
 import Firebase
 
-
-protocol PassMovieDelegate {
-    func passMovie(movie: SavedMovies)
-}
-
-
 class AddNewMovieController: BaseListController {
 
+    // MARK: - vars and lets
     fileprivate let activitityIndicator = UIActivityIndicatorView(indicatorColor: .darkGray)
     fileprivate let searchController = UISearchController(searchResultsController: nil)
     fileprivate let cellId = "Cell"
@@ -29,16 +24,22 @@ class AddNewMovieController: BaseListController {
     var index: IndexPath?
     
     
-    
+    // MARK: - view life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        collectionView.register(AddNewMovieCell.self, forCellWithReuseIdentifier: cellId)
-        collectionView.allowsMultipleSelection = true
-        
+        setupCollectionView()
         setupActivityIndicatorView()
         setUpNavBar()
         fetchPopularMovies()
+    }
+    
+    
+    // MARK: - setup
+    fileprivate func setupCollectionView() {
+        collectionView.register(AddNewMovieCell.self, forCellWithReuseIdentifier: cellId)
+        collectionView.allowsMultipleSelection = true
+        collectionView.keyboardDismissMode = .onDrag
     }
     
     
@@ -62,6 +63,7 @@ class AddNewMovieController: BaseListController {
     }
     
     
+    // MARK: - fetch data
     fileprivate func fetchPopularMovies() {
         Service.shared.fetchMovies(url: moviesUrl) { (result, error) in
             self.popularMovies = result?.results ?? []
@@ -75,6 +77,7 @@ class AddNewMovieController: BaseListController {
     }
     
     
+    // MARK: - @objc methods
     @objc fileprivate func handleDismissController() {
         dismiss(animated: true, completion: nil)
     }
@@ -84,6 +87,7 @@ class AddNewMovieController: BaseListController {
 
 
 
+// MARK: - collectionVeiwDelegate
 extension AddNewMovieController: UICollectionViewDelegateFlowLayout  {
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return popularMovies.count
@@ -110,18 +114,14 @@ extension AddNewMovieController: UICollectionViewDelegateFlowLayout  {
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let selectedMovie = self.popularMovies[indexPath.item]
         self.selectedMovie = selectedMovie
-        
-        guard let uid = Auth.auth().currentUser?.uid else { return }
 
-        let childRef = firebaseReference.child("movies").childByAutoId()
-        if uid == uid {
+        let childRef = firebaseMoviesReference.child(selectedMovie.title ?? "")
+        if firebaseCurrentUserId == firebaseCurrentUserId {
             childRef.observe(.value, with: { (snapshot) in
                 
                 if !snapshot.hasChild(selectedMovie.title ?? "") {
                     childRef.child(selectedMovie.title ?? "").setValue(["title": selectedMovie.title as AnyObject, "posterPath": selectedMovie.posterPath as AnyObject, "id": selectedMovie.id as AnyObject])
-                    childRef.updateChildValues(["accountId" : uid])
-                    
-                   
+                    childRef.updateChildValues(["accountId" : firebaseCurrentUserEmail ?? ""])
                     
                     if indexPath.item > 1 {
                         self.popularMovies.remove(at: indexPath.item)
@@ -136,10 +136,13 @@ extension AddNewMovieController: UICollectionViewDelegateFlowLayout  {
                 
             }) { (error) in
                 print(error.localizedDescription)
+                if let errorCode = AuthErrorCode(rawValue: error._code) {
+                    self.displayAlertController(title: "Error", message: errorCode.errorMessage, buttonTitle: "ok")
+                }
             }
             
             guard let movieId = childRef.key else { return }
-            firebaseReference.child("account-movies").child(uid).updateChildValues([movieId : 1])
+            firebaseAccountMoviesReference.child(firebaseCurrentUserId ?? "").updateChildValues([movieId : 1])
         }
 
     }
@@ -149,6 +152,7 @@ extension AddNewMovieController: UICollectionViewDelegateFlowLayout  {
 
 
 
+// MARK: - searchBarDelegate
 extension AddNewMovieController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         timer?.invalidate()
@@ -163,16 +167,19 @@ extension AddNewMovieController: UISearchBarDelegate {
                     
                     if let error = error {
                         print("Failed to fetch apps:", error)
+                        if let errorCode = AuthErrorCode(rawValue: error._code) {
+                            self.displayAlertController(title: "Error", message: errorCode.errorMessage, buttonTitle: "ok")
+                        }
+                        
                         return
                     }
-                    
+
                     self.popularMovies = result?.results ?? []
                     DispatchQueue.main.async {
                         self.collectionView.reloadData()
                     }
                     
                 }
-                
             } else {
                 self.fetchPopularMovies()
             }

@@ -10,24 +10,27 @@ import UIKit
 import Firebase
 import FirebaseDatabase
 
-class MoviesController: BaseListController, UIGestureRecognizerDelegate {
+class MoviesController: BaseListController {
     
+    // MARK: - views
     let activitityIndicator = UIActivityIndicatorView(indicatorColor: .darkGray)
     let placeholderText = UILabel(text: "\n\nClick the '+' to add a movie\n to your library.", textColor: .black, fontSize: 24, fontWeight: .medium, textAlignment: .center, numberOfLines: 0)
     let searchController = UISearchController(searchResultsController: nil)
     
+    
+    // MARK: - vars and lets
     fileprivate let cellId = "Cell"
     var myMovies = [SavedMovies]()
     var filteredMovies = [SavedMovies]()
     var timer: Timer?
     var startingFrame: CGRect?
-    var movieDetailController: MovieDetailController!
     var topConstraint: NSLayoutConstraint?
     var leadingConstraint: NSLayoutConstraint?
     var widthConstraint: NSLayoutConstraint?
     var heightConstraint: NSLayoutConstraint?
     
     
+    // MARK: - view life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -39,13 +42,15 @@ class MoviesController: BaseListController, UIGestureRecognizerDelegate {
     }
     
     
+    // MARK: - setup
     fileprivate func setUpNavBar() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(handleAddNewMovie))
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Log Out", style: .plain, target: self, action: #selector(handleLogOut))
+        
         navigationItem.leftBarButtonItem?.tintColor = .red
         navigationItem.hidesSearchBarWhenScrolling = true
         navigationItem.searchController = searchController
-        
+
         searchController.searchBar.placeholder = "Search movies you own..."
         searchController.searchBar.tintColor = .black
         searchController.searchResultsUpdater = self
@@ -60,6 +65,7 @@ class MoviesController: BaseListController, UIGestureRecognizerDelegate {
         collectionView.alwaysBounceVertical = true
         collectionView.isScrollEnabled = false
         collectionView.isHidden = true
+        collectionView.keyboardDismissMode = .onDrag
     }
     
     
@@ -86,10 +92,9 @@ class MoviesController: BaseListController, UIGestureRecognizerDelegate {
     }
     
     
-    public func checkIfUserHasMovies() {
-        guard let uid = Auth.auth().currentUser?.uid else { return }
-        
-        firebaseReference.child("account-movies").child(uid).observe(.value, with: { (snapshot) in
+    // MARK: - fetch data
+    func checkIfUserHasMovies() {
+        firebaseAccountMoviesReference.child(firebaseCurrentUserId ?? "").observe(.value, with: { (snapshot) in
             
             if !snapshot.hasChildren() {
                 self.activitityIndicator.stopAnimating()
@@ -104,10 +109,8 @@ class MoviesController: BaseListController, UIGestureRecognizerDelegate {
     
     
     fileprivate func fetchUsersMovies() {
-        guard let uid = Auth.auth().currentUser?.uid else { return }
-        
-        firebaseReference.child("account-movies").child(uid).observe(.childAdded, with: { (snapshot) in
-            firebaseReference.child("movies").child(snapshot.key).observeSingleEvent(of: .value, with: { (snapshot) in
+        firebaseAccountMoviesReference.child(firebaseCurrentUserId ?? "").observe(.childAdded, with: { (snapshot) in
+            firebaseMoviesReference.child(snapshot.key).observeSingleEvent(of: .value, with: { (snapshot) in
                 
                 for child in snapshot.children {
                     if let childSnapshot = child as? DataSnapshot,
@@ -117,7 +120,7 @@ class MoviesController: BaseListController, UIGestureRecognizerDelegate {
                         let posterPath = dict["posterPath"] as? String {
                         
                         let movie = SavedMovies(id: id, title: title, posterPath: posterPath)
-                        if uid == uid {
+                        if firebaseCurrentUserId == firebaseCurrentUserId {
                             self.myMovies.append(movie)
                         }
                     }
@@ -133,6 +136,7 @@ class MoviesController: BaseListController, UIGestureRecognizerDelegate {
     }
     
     
+    // MARK: - @objc methods
     @objc fileprivate func handleAddNewMovie() {
         let addNewMovieController = AddNewMovieController()
         addNewMovieController.delegate = self
@@ -147,29 +151,11 @@ class MoviesController: BaseListController, UIGestureRecognizerDelegate {
             try Auth.auth().signOut()
         } catch let signOutError {
             print(signOutError)
+            if let errorCode = AuthErrorCode(rawValue: signOutError._code) {
+                self.displayAlertController(title: "Error", message: errorCode.errorMessage, buttonTitle: "ok")
+            }
         }
         present(LogInController(), animated: true)
-//        print(myMovies)
-//        myMovies = [SavedMovies]()
-//        print(myMovies)
-    }
-    
-    
-    fileprivate func searchBarIsEmpty() -> Bool {
-        return searchController.searchBar.text?.isEmpty ?? true
-    }
-    
-    
-    fileprivate func filterContentForSearchText(_ searchText: String, scope: String = "All") {
-        filteredMovies = myMovies.filter({(movie : SavedMovies) -> Bool in
-            return movie.title.lowercased().contains(searchText.lowercased())
-        })
-        collectionView.reloadData()
-    }
-    
-    
-    fileprivate func isFiltering() -> Bool {
-        return searchController.isActive && !searchBarIsEmpty()
     }
     
 }
@@ -177,8 +163,8 @@ class MoviesController: BaseListController, UIGestureRecognizerDelegate {
 
 
 
-
-extension MoviesController: UICollectionViewDelegateFlowLayout{
+// MARK: - collectionViewDelegate
+extension MoviesController: UICollectionViewDelegateFlowLayout {
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if isFiltering() {
             return filteredMovies.count
@@ -231,6 +217,7 @@ extension MoviesController: UICollectionViewDelegateFlowLayout{
 
 
 
+// MARK: - PassMovieDelegate
 extension MoviesController: PassMovieDelegate {
     func passMovie(movie: SavedMovies) {
         self.myMovies.append(movie)
@@ -242,12 +229,31 @@ extension MoviesController: PassMovieDelegate {
 
 
 
+// MARK: - searchResults methods
 extension MoviesController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         timer?.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: false, block: { (_) in
             self.filterContentForSearchText(searchController.searchBar.text!)
         })
+    }
+    
+    
+    fileprivate func searchBarIsEmpty() -> Bool {
+        return searchController.searchBar.text?.isEmpty ?? true
+    }
+    
+    
+    fileprivate func filterContentForSearchText(_ searchText: String, scope: String = "All") {
+        filteredMovies = myMovies.filter({(movie : SavedMovies) -> Bool in
+            return movie.title.lowercased().contains(searchText.lowercased())
+        })
+        collectionView.reloadData()
+    }
+    
+    
+    fileprivate func isFiltering() -> Bool {
+        return searchController.isActive && !searchBarIsEmpty()
     }
     
 }

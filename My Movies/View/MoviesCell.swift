@@ -9,7 +9,7 @@
 import UIKit
 
 class MoviesCell: UICollectionViewCell {
-    
+
     var movie: SavedMovies! {
         didSet {
             movieCoverImageView.loadImageUsingUrlString(urlString: movieCoverImageUrl + movie.posterPath)

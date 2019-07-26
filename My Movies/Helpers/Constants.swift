@@ -10,6 +10,11 @@ import Foundation
 import Firebase
 
 let firebaseReference = Database.database().reference()
+let firebaseUsersReference = firebaseReference.child("users")
+let firebaseMoviesReference = firebaseReference.child("movies")
+let firebaseAccountMoviesReference = firebaseReference.child("account-movies")
+let firebaseCurrentUserId = Auth.auth().currentUser?.uid
+let firebaseCurrentUserEmail = Auth.auth().currentUser?.email
 
 fileprivate let apiKey = "c74a05860eaa0b6c8f22aa1b8342691c"
 let query = "&query="

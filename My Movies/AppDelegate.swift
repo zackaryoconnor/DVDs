@@ -11,11 +11,12 @@ import Firebase
 
 public func baseNavController(viewController: UIViewController, title: String, searchControllerText: String) -> UIViewController {
     
-    let navigtionController = UINavigationController(rootViewController: viewController)
+    let navigationController = UINavigationController(rootViewController: viewController)
     let searchController = UISearchController(searchResultsController: nil)
     
-    navigtionController.navigationBar.prefersLargeTitles = true
-    navigtionController.navigationBar.tintColor = .black
+    navigationController.navigationBar.prefersLargeTitles = true
+    navigationController.navigationBar.tintColor = .black
+    navigationController.navigationBar.setValue(true, forKey: "hidesShadow")
     
     searchController.searchBar.placeholder = searchControllerText
     searchController.searchBar.tintColor = .black
@@ -26,7 +27,7 @@ public func baseNavController(viewController: UIViewController, title: String, s
     viewController.navigationItem.title = title
     viewController.view.backgroundColor = .white
     
-    return navigtionController
+    return navigationController
 }
 
 @UIApplicationMain

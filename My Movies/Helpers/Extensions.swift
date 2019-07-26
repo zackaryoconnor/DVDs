@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 extension UILabel {
     convenience init(text: String, textColor: UIColor, fontSize: CGFloat, fontWeight: UIFont.Weight, textAlignment: NSTextAlignment, numberOfLines: Int) {
@@ -81,10 +82,10 @@ extension UIActivityIndicatorView {
 
 
 extension UIViewController {
-    func displayAlertController(title: String, message: String) {
+    func displayAlertController(title: String, message: String, buttonTitle: String) {
         DispatchQueue.main.async {
             let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            alert.addAction(UIAlertAction(title: buttonTitle, style: .default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
     }
@@ -130,5 +131,33 @@ extension UIImageView {
                 self.image = UIImage(data: data!)
             }
             }.resume()
+    }
+}
+
+
+
+
+extension AuthErrorCode {
+    var errorMessage: String {
+        switch self {
+        case .emailAlreadyInUse:
+            return "The email is already in use with another account."
+        case .userNotFound:
+            return "Account not found for the specified user. Please check and try again."
+        case .userDisabled:
+            return "Your account has been disabled. Please contact support."
+        case .invalidEmail, .invalidSender, .invalidRecipientEmail:
+            return "Please enter a valid email."
+        case .networkError:
+            return "Network error. Please try again."
+        case .weakPassword:
+            return "Your password is too weak. The password must be 6 characters long or more."
+        case .wrongPassword:
+            return "Your password is incorrect. Please try again or use 'Forgot password' to reset your password."
+        case .keychainError:
+            return "looks like there was an error logging out, please try again later."
+        default:
+            return "Unknown error occurred."
+        }
     }
 }

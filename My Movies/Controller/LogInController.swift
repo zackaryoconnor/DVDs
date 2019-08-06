@@ -29,6 +29,10 @@ class LogInController: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = .white
+        
+        emailTextField.delegate = self
+        passwordTextField.delegate = self
+        
         setupWelcomeLabel()
         setupTextFields()
         setupButtons()

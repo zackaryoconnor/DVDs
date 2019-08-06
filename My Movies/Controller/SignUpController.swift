@@ -29,6 +29,10 @@ class SignUpController: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = .white
+        
+        emailTextField.delegate = self
+        passwordTextField.delegate = self
+        
         setupWelcomeLabel()
         setupTextFields()
         setupButtons()
@@ -112,4 +116,21 @@ class SignUpController: UIViewController {
         dismiss(animated: true, completion: nil)
     }
     
+}
+
+
+
+
+// MARK: - textFieldDelegate
+extension SignUpController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField == emailTextField {
+            textField.resignFirstResponder()
+            passwordTextField.becomeFirstResponder()
+        } else if textField == passwordTextField {
+            textField.resignFirstResponder()
+            handleSignUp()
+        }
+        return true
+    }
 }

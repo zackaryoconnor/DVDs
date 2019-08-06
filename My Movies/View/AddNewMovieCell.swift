@@ -31,20 +31,20 @@ class AddNewMovieCell: UICollectionViewCell {
     }
     
     
-    override var isSelected: Bool {
-        didSet {
-            
-            if isSelected == true {
-                movieTitleLabel.textColor = .red
-                isUserInteractionEnabled = false
-            } else {
-                movieTitleLabel.textColor = .black
-            }
-            
-        }
-        
-    }
-    
+//    override var isSelected: Bool {
+//        didSet {
+//            
+//            if isSelected == true {
+//                movieCoverImageView.layer.opacity = 0.6
+//                movieTitleLabel.textColor = .lightGray
+//                isUserInteractionEnabled = false
+//            } else {
+//                movieTitleLabel.textColor = .black
+//            }
+//            
+//        }
+//        
+//    }
     
     
     let movieCoverImageView = UIImageView(image: "", cornerRadius: 4)

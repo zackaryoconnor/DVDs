@@ -15,13 +15,11 @@ class AddNewMovieController: BaseListController {
     fileprivate let activitityIndicator = UIActivityIndicatorView(indicatorColor: .darkGray)
     fileprivate let searchController = UISearchController(searchResultsController: nil)
     fileprivate let cellId = "Cell"
-    fileprivate var MovieVC: MoviesController!
+    fileprivate var moviesVC: MoviesController!
     fileprivate var timer: Timer?
     lazy fileprivate var popularMovies = [Results]()
-    lazy var isTextColorChanged = false
     var delegate: PassMovieDelegate?
     var selectedMovie: Results?
-    var index: IndexPath?
     
     
     // MARK: - view life cycle
@@ -32,6 +30,23 @@ class AddNewMovieController: BaseListController {
         setupActivityIndicatorView()
         setUpNavBar()
         fetchPopularMovies()
+    }
+    
+    
+    func checkForMovies(indexPath: IndexPath) {
+        firebaseAccountMoviesReference.child(firebaseCurrentUserId ?? "").observeSingleEvent(of: .value, with: { snapshot in
+            if let savedMovies = snapshot.value as? [String: AnyObject] {
+                for (_, value) in savedMovies {
+                    if value as? String == self.popularMovies[indexPath.item].title {
+                        print("blah")
+                        let vc = AddNewMovieCell()
+                        vc.movieTitleLabel.textColor = .red
+                        self.collectionView.cellForItem(at: indexPath)?.tintColor = .red
+                    }
+                }
+            }
+        })
+        firebaseUsersReference.removeAllObservers()
     }
     
     
@@ -51,7 +66,7 @@ class AddNewMovieController: BaseListController {
         searchController.searchBar.delegate = self
         searchController.dimsBackgroundDuringPresentation = false
         searchController.searchBar.tintColor = .black
-        searchController.searchBar.placeholder = "Search for movie..."
+        searchController.searchBar.placeholder = "Search for a movie..."
     }
     
     
@@ -96,6 +111,7 @@ extension AddNewMovieController: UICollectionViewDelegateFlowLayout  {
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! AddNewMovieCell
+        checkForMovies(indexPath: indexPath)
         cell.movie = self.popularMovies[indexPath.item]
         return cell
     }
@@ -115,8 +131,10 @@ extension AddNewMovieController: UICollectionViewDelegateFlowLayout  {
         let selectedMovie = self.popularMovies[indexPath.item]
         self.selectedMovie = selectedMovie
 
+        
         let childRef = firebaseMoviesReference.child(selectedMovie.title ?? "")
         if firebaseCurrentUserId == firebaseCurrentUserId {
+            
             childRef.observe(.value, with: { (snapshot) in
                 
                 if !snapshot.hasChild(selectedMovie.title ?? "") {
@@ -142,7 +160,7 @@ extension AddNewMovieController: UICollectionViewDelegateFlowLayout  {
             }
             
             guard let movieId = childRef.key else { return }
-            firebaseAccountMoviesReference.child(firebaseCurrentUserId ?? "").updateChildValues([movieId : 1])
+            firebaseAccountMoviesReference.child(firebaseCurrentUserId ?? "").updateChildValues([movieId : 0])
         }
 
     }

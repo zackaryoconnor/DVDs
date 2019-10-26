@@ -31,25 +31,27 @@ class AddNewMovieCell: UICollectionViewCell {
     }
     
     
-//    override var isSelected: Bool {
-//        didSet {
-//            
-//            if isSelected == true {
-//                movieCoverImageView.layer.opacity = 0.6
-//                movieTitleLabel.textColor = .lightGray
-//                isUserInteractionEnabled = false
-//            } else {
-//                movieTitleLabel.textColor = .black
-//            }
-//            
-//        }
-//        
-//    }
+    override var isSelected: Bool {
+        didSet {
+
+            if isSelected == true {
+                movieCoverImageView.layer.opacity = 0.6
+                movieTitleLabel.textColor = .secondaryLabel
+                isUserInteractionEnabled = false
+            } else {
+                movieTitleLabel.textColor = .label
+                movieCoverImageView.layer.opacity = 1.0
+                isUserInteractionEnabled = true
+            }
+
+        }
+
+    }
     
     
     let movieCoverImageView = UIImageView(image: "", cornerRadius: 4)
-    let movieTitleLabel = UILabel(text: "", textColor: .black, fontSize: 18, fontWeight: .medium, textAlignment: .left, numberOfLines: 2)
-    let yearReleasedLabel = UILabel(text: "", textColor: .lightGray, fontSize: 16, fontWeight: .regular, textAlignment: .left, numberOfLines: 1)
+    let movieTitleLabel = UILabel(text: "", textColor: .label, fontSize: 18, fontWeight: .medium, textAlignment: .left, numberOfLines: 2)
+    let yearReleasedLabel = UILabel(text: "", textColor: .secondaryLabel, fontSize: 16, fontWeight: .regular, textAlignment: .left, numberOfLines: 1)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -75,6 +77,7 @@ class AddNewMovieCell: UICollectionViewCell {
         movieStackView.alignment = .center
     }
 
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

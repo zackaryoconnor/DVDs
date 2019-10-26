@@ -14,8 +14,28 @@ class MoviesController: BaseListController {
     
     // MARK: - views
     let activitityIndicator = UIActivityIndicatorView(indicatorColor: .darkGray)
-    let placeholderText = UILabel(text: "\n\nClick the '+' to add a movie\n to your library.", textColor: .black, fontSize: 24, fontWeight: .medium, textAlignment: .center, numberOfLines: 0)
+    let placeholderText = UILabel(text: "\n\nClick the '+' to add a movie\n to your library.", textColor: .label, fontSize: 24, fontWeight: .medium, textAlignment: .center, numberOfLines: 0)
     let searchController = UISearchController(searchResultsController: nil)
+    
+    lazy var editButton: UIBarButtonItem = {
+        let button = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(handleEditButtonPressed))
+        return button
+    }()
+    
+    lazy var logoutButton: UIBarButtonItem = {
+        let button = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogOut))
+        return button
+    }()
+    
+    lazy var deleteButton: UIBarButtonItem = {
+        let button = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(handleDeleteButtonPressed))
+        return button
+    }()
+    
+    lazy var addNewMovieButton: UIBarButtonItem = {
+        let button = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(handleAddNewMovie))
+        return button
+    }()
     
     
     // MARK: - vars and lets
@@ -23,39 +43,79 @@ class MoviesController: BaseListController {
     var myMovies = [SavedMovies]()
     var filteredMovies = [SavedMovies]()
     var timer: Timer?
-    var startingFrame: CGRect?
-    var topConstraint: NSLayoutConstraint?
-    var leadingConstraint: NSLayoutConstraint?
-    var widthConstraint: NSLayoutConstraint?
-    var heightConstraint: NSLayoutConstraint?
+//    var startingFrame: CGRect?
+//    var topConstraint: NSLayoutConstraint?
+//    var leadingConstraint: NSLayoutConstraint?
+//    var widthConstraint: NSLayoutConstraint?
+//    var heightConstraint: NSLayoutConstraint?
+    var selectedIndexPath: [IndexPath: Bool] = [:]
+    var index: IndexPath!
+    
+    var editMode: EditMode = .notEditing {
+        didSet {
+            switch editMode {
+            case .notEditing:
+                for (key, value) in selectedIndexPath {
+                    if value {
+                        collectionView.deselectItem(at: key, animated: true)
+                    }
+                }
+                
+                editButton.title = "Edit"
+                navigationItem.leftBarButtonItems = [editButton]
+                navigationItem.rightBarButtonItem = addNewMovieButton
+                collectionView.allowsMultipleSelection = false
+                collectionView.allowsSelection = false
+            case .isEditing:
+                editButton.title = "Cancel"
+                logoutButton.tintColor = .red
+                navigationItem.leftBarButtonItems = [editButton, logoutButton]
+                navigationItem.rightBarButtonItem = deleteButton
+                navigationItem.rightBarButtonItem?.isEnabled = false
+                collectionView.allowsMultipleSelection = true
+                collectionView.allowsSelection = true
+            }
+        }
+    }
     
     
     // MARK: - view life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.collectionView.reloadData()
+        checkIfUserIsLoggedIn()
         setUpNavBar()
         setupActivityIndicatorView()
         setupCollectionView()
-        checkIfUserIsLoggedIn()
         setupPlaceholderTextView()
     }
     
     
     // MARK: - setup
+    func checkIfUserIsLoggedIn() {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        if uid != uid {
+            perform(#selector(handleLogOut), with: nil, afterDelay: 2)
+        }
+        checkIfUserHasMovies()
+    }
+    
+    
     fileprivate func setUpNavBar() {
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(handleAddNewMovie))
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Log Out", style: .plain, target: self, action: #selector(handleLogOut))
-        
-        navigationItem.leftBarButtonItem?.tintColor = .red
+        navigationItem.rightBarButtonItem = addNewMovieButton
+        navigationItem.leftBarButtonItem = editButton
         navigationItem.hidesSearchBarWhenScrolling = true
         navigationItem.searchController = searchController
-
+        setUpSearchBar()
+    }
+    
+    
+    fileprivate func setUpSearchBar() {
         searchController.searchBar.placeholder = "Search movies you own..."
-        searchController.searchBar.tintColor = .black
         searchController.searchResultsUpdater = self
-        searchController.obscuresBackgroundDuringPresentation = false
-        searchController.definesPresentationContext = true
+//        searchController.obscuresBackgroundDuringPresentation = false
+//        searchController.definesPresentationContext = true
     }
     
     
@@ -66,6 +126,7 @@ class MoviesController: BaseListController {
         collectionView.isScrollEnabled = false
         collectionView.isHidden = true
         collectionView.keyboardDismissMode = .onDrag
+        collectionView.allowsSelection = false
     }
     
     
@@ -82,35 +143,29 @@ class MoviesController: BaseListController {
     }
     
     
-    fileprivate func checkIfUserIsLoggedIn() {
-        if Auth.auth().currentUser?.uid == nil {
-            perform(#selector(handleLogOut), with: nil, afterDelay: 0)
-        } else {
-            checkIfUserHasMovies()
-            fetchUsersMovies()
-        }
-    }
-    
-    
     // MARK: - fetch data
     func checkIfUserHasMovies() {
-        firebaseAccountMoviesReference.child(firebaseCurrentUserId ?? "").observe(.value, with: { (snapshot) in
-            
+        
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        firebaseReference.child(firebaseAccountMoviesReference).child(uid).observe(.value, with: { (snapshot) in
             if !snapshot.hasChildren() {
                 self.activitityIndicator.stopAnimating()
                 self.collectionView.isHidden = true
+                self.view.backgroundColor = .systemBackground
                 self.placeholderText.isHidden = false
             } else {
                 self.placeholderText.isHidden = true
+                self.fetchUsersMovies()
+                self.collectionView.reloadData()
             }
-            
         })
     }
     
     
     fileprivate func fetchUsersMovies() {
-        firebaseAccountMoviesReference.child(firebaseCurrentUserId ?? "").observe(.childAdded, with: { (snapshot) in
-            firebaseMoviesReference.child(snapshot.key).observeSingleEvent(of: .value, with: { (snapshot) in
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        firebaseReference.child(firebaseAccountMoviesReference).child(uid).observe(.childAdded, with: { (snapshot) in
+            firebaseReference.child(firebaseMoviesReference).child(snapshot.key).observeSingleEvent(of: .value, with: { (snapshot) in
                 
                 for child in snapshot.children {
                     if let childSnapshot = child as? DataSnapshot,
@@ -118,18 +173,20 @@ class MoviesController: BaseListController {
                         let id = dict["id"] as? Int,
                         let title = dict["title"] as? String,
                         let posterPath = dict["posterPath"] as? String {
-                        
                         let movie = SavedMovies(id: id, title: title, posterPath: posterPath)
-                        if firebaseCurrentUserId == firebaseCurrentUserId {
+                        if uid == uid {
                             self.myMovies.append(movie)
                         }
                     }
                 }
                 
-                self.activitityIndicator.isHidden = true
-                self.activitityIndicator.stopAnimating()
-                self.collectionView.isHidden = false
-                self.collectionView.isScrollEnabled = true
+                DispatchQueue.main.async {
+                    self.activitityIndicator.isHidden = true
+                    self.activitityIndicator.stopAnimating()
+                    self.collectionView.isHidden = false
+                    self.collectionView.isScrollEnabled = true
+                    self.collectionView.reloadData()
+                }
                 self.collectionView.reloadData()
             })
         })
@@ -137,6 +194,38 @@ class MoviesController: BaseListController {
     
     
     // MARK: - @objc methods
+    @objc func handleEditButtonPressed() {
+        editMode = editMode == .notEditing ? .isEditing : .notEditing
+    }
+    
+    
+    @objc func handleDeleteButtonPressed() {
+        var deleteIndexPaths: [IndexPath] = []
+        for (key, value) in selectedIndexPath {
+            if value {
+                deleteIndexPaths.append(key)
+            }
+        }
+        
+        for index in deleteIndexPaths.sorted(by: { $0.item <= $1.item }) {
+            
+            // remove movie from myMovies array
+            myMovies.remove(at: index.item)
+            #warning("fix error with deleting movies")
+            print("INDEX: \(myMovies[index.item].title)")
+            
+            
+            // remove movie from Firebase
+//            guard let uid = Auth.auth().currentUser?.uid else { return }
+//            firebaseReference.child(firebaseAccountMoviesReference).child(uid).child(myMovies[index.item].title).removeValue()
+        }
+        
+        collectionView.deleteItems(at: deleteIndexPaths)
+        selectedIndexPath.removeAll()
+        navigationItem.rightBarButtonItem?.isEnabled = false
+    }
+    
+    
     @objc fileprivate func handleAddNewMovie() {
         let addNewMovieController = AddNewMovieController()
         addNewMovieController.delegate = self
@@ -155,6 +244,11 @@ class MoviesController: BaseListController {
                 self.displayAlertController(title: "Error", message: errorCode.errorMessage, buttonTitle: "ok")
             }
         }
+        
+        self.myMovies.removeAll()
+        self.filteredMovies.removeAll()
+        
+        editMode = .notEditing
         present(LogInController(), animated: true)
     }
     
@@ -175,9 +269,9 @@ extension MoviesController: UICollectionViewDelegateFlowLayout {
     
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! MoviesCell
         let filteredMovie: SavedMovies
-        
+                
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! MoviesCell
         cell.movie = myMovies[indexPath.item]
         
         if isFiltering() {
@@ -188,7 +282,6 @@ extension MoviesController: UICollectionViewDelegateFlowLayout {
         
         cell.movieCoverImageView.loadImageUsingUrlString(urlString: movieCoverImageUrl + filteredMovie.posterPath)
         cell.movieTitleLabel.text = filteredMovie.title
-        
         return cell
     }
     
@@ -204,12 +297,33 @@ extension MoviesController: UICollectionViewDelegateFlowLayout {
     
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 16
+        return 24
     }
     
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 8
+    }
+    
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        switch editMode {
+        case .notEditing:
+            _ = myMovies[indexPath.item]
+        case .isEditing:
+            navigationItem.rightBarButtonItem?.isEnabled = true
+            deleteButton.tintColor = .red
+            selectedIndexPath[indexPath] = true
+            index = indexPath
+        }
+    }
+    
+    
+    override func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        if editMode == .isEditing {
+            navigationItem.rightBarButtonItem?.isEnabled = false
+            selectedIndexPath[indexPath] = false
+        }
     }
     
 }

@@ -12,23 +12,28 @@ import Firebase
 class LogInController: UIViewController {
     
     // MARK: - views
-    let welcomeLabel = UILabel(text: "Welcome back...", textColor: .black, fontSize: 54, fontWeight: .black, textAlignment: .left, numberOfLines: 2)
+    let welcomeLabel = UILabel(text: "Welcome back...", textColor: .label, fontSize: 54, fontWeight: .black, textAlignment: .left, numberOfLines: 2)
     
     let emailTextField = UITextField(placeholder: "Email", keyboardType: .emailAddress, returnKeyType: .next, autocorrectionType: .no)
-    let emailSeperatorView = UIView(backgroundColor: .black)
+    let emailSeperatorView = UIView(backgroundColor: .lightGray)
     
     let passwordTextField = UITextField(placeholder: "Password", keyboardType: .default, returnKeyType: .go, autocorrectionType: .no)
-    let passwordSeperatorView = UIView(backgroundColor: .black)
+    let passwordSeperatorView = UIView(backgroundColor: .lightGray)
     
-    let logInButton = UIButton(title: "Log In", backgroundColor: .black, setTitleColor: .white, font: .systemFont(ofSize: 17, weight: .medium), cornerRadius: 12)
+    let logInButton = UIButton(title: "Log In", backgroundColor: .systemBlue, setTitleColor: .white, font: .systemFont(ofSize: 17, weight: .medium), cornerRadius: 12)
     let signUpButton = UIButton(title: "Don't have an accout? Tap here.", backgroundColor: .clear, setTitleColor: .lightGray, font: .systemFont(ofSize: 14, weight: .regular), cornerRadius: 0)
+    
+    
+    // MARK: - vars and lets
+    let moviesController = MoviesController()
     
     
     // MARK: - view life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .white
+        isModalInPresentation = true
+        view.backgroundColor = .systemBackground
         
         emailTextField.delegate = self
         passwordTextField.delegate = self
@@ -46,15 +51,20 @@ class LogInController: UIViewController {
         welcomeLabel.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.safeAreaLayoutGuide.leadingAnchor, bottom: nil, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 46, left: 16, bottom: 0, right: 16))
     }
     
-    
+    let dividerHeight: CGFloat = 0.5
     fileprivate func setupTextFields() {
-        emailSeperatorView.constrainHeight(constant: 0.5)
-        passwordSeperatorView.constrainHeight(constant: 0.5)
+        emailSeperatorView.constrainHeight(constant: dividerHeight)
+        emailTextField.constrainHeight(constant: 46)
+        emailTextField.autocapitalizationType = .none
+        
+        passwordSeperatorView.constrainHeight(constant: dividerHeight)
         passwordTextField.isSecureTextEntry = true
+        passwordTextField.constrainHeight(constant: 46)
+        passwordTextField.autocapitalizationType = .none
         
         let textFieldsStackview = UIStackView(arrangedSubviews: [
-            UIStackView(arrangedSubviews: [emailTextField, emailSeperatorView], customSpacing: 8),
-            UIStackView(arrangedSubviews: [passwordTextField, passwordSeperatorView], customSpacing: 8)
+            UIStackView(arrangedSubviews: [emailTextField, emailSeperatorView], customSpacing: -4),
+            UIStackView(arrangedSubviews: [passwordTextField, passwordSeperatorView], customSpacing: -4)
             ], customSpacing: 42)
         view.addSubview(textFieldsStackview)
         textFieldsStackview.centerInSuperview()
@@ -95,9 +105,14 @@ class LogInController: UIViewController {
                 }
                 
                 return
+            } else {
+                self.dismiss(animated: true) {
+                    let vc = MoviesController()
+                    vc.myMovies.removeAll()
+                    vc.filteredMovies.removeAll()
+                    vc.collectionView.reloadData()
+                }
             }
-            
-            self.dismiss(animated: true, completion: nil)
         }
         
     }
@@ -115,8 +130,6 @@ class LogInController: UIViewController {
     }
     
 }
-
-
 
 
 // MARK: - textFieldDelegate

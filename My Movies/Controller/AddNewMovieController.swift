@@ -12,6 +12,7 @@ import Firebase
 class AddNewMovieController: BaseListController {
 
     // MARK: - vars and lets
+    fileprivate let noConnectionLabel = UILabel(text: "", textColor: .label, fontSize: 17, fontWeight: .regular, textAlignment: .center, numberOfLines: 0)
     fileprivate let activitityIndicator = UIActivityIndicatorView(indicatorColor: .darkGray)
     fileprivate let searchController = UISearchController(searchResultsController: nil)
     fileprivate let cellId = "Cell"
@@ -30,23 +31,7 @@ class AddNewMovieController: BaseListController {
         setupActivityIndicatorView()
         setUpNavBar()
         fetchPopularMovies()
-    }
-    
-    
-    func checkForMovies(indexPath: IndexPath) {
-        firebaseAccountMoviesReference.child(firebaseCurrentUserId ?? "").observeSingleEvent(of: .value, with: { snapshot in
-            if let savedMovies = snapshot.value as? [String: AnyObject] {
-                for (_, value) in savedMovies {
-                    if value as? String == self.popularMovies[indexPath.item].title {
-                        print("blah")
-                        let vc = AddNewMovieCell()
-                        vc.movieTitleLabel.textColor = .red
-                        self.collectionView.cellForItem(at: indexPath)?.tintColor = .red
-                    }
-                }
-            }
-        })
-        firebaseUsersReference.removeAllObservers()
+        checkForConnection()
     }
     
     
@@ -64,8 +49,8 @@ class AddNewMovieController: BaseListController {
         navigationItem.hidesSearchBarWhenScrolling = false
         
         searchController.searchBar.delegate = self
-        searchController.dimsBackgroundDuringPresentation = false
-        searchController.searchBar.tintColor = .black
+        searchController.obscuresBackgroundDuringPresentation = false
+//        searchController.searchBar.tintColor = .black
         searchController.searchBar.placeholder = "Search for a movie..."
     }
     
@@ -78,10 +63,58 @@ class AddNewMovieController: BaseListController {
     }
     
     
+    
+    
+    // MARK: - check for data
+    func checkForMovies(indexPath: IndexPath) {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        firebaseReference.child(firebaseAccountMoviesReference).child(uid).observeSingleEvent(of: .value, with: { snapshot in
+            
+            if let savedMovies = snapshot.value as? [String: AnyObject] {
+                for (key, _) in savedMovies {
+                    if key == self.popularMovies[indexPath.item].title ?? "" {
+                        self.collectionView.cellForItem(at: indexPath)?.isSelected = true
+                    }
+                }
+            }
+        })
+    }
+    
+    
+    fileprivate func checkForConnection() {
+        connectedReference.observe(.value) { (snapshot) in
+            if let connected = snapshot.value as? Bool, connected {
+                self.collectionView.isHidden = false
+                self.noConnectionLabel.isHidden = true
+                
+                self.searchController.searchBar.isHidden = false
+                self.navigationItem.title = "Search"
+            } else {
+                
+                self.collectionView.isHidden = true
+                self.view.backgroundColor = .systemBackground
+                
+                let attributedString = NSMutableAttributedString(string: "Cannot connect to the Internet.", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 36)])
+                let normalString = NSMutableAttributedString(string: "\n\nYou must connect to WI-Fi or cellular data network to access the search feature.")
+                attributedString.append(normalString)
+                
+                self.view.addSubview(self.noConnectionLabel)
+                self.noConnectionLabel.attributedText = attributedString
+                self.noConnectionLabel.isHidden = false
+                self.noConnectionLabel.fillSuperview(padding: .init(top: 16, left: 16, bottom: 16, right: 16))
+                
+                self.searchController.searchBar.isHidden = true
+                self.navigationItem.title = ""
+            }
+        }
+    }
+    
+    
     // MARK: - fetch data
     fileprivate func fetchPopularMovies() {
         Service.shared.fetchMovies(url: moviesUrl) { (result, error) in
             self.popularMovies = result?.results ?? []
+            
             DispatchQueue.main.async {
                 self.activitityIndicator.isHidden = true
                 self.activitityIndicator.stopAnimating()
@@ -110,9 +143,12 @@ extension AddNewMovieController: UICollectionViewDelegateFlowLayout  {
     
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! AddNewMovieCell
+        
         checkForMovies(indexPath: indexPath)
+        
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! AddNewMovieCell
         cell.movie = self.popularMovies[indexPath.item]
+        
         return cell
     }
     
@@ -128,13 +164,14 @@ extension AddNewMovieController: UICollectionViewDelegateFlowLayout  {
     
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
         let selectedMovie = self.popularMovies[indexPath.item]
         self.selectedMovie = selectedMovie
-
         
-        let childRef = firebaseMoviesReference.child(selectedMovie.title ?? "")
-        if firebaseCurrentUserId == firebaseCurrentUserId {
-            
+        let childRef = firebaseReference.child(firebaseMoviesReference).child(selectedMovie.title ?? "")
+        
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        if uid == uid {
             childRef.observe(.value, with: { (snapshot) in
                 
                 if !snapshot.hasChild(selectedMovie.title ?? "") {
@@ -145,7 +182,7 @@ extension AddNewMovieController: UICollectionViewDelegateFlowLayout  {
                         self.popularMovies.remove(at: indexPath.item)
                         collectionView.reloadData()
                     }
-                    
+                
                     self.delegate?.passMovie(movie: SavedMovies.init(id: selectedMovie.id ?? 0, title: selectedMovie.title ?? "", posterPath: selectedMovie.posterPath ?? ""))
                     
                     self.searchController.searchBar.text = ""
@@ -159,8 +196,9 @@ extension AddNewMovieController: UICollectionViewDelegateFlowLayout  {
                 }
             }
             
+            guard let uid = Auth.auth().currentUser?.uid else { return }
             guard let movieId = childRef.key else { return }
-            firebaseAccountMoviesReference.child(firebaseCurrentUserId ?? "").updateChildValues([movieId : 0])
+            firebaseReference.child(firebaseAccountMoviesReference).child(uid).updateChildValues([movieId : 0])
         }
 
     }

@@ -14,8 +14,7 @@ class BaseListController: UICollectionViewController {
         super.viewDidLoad()
         
         navigationItem.hidesSearchBarWhenScrolling = false
-        collectionView.backgroundColor = .white
-        navigationController?.navigationBar.barTintColor = .white
+        collectionView.backgroundColor = .systemBackground
     }
     
     

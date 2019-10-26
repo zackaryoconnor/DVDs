@@ -12,23 +12,24 @@ import Firebase
 class SignUpController: UIViewController {
     
     // MARK: - views
-    let welcomeLabel = UILabel(text: "Welcome to My Movies...", textColor: .black, fontSize: 54, fontWeight: .black, textAlignment: .left, numberOfLines: 0)
-
+    let welcomeLabel = UILabel(text: "Welcome to My Movies...", textColor: .label, fontSize: 54, fontWeight: .black, textAlignment: .left, numberOfLines: 0)
+    
     let emailTextField = UITextField(placeholder: "Email", keyboardType: .emailAddress, returnKeyType: .next, autocorrectionType: .no)
-    let emailSeperatorView = UIView(backgroundColor: .black)
+    let emailSeperatorView = UIView(backgroundColor: .lightGray)
     
     let passwordTextField = UITextField(placeholder: "Password", keyboardType: .default, returnKeyType: .go, autocorrectionType: .no)
-    let passwordSeperatorView = UIView(backgroundColor: .black)
+    let passwordSeperatorView = UIView(backgroundColor: .lightGray)
     
-    let signUpButton = UIButton(title: "Sign Up", backgroundColor: .black, setTitleColor: .white, font: .systemFont(ofSize: 17, weight: .medium), cornerRadius: 12)
-    let loginButton = UIButton(title: "Already have an accout? Tap here.", backgroundColor: .clear, setTitleColor: .lightGray, font: .systemFont(ofSize: 14, weight: .regular), cornerRadius: 0)
+    let signUpButton = UIButton(title: "Sign Up", backgroundColor: .systemBlue, setTitleColor: .white, font: .systemFont(ofSize: 17, weight: .medium), cornerRadius: 12)
+    let loginButton = UIButton(title: "Already have an accout? Tap here.", backgroundColor: .clear, setTitleColor: .secondaryLabel, font: .systemFont(ofSize: 14, weight: .regular), cornerRadius: 0)
     
     
     // MARK: - view life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .white
+//        isModalInPresentation = true
+        view.backgroundColor = .systemBackground
         
         emailTextField.delegate = self
         passwordTextField.delegate = self
@@ -46,15 +47,21 @@ class SignUpController: UIViewController {
         welcomeLabel.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.safeAreaLayoutGuide.leadingAnchor, bottom: nil, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 46, left: 16, bottom: 0, right: 16))
     }
     
-    
+    let dividerHeight: CGFloat = 0.5
     fileprivate func setupTextFields() {
-        emailSeperatorView.constrainHeight(constant: 0.5)
+        emailSeperatorView.constrainHeight(constant: dividerHeight)
+        emailTextField.constrainHeight(constant: 46)
+        emailTextField.autocapitalizationType = .none
+        
         passwordTextField.isSecureTextEntry = true
-        passwordSeperatorView.constrainHeight(constant: 0.5)
+        passwordSeperatorView.constrainHeight(constant: dividerHeight)
+        passwordTextField.constrainHeight(constant: 46)
+        passwordTextField.autocapitalizationType = .none
+        
         
         let textFieldsStackview = UIStackView(arrangedSubviews: [
-            UIStackView(arrangedSubviews: [emailTextField, emailSeperatorView], customSpacing: 8),
-            UIStackView(arrangedSubviews: [passwordTextField, passwordSeperatorView], customSpacing: 8)
+            UIStackView(arrangedSubviews: [emailTextField, emailSeperatorView], customSpacing: -4),
+            UIStackView(arrangedSubviews: [passwordTextField, passwordSeperatorView], customSpacing: -4)
             ], customSpacing: 42)
         view.addSubview(textFieldsStackview)
         textFieldsStackview.centerInSuperview()
@@ -104,7 +111,10 @@ class SignUpController: UIViewController {
                 return
             }
             
-            firebaseUsersReference.child(firebaseCurrentUserId ?? "").updateChildValues(["email": email])
+
+            guard let uid = Auth.auth().currentUser?.uid else { return }
+            firebaseReference.child(firebaseUsersReference).child(uid).updateChildValues(["email": email])
+            
             self.presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil)
         }
     }
@@ -134,3 +144,6 @@ extension SignUpController: UITextFieldDelegate {
         return true
     }
 }
+
+
+

@@ -14,7 +14,6 @@
 		F35C560722321F8D00885215 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35C560622321F8D00885215 /* Extensions.swift */; };
 		F35C56092232272100885215 /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35C56082232272100885215 /* Service.swift */; };
 		F3773C1D225E91BD00C1341E /* SavedMovies.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3773C1C225E91BD00C1341E /* SavedMovies.swift */; };
-		F3773C23225FE15D00C1341E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F3773C22225FE15D00C1341E /* GoogleService-Info.plist */; };
 		F3D9FE5D21F2790E00B864AA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9FE5C21F2790E00B864AA /* AppDelegate.swift */; };
 		F3D9FE5F21F2790E00B864AA /* MoviesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9FE5E21F2790E00B864AA /* MoviesController.swift */; };
 		F3D9FE6421F2791000B864AA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F3D9FE6321F2791000B864AA /* Assets.xcassets */; };
@@ -24,6 +23,8 @@
 		F3D9FE7B21F287E200B864AA /* AddNewMovieCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9FE7A21F287E200B864AA /* AddNewMovieCell.swift */; };
 		F3D9FE8221F28D9400B864AA /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9FE8121F28D9400B864AA /* Constants.swift */; };
 		F3D9FE8421F28E1B00B864AA /* Results.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9FE8321F28E1B00B864AA /* Results.swift */; };
+		F3F4C276236500CC005B0DBC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F3F4C275236500CC005B0DBC /* GoogleService-Info.plist */; };
+		F3F4C2792365016A005B0DBC /* app_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = F3F4C27823650169005B0DBC /* app_icon.png */; };
 		F3FC3955224DAE7800B2F51F /* UIView+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3FC3954224DAE7800B2F51F /* UIView+Layout.swift */; };
 		F3FC3957224DAF5F00B2F51F /* BaseListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3FC3956224DAF5F00B2F51F /* BaseListController.swift */; };
 /* End PBXBuildFile section */
@@ -38,7 +39,6 @@
 		F35C560622321F8D00885215 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		F35C56082232272100885215 /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
 		F3773C1C225E91BD00C1341E /* SavedMovies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedMovies.swift; sourceTree = "<group>"; };
-		F3773C22225FE15D00C1341E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 		F3970C84227681FB008FCE78 /* My Movies.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "My Movies.entitlements"; sourceTree = "<group>"; };
 		F3D9FE5921F2790E00B864AA /* My Movies.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "My Movies.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F3D9FE5C21F2790E00B864AA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -51,6 +51,8 @@
 		F3D9FE7A21F287E200B864AA /* AddNewMovieCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNewMovieCell.swift; sourceTree = "<group>"; };
 		F3D9FE8121F28D9400B864AA /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		F3D9FE8321F28E1B00B864AA /* Results.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Results.swift; sourceTree = "<group>"; };
+		F3F4C275236500CC005B0DBC /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		F3F4C27823650169005B0DBC /* app_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = app_icon.png; path = Assets/app_icon.png; sourceTree = SOURCE_ROOT; };
 		F3FC3954224DAE7800B2F51F /* UIView+Layout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Layout.swift"; sourceTree = "<group>"; };
 		F3FC3956224DAF5F00B2F51F /* BaseListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseListController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -106,6 +108,7 @@
 			children = (
 				F3970C84227681FB008FCE78 /* My Movies.entitlements */,
 				F3D9FE5C21F2790E00B864AA /* AppDelegate.swift */,
+				F3F4C2772365015C005B0DBC /* App Icon */,
 				F3D9FE7F21F28D1800B864AA /* Helpers */,
 				F3713ECA2234DBF600C40A92 /* Service */,
 				F3D9FE7E21F28D0F00B864AA /* Model */,
@@ -114,7 +117,7 @@
 				F3D9FE6321F2791000B864AA /* Assets.xcassets */,
 				F3D9FE6521F2791000B864AA /* LaunchScreen.storyboard */,
 				F3D9FE6821F2791000B864AA /* Info.plist */,
-				F3773C22225FE15D00C1341E /* GoogleService-Info.plist */,
+				F3F4C275236500CC005B0DBC /* GoogleService-Info.plist */,
 			);
 			path = "My Movies";
 			sourceTree = "<group>";
@@ -158,6 +161,14 @@
 				F35C560622321F8D00885215 /* Extensions.swift */,
 			);
 			path = Helpers;
+			sourceTree = "<group>";
+		};
+		F3F4C2772365015C005B0DBC /* App Icon */ = {
+			isa = PBXGroup;
+			children = (
+				F3F4C27823650169005B0DBC /* app_icon.png */,
+			);
+			path = "App Icon";
 			sourceTree = "<group>";
 		};
 		F7DE03F520189BA8EE87F195 /* Pods */ = {
@@ -239,9 +250,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F3F4C2792365016A005B0DBC /* app_icon.png in Resources */,
 				F3D9FE6721F2791000B864AA /* LaunchScreen.storyboard in Resources */,
 				F3D9FE6421F2791000B864AA /* Assets.xcassets in Resources */,
-				F3773C23225FE15D00C1341E /* GoogleService-Info.plist in Resources */,
+				F3F4C276236500CC005B0DBC /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -469,7 +481,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = ZZE62SD4Y5;
 				INFOPLIST_FILE = "My Movies/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -478,7 +490,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -491,7 +503,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = ZZE62SD4Y5;
 				INFOPLIST_FILE = "My Movies/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -500,7 +512,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

@@ -46,11 +46,9 @@ class AddNewMovieController: BaseListController {
     fileprivate func setUpNavBar() {
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(handleDismissController))
         navigationItem.searchController = self.searchController
-        navigationItem.hidesSearchBarWhenScrolling = false
         
         searchController.searchBar.delegate = self
         searchController.obscuresBackgroundDuringPresentation = false
-//        searchController.searchBar.tintColor = .black
         searchController.searchBar.placeholder = "Search for a movie..."
     }
     
@@ -214,6 +212,8 @@ extension AddNewMovieController: UISearchBarDelegate {
         timer?.invalidate()
 
         timer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: false, block: { (_) in
+            
+            self.collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
             
             let searchTerm = searchText
             let finalSearchTerm = searchTerm.replacingOccurrences(of: " ", with: "%20")

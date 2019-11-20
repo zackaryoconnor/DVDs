@@ -12,7 +12,7 @@ import Firebase
 class LogInController: UIViewController {
     
     // MARK: - views
-    let welcomeLabel = UILabel(text: "Welcome back...", textColor: .label, fontSize: 54, fontWeight: .black, textAlignment: .left, numberOfLines: 2)
+    let welcomeLabel = UILabel(text: "Login with email...", textColor: .label, fontSize: 36, fontWeight: .bold, textAlignment: .left, numberOfLines: 0)
     
     let emailTextField = UITextField(placeholder: "Email", keyboardType: .emailAddress, returnKeyType: .next, autocorrectionType: .no)
     let emailSeperatorView = UIView(backgroundColor: .lightGray)
@@ -32,7 +32,6 @@ class LogInController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        isModalInPresentation = true
         view.backgroundColor = .systemBackground
         
         emailTextField.delegate = self
@@ -48,8 +47,9 @@ class LogInController: UIViewController {
     // MARK: - setup
     fileprivate func setupWelcomeLabel() {
         view.addSubview(welcomeLabel)
-        welcomeLabel.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.safeAreaLayoutGuide.leadingAnchor, bottom: nil, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 46, left: 16, bottom: 0, right: 16))
+        welcomeLabel.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.safeAreaLayoutGuide.leadingAnchor, bottom: nil, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 64, left: 16, bottom: 0, right: 16))
     }
+    
     
     let dividerHeight: CGFloat = 0.5
     fileprivate func setupTextFields() {
@@ -106,12 +106,11 @@ class LogInController: UIViewController {
                 
                 return
             } else {
-                self.dismiss(animated: true) {
+                self.presentingViewController?.presentingViewController?.dismiss(animated: true, completion: {
                     let vc = MoviesController()
                     vc.myMovies.removeAll()
-                    vc.filteredMovies.removeAll()
                     vc.collectionView.reloadData()
-                }
+                })
             }
         }
         

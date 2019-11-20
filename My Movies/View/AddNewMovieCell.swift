@@ -16,12 +16,24 @@ class AddNewMovieCell: UICollectionViewCell {
             guard let posterPath = movie.posterPath else { return }
             
             movieCoverImageView.loadImageUsingUrlString(urlString: movieCoverImageUrl + posterPath)
-            movieTitleLabel.text = movie.title
             
+            if movie.mediaType == "tv" {
+                movieTitleLabel.text = movie.name
+                yearReleasedLabel.text = movie.firstAirDate
+            } else {
+                movieTitleLabel.text = movie.title
+                yearReleasedLabel.text = movie.releaseDate
+            }
+
             let dateReleased = movie.releaseDate
+            let tvShowDateReleased = movie.firstAirDate
             let formatter = DateFormatter()
             formatter.dateFormat = "yyyy-MM-dd"
             if let date = formatter.date(from: dateReleased ?? "") {
+                let displayFormatter = DateFormatter()
+                displayFormatter.dateFormat = "yyyy"
+                yearReleasedLabel.text = displayFormatter.string(from: date)
+            } else if let date = formatter.date(from: tvShowDateReleased ?? "") {
                 let displayFormatter = DateFormatter()
                 displayFormatter.dateFormat = "yyyy"
                 yearReleasedLabel.text = displayFormatter.string(from: date)

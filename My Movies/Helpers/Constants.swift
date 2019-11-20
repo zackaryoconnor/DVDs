@@ -30,7 +30,14 @@ let language = "&language=en-US"
 let includeAdultContent = "&include_adult=false"
 let movieCoverImageUrl = "https://image.tmdb.org/t/p/w500/"
 let moviesUrl = "https://api.themoviedb.org/3/movie/popular?api_key=\(apiKey)\(language)"
-let baseSearchUrl = "https://api.themoviedb.org/3/search/movie?api_key=\(apiKey)\(language)\(query)"
+let baseSearchUrl = "https://api.themoviedb.org/3/search/multi?api_key=\(apiKey)\(language)\(query)"
+//"https://api.themoviedb.org/3/search/movie?api_key=\(apiKey)\(language)\(query)"
+
+
+
+
+// multi search url
+//"https://api.themoviedb.org/3/search/multi?api_key=<<api_key>>&language=en-US&page=1&include_adult=false"
 
 
 func updateSearchUrl(with searchQuery: String) -> String {

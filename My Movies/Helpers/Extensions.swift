@@ -73,7 +73,7 @@ extension UIStackView {
 
 extension UIActivityIndicatorView {
     convenience init(indicatorColor: UIColor) {
-        self.init(style: .whiteLarge)
+        self.init(style: .large)
         self.color = .darkGray
         self.isHidden = false
         self.startAnimating()

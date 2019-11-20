@@ -43,11 +43,6 @@ class MoviesController: BaseListController {
     var myMovies = [SavedMovies]()
     var filteredMovies = [SavedMovies]()
     var timer: Timer?
-//    var startingFrame: CGRect?
-//    var topConstraint: NSLayoutConstraint?
-//    var leadingConstraint: NSLayoutConstraint?
-//    var widthConstraint: NSLayoutConstraint?
-//    var heightConstraint: NSLayoutConstraint?
     var selectedIndexPath: [IndexPath: Bool] = [:]
     var index: IndexPath!
     
@@ -66,13 +61,14 @@ class MoviesController: BaseListController {
                 navigationItem.rightBarButtonItem = addNewMovieButton
                 collectionView.allowsMultipleSelection = false
                 collectionView.allowsSelection = false
+                
             case .isEditing:
                 editButton.title = "Cancel"
                 logoutButton.tintColor = .red
                 navigationItem.leftBarButtonItems = [editButton, logoutButton]
                 navigationItem.rightBarButtonItem = deleteButton
                 navigationItem.rightBarButtonItem?.isEnabled = false
-                collectionView.allowsMultipleSelection = true
+                collectionView.allowsMultipleSelection = false
                 collectionView.allowsSelection = true
             }
         }
@@ -83,39 +79,27 @@ class MoviesController: BaseListController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.collectionView.reloadData()
-        checkIfUserIsLoggedIn()
         setUpNavBar()
-        setupActivityIndicatorView()
+        setUpSearchBar()
         setupCollectionView()
+        setupActivityIndicatorView()
         setupPlaceholderTextView()
-    }
-    
-    
-    // MARK: - setup
-    func checkIfUserIsLoggedIn() {
-        guard let uid = Auth.auth().currentUser?.uid else { return }
-        if uid != uid {
-            perform(#selector(handleLogOut), with: nil, afterDelay: 2)
-        }
         checkIfUserHasMovies()
     }
     
     
+    // MARK: - setup
     fileprivate func setUpNavBar() {
         navigationItem.rightBarButtonItem = addNewMovieButton
         navigationItem.leftBarButtonItem = editButton
         navigationItem.hidesSearchBarWhenScrolling = true
         navigationItem.searchController = searchController
-        setUpSearchBar()
     }
     
     
     fileprivate func setUpSearchBar() {
         searchController.searchBar.placeholder = "Search movies you own..."
         searchController.searchResultsUpdater = self
-//        searchController.obscuresBackgroundDuringPresentation = false
-//        searchController.definesPresentationContext = true
     }
     
     
@@ -145,18 +129,14 @@ class MoviesController: BaseListController {
     
     // MARK: - fetch data
     func checkIfUserHasMovies() {
-        
         guard let uid = Auth.auth().currentUser?.uid else { return }
         firebaseReference.child(firebaseAccountMoviesReference).child(uid).observe(.value, with: { (snapshot) in
             if !snapshot.hasChildren() {
                 self.activitityIndicator.stopAnimating()
                 self.collectionView.isHidden = true
-                self.view.backgroundColor = .systemBackground
                 self.placeholderText.isHidden = false
             } else {
-                self.placeholderText.isHidden = true
                 self.fetchUsersMovies()
-                self.collectionView.reloadData()
             }
         })
     }
@@ -164,6 +144,7 @@ class MoviesController: BaseListController {
     
     fileprivate func fetchUsersMovies() {
         guard let uid = Auth.auth().currentUser?.uid else { return }
+        
         firebaseReference.child(firebaseAccountMoviesReference).child(uid).observe(.childAdded, with: { (snapshot) in
             firebaseReference.child(firebaseMoviesReference).child(snapshot.key).observeSingleEvent(of: .value, with: { (snapshot) in
                 
@@ -180,14 +161,17 @@ class MoviesController: BaseListController {
                     }
                 }
                 
+                self.placeholderText.isHidden = true
+                self.activitityIndicator.isHidden = true
+                self.activitityIndicator.stopAnimating()
+                self.collectionView.isHidden = false
+                self.collectionView.isScrollEnabled = true
+                
                 DispatchQueue.main.async {
-                    self.activitityIndicator.isHidden = true
-                    self.activitityIndicator.stopAnimating()
-                    self.collectionView.isHidden = false
-                    self.collectionView.isScrollEnabled = true
                     self.collectionView.reloadData()
+                    print(self.myMovies.count)
                 }
-                self.collectionView.reloadData()
+                
             })
         })
     }
@@ -200,29 +184,10 @@ class MoviesController: BaseListController {
     
     
     @objc func handleDeleteButtonPressed() {
-        var deleteIndexPaths: [IndexPath] = []
-        for (key, value) in selectedIndexPath {
-            if value {
-                deleteIndexPaths.append(key)
-            }
-        }
-        
-        for index in deleteIndexPaths.sorted(by: { $0.item <= $1.item }) {
-            
-            // remove movie from myMovies array
-            myMovies.remove(at: index.item)
-            #warning("fix error with deleting movies")
-            print("INDEX: \(myMovies[index.item].title)")
-            
-            
-            // remove movie from Firebase
-//            guard let uid = Auth.auth().currentUser?.uid else { return }
-//            firebaseReference.child(firebaseAccountMoviesReference).child(uid).child(myMovies[index.item].title).removeValue()
-        }
-        
-        collectionView.deleteItems(at: deleteIndexPaths)
-        selectedIndexPath.removeAll()
-        navigationItem.rightBarButtonItem?.isEnabled = false
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        firebaseReference.child(firebaseAccountMoviesReference).child(uid).child(myMovies[index.item].title).removeValue()
+        self.myMovies.removeAll()
+        self.editMode = .notEditing
     }
     
     
@@ -235,21 +200,16 @@ class MoviesController: BaseListController {
     }
     
     
-    @objc fileprivate func handleLogOut() {
+    @objc  func handleLogOut() {
         do {
             try Auth.auth().signOut()
         } catch let signOutError {
-            print(signOutError)
             if let errorCode = AuthErrorCode(rawValue: signOutError._code) {
                 self.displayAlertController(title: "Error", message: errorCode.errorMessage, buttonTitle: "ok")
             }
         }
-        
-        self.myMovies.removeAll()
-        self.filteredMovies.removeAll()
-        
         editMode = .notEditing
-        present(LogInController(), animated: true)
+        present(WelcomeScreen(), animated: true)
     }
     
 }
@@ -335,7 +295,9 @@ extension MoviesController: UICollectionViewDelegateFlowLayout {
 extension MoviesController: PassMovieDelegate {
     func passMovie(movie: SavedMovies) {
         self.myMovies.append(movie)
-        self.collectionView.reloadData()
+        DispatchQueue.main.async {
+            self.collectionView.reloadData()
+        }
     }
     
 }

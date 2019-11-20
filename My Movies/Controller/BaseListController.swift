@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class BaseListController: UICollectionViewController {
     
@@ -15,6 +16,18 @@ class BaseListController: UICollectionViewController {
         
         navigationItem.hidesSearchBarWhenScrolling = false
         collectionView.backgroundColor = .systemBackground
+        checkIfUserIsLoggedIn()
+    }
+    
+    
+    func checkIfUserIsLoggedIn() {
+        if Auth.auth().currentUser == nil {
+            DispatchQueue.main.async {
+                let vc = WelcomeScreen()
+                self.present(vc, animated: false)
+                return
+            }
+        }
     }
     
     

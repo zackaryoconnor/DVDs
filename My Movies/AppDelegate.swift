@@ -23,7 +23,7 @@ public func baseNavController(viewController: UIViewController, title: String, s
     viewController.navigationItem.title = title
     viewController.view.backgroundColor = .systemBackground
     
-    return navigationController
+    return navigationController    
 }
 
 
@@ -35,6 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         FirebaseApp.configure()
+        Database.database().isPersistenceEnabled = true
         
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.rootViewController = baseNavController(viewController: MoviesController(), title: "Library", searchControllerText: "Search movies you own...")

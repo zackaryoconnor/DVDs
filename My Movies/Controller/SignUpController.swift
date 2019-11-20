@@ -12,7 +12,7 @@ import Firebase
 class SignUpController: UIViewController {
     
     // MARK: - views
-    let welcomeLabel = UILabel(text: "Welcome to My Movies...", textColor: .label, fontSize: 54, fontWeight: .black, textAlignment: .left, numberOfLines: 0)
+    let welcomeLabel = UILabel(text: "Create Account...", textColor: .label, fontSize: 36, fontWeight: .bold, textAlignment: .left, numberOfLines: 0)
     
     let emailTextField = UITextField(placeholder: "Email", keyboardType: .emailAddress, returnKeyType: .next, autocorrectionType: .no)
     let emailSeperatorView = UIView(backgroundColor: .lightGray)
@@ -21,14 +21,13 @@ class SignUpController: UIViewController {
     let passwordSeperatorView = UIView(backgroundColor: .lightGray)
     
     let signUpButton = UIButton(title: "Sign Up", backgroundColor: .systemBlue, setTitleColor: .white, font: .systemFont(ofSize: 17, weight: .medium), cornerRadius: 12)
-    let loginButton = UIButton(title: "Already have an accout? Tap here.", backgroundColor: .clear, setTitleColor: .secondaryLabel, font: .systemFont(ofSize: 14, weight: .regular), cornerRadius: 0)
+    let loginButton = UIButton(title: "Already have an accout? Sign in here.", backgroundColor: .clear, setTitleColor: .secondaryLabel, font: .systemFont(ofSize: 14, weight: .regular), cornerRadius: 0)
     
     
     // MARK: - view life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        isModalInPresentation = true
         view.backgroundColor = .systemBackground
         
         emailTextField.delegate = self
@@ -44,7 +43,7 @@ class SignUpController: UIViewController {
     // MARK: - setup
     fileprivate func setupWelcomeLabel() {
         view.addSubview(welcomeLabel)
-        welcomeLabel.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.safeAreaLayoutGuide.leadingAnchor, bottom: nil, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 46, left: 16, bottom: 0, right: 16))
+        welcomeLabel.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.safeAreaLayoutGuide.leadingAnchor, bottom: nil, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 64, left: 16, bottom: 0, right: 16))
     }
     
     let dividerHeight: CGFloat = 0.5
@@ -123,7 +122,9 @@ class SignUpController: UIViewController {
     @objc func handleLogInButtonPressed() {
         emailTextField.text = ""
         passwordTextField.text = ""
-        dismiss(animated: true, completion: nil)
+        dismiss(animated: true) {
+            self.present(LogInController(), animated: true, completion: nil)
+        }
     }
     
 }

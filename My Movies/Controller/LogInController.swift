@@ -25,7 +25,7 @@ class LogInController: UIViewController {
     
     
     // MARK: - vars and lets
-    let moviesController = MoviesController()
+    let moviesController = DvdsController()
     
     
     // MARK: - view life cycle
@@ -106,11 +106,7 @@ class LogInController: UIViewController {
                 
                 return
             } else {
-                self.presentingViewController?.presentingViewController?.dismiss(animated: true, completion: {
-                    let vc = MoviesController()
-                    vc.myMovies.removeAll()
-                    vc.collectionView.reloadData()
-                })
+                self.presentingViewController?.presentingViewController?.dismiss(animated: true)
             }
         }
         

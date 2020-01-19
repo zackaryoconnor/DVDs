@@ -11,7 +11,7 @@ import UIKit
 class WelcomeScreen: UIViewController {
     
     // MARK: - views
-    let dvdLogo = UIImageView(image: "splash_screen_icon", cornerRadius: 0)
+    let dvdLogo = UIImageView(image: "", cornerRadius: 0)
     
     let welcomeLabel = UILabel(text: "Welcome to DVD's", textColor: .label, fontSize: 36, fontWeight: .bold, textAlignment: .center, numberOfLines: 2)
     let welcomeDescriptionLabel = UILabel(text: "The best way to see what movies and TV Shows you own on DVD or Blu-ray", textColor: .label, fontSize: 17, fontWeight: .regular, textAlignment: .center, numberOfLines: 0)

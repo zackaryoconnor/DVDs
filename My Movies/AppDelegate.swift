@@ -22,7 +22,7 @@ public func baseNavController(viewController: UIViewController, title: String, s
     viewController.navigationItem.searchController = searchController
     viewController.navigationItem.title = title
     viewController.view.backgroundColor = .systemBackground
-    
+        
     return navigationController    
 }
 
@@ -38,11 +38,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Database.database().isPersistenceEnabled = true
         
         window = UIWindow(frame: UIScreen.main.bounds)
-        window?.rootViewController = baseNavController(viewController: MoviesController(), title: "Library", searchControllerText: "Search movies you own...")
+        window?.rootViewController = baseNavController(viewController: DvdsController(), title: "Library", searchControllerText: "Search movies you own...")
         window?.makeKeyAndVisible()
         
         return true
     }
 
+
+    
 }
 

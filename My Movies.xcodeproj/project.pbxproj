@@ -8,25 +8,21 @@
 
 /* Begin PBXBuildFile section */
 		B37CDDCAA18BF0E1EF26DF07 /* Pods_My_Movies.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA0F96DB2A7058B5ECA9B853 /* Pods_My_Movies.framework */; };
-		F31660782385D77500B1DBE6 /* dvd_logo.pdf in Resources */ = {isa = PBXBuildFile; fileRef = F31660772385D77500B1DBE6 /* dvd_logo.pdf */; };
-		F316607C2385D84D00B1DBE6 /* dvd_logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F31660792385D84D00B1DBE6 /* dvd_logo@2x.png */; };
-		F316607D2385D84D00B1DBE6 /* dvd_logo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F316607A2385D84D00B1DBE6 /* dvd_logo@3x.png */; };
-		F316607E2385D84D00B1DBE6 /* dvd_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = F316607B2385D84D00B1DBE6 /* dvd_logo.png */; };
-		F31FE2C522E6635400DBC702 /* PassMovieDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F31FE2C422E6635400DBC702 /* PassMovieDelegate.swift */; };
+		F31FE2C522E6635400DBC702 /* PassDvdDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F31FE2C422E6635400DBC702 /* PassDvdDelegate.swift */; };
 		F3469A8322AB07DE00E1DB20 /* LogInController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3469A8222AB07DE00E1DB20 /* LogInController.swift */; };
 		F3469A8522AB16EA00E1DB20 /* SignUpController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3469A8422AB16EA00E1DB20 /* SignUpController.swift */; };
 		F34E0B8B237295C900F14328 /* splash_screen_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = F34E0B8A237295C800F14328 /* splash_screen_icon.png */; };
 		F35C560722321F8D00885215 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35C560622321F8D00885215 /* Extensions.swift */; };
 		F35C56092232272100885215 /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35C56082232272100885215 /* Service.swift */; };
-		F3773C1D225E91BD00C1341E /* SavedMovies.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3773C1C225E91BD00C1341E /* SavedMovies.swift */; };
+		F3773C1D225E91BD00C1341E /* SavedDvds.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3773C1C225E91BD00C1341E /* SavedDvds.swift */; };
 		F3BA2FC323847EA9002EE1A1 /* WelcomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3BA2FC223847EA9002EE1A1 /* WelcomeScreen.swift */; };
 		F3D9FE5D21F2790E00B864AA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9FE5C21F2790E00B864AA /* AppDelegate.swift */; };
-		F3D9FE5F21F2790E00B864AA /* MoviesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9FE5E21F2790E00B864AA /* MoviesController.swift */; };
+		F3D9FE5F21F2790E00B864AA /* DvdsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9FE5E21F2790E00B864AA /* DvdsController.swift */; };
 		F3D9FE6421F2791000B864AA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F3D9FE6321F2791000B864AA /* Assets.xcassets */; };
 		F3D9FE6721F2791000B864AA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F3D9FE6521F2791000B864AA /* LaunchScreen.storyboard */; };
-		F3D9FE6F21F27C1B00B864AA /* MoviesCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9FE6E21F27C1B00B864AA /* MoviesCell.swift */; };
-		F3D9FE7921F287D300B864AA /* AddNewMovieController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9FE7821F287D300B864AA /* AddNewMovieController.swift */; };
-		F3D9FE7B21F287E200B864AA /* AddNewMovieCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9FE7A21F287E200B864AA /* AddNewMovieCell.swift */; };
+		F3D9FE6F21F27C1B00B864AA /* DvdsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9FE6E21F27C1B00B864AA /* DvdsCell.swift */; };
+		F3D9FE7921F287D300B864AA /* AddNewDvdController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9FE7821F287D300B864AA /* AddNewDvdController.swift */; };
+		F3D9FE7B21F287E200B864AA /* AddNewDvdCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9FE7A21F287E200B864AA /* AddNewDvdCell.swift */; };
 		F3D9FE8221F28D9400B864AA /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9FE8121F28D9400B864AA /* Constants.swift */; };
 		F3D9FE8421F28E1B00B864AA /* Results.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9FE8321F28E1B00B864AA /* Results.swift */; };
 		F3F4C276236500CC005B0DBC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F3F4C275236500CC005B0DBC /* GoogleService-Info.plist */; };
@@ -39,28 +35,24 @@
 		477D256E936B88304336D4EE /* Pods-My Movies.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-My Movies.release.xcconfig"; path = "Pods/Target Support Files/Pods-My Movies/Pods-My Movies.release.xcconfig"; sourceTree = "<group>"; };
 		7BD5226242D983D332869CEA /* Pods-My Movies.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-My Movies.debug.xcconfig"; path = "Pods/Target Support Files/Pods-My Movies/Pods-My Movies.debug.xcconfig"; sourceTree = "<group>"; };
 		DA0F96DB2A7058B5ECA9B853 /* Pods_My_Movies.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_My_Movies.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		F31660772385D77500B1DBE6 /* dvd_logo.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = dvd_logo.pdf; sourceTree = "<group>"; };
-		F31660792385D84D00B1DBE6 /* dvd_logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dvd_logo@2x.png"; sourceTree = "<group>"; };
-		F316607A2385D84D00B1DBE6 /* dvd_logo@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dvd_logo@3x.png"; sourceTree = "<group>"; };
-		F316607B2385D84D00B1DBE6 /* dvd_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dvd_logo.png; sourceTree = "<group>"; };
-		F31FE2C422E6635400DBC702 /* PassMovieDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassMovieDelegate.swift; sourceTree = "<group>"; };
+		F31FE2C422E6635400DBC702 /* PassDvdDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassDvdDelegate.swift; sourceTree = "<group>"; };
 		F3469A8222AB07DE00E1DB20 /* LogInController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogInController.swift; sourceTree = "<group>"; };
 		F3469A8422AB16EA00E1DB20 /* SignUpController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpController.swift; sourceTree = "<group>"; };
 		F34E0B8A237295C800F14328 /* splash_screen_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = splash_screen_icon.png; path = Assets/splash_screen_icon.png; sourceTree = SOURCE_ROOT; };
 		F35C560622321F8D00885215 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		F35C56082232272100885215 /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
-		F3773C1C225E91BD00C1341E /* SavedMovies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedMovies.swift; sourceTree = "<group>"; };
+		F3773C1C225E91BD00C1341E /* SavedDvds.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedDvds.swift; sourceTree = "<group>"; };
 		F3970C84227681FB008FCE78 /* My Movies.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "My Movies.entitlements"; sourceTree = "<group>"; };
 		F3BA2FC223847EA9002EE1A1 /* WelcomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeScreen.swift; sourceTree = "<group>"; };
 		F3D9FE5921F2790E00B864AA /* My Movies.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "My Movies.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F3D9FE5C21F2790E00B864AA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		F3D9FE5E21F2790E00B864AA /* MoviesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesController.swift; sourceTree = "<group>"; };
+		F3D9FE5E21F2790E00B864AA /* DvdsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DvdsController.swift; sourceTree = "<group>"; };
 		F3D9FE6321F2791000B864AA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F3D9FE6621F2791000B864AA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F3D9FE6821F2791000B864AA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		F3D9FE6E21F27C1B00B864AA /* MoviesCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesCell.swift; sourceTree = "<group>"; };
-		F3D9FE7821F287D300B864AA /* AddNewMovieController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNewMovieController.swift; sourceTree = "<group>"; };
-		F3D9FE7A21F287E200B864AA /* AddNewMovieCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNewMovieCell.swift; sourceTree = "<group>"; };
+		F3D9FE6E21F27C1B00B864AA /* DvdsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DvdsCell.swift; sourceTree = "<group>"; };
+		F3D9FE7821F287D300B864AA /* AddNewDvdController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNewDvdController.swift; sourceTree = "<group>"; };
+		F3D9FE7A21F287E200B864AA /* AddNewDvdCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNewDvdCell.swift; sourceTree = "<group>"; };
 		F3D9FE8121F28D9400B864AA /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		F3D9FE8321F28E1B00B864AA /* Results.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Results.swift; sourceTree = "<group>"; };
 		F3F4C275236500CC005B0DBC /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -139,8 +131,8 @@
 			children = (
 				F3BA2FC223847EA9002EE1A1 /* WelcomeScreen.swift */,
 				F3FC3956224DAF5F00B2F51F /* BaseListController.swift */,
-				F3D9FE5E21F2790E00B864AA /* MoviesController.swift */,
-				F3D9FE7821F287D300B864AA /* AddNewMovieController.swift */,
+				F3D9FE5E21F2790E00B864AA /* DvdsController.swift */,
+				F3D9FE7821F287D300B864AA /* AddNewDvdController.swift */,
 				F3469A8222AB07DE00E1DB20 /* LogInController.swift */,
 				F3469A8422AB16EA00E1DB20 /* SignUpController.swift */,
 			);
@@ -150,8 +142,8 @@
 		F3D9FE7D21F28D0800B864AA /* View */ = {
 			isa = PBXGroup;
 			children = (
-				F3D9FE6E21F27C1B00B864AA /* MoviesCell.swift */,
-				F3D9FE7A21F287E200B864AA /* AddNewMovieCell.swift */,
+				F3D9FE6E21F27C1B00B864AA /* DvdsCell.swift */,
+				F3D9FE7A21F287E200B864AA /* AddNewDvdCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -160,8 +152,8 @@
 			isa = PBXGroup;
 			children = (
 				F3D9FE8321F28E1B00B864AA /* Results.swift */,
-				F3773C1C225E91BD00C1341E /* SavedMovies.swift */,
-				F31FE2C422E6635400DBC702 /* PassMovieDelegate.swift */,
+				F3773C1C225E91BD00C1341E /* SavedDvds.swift */,
+				F31FE2C422E6635400DBC702 /* PassDvdDelegate.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -181,10 +173,6 @@
 			children = (
 				F3F4C27823650169005B0DBC /* app_icon.png */,
 				F34E0B8A237295C800F14328 /* splash_screen_icon.png */,
-				F31660772385D77500B1DBE6 /* dvd_logo.pdf */,
-				F316607B2385D84D00B1DBE6 /* dvd_logo.png */,
-				F31660792385D84D00B1DBE6 /* dvd_logo@2x.png */,
-				F316607A2385D84D00B1DBE6 /* dvd_logo@3x.png */,
 			);
 			path = Icons;
 			sourceTree = "<group>";
@@ -269,13 +257,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				F3F4C2792365016A005B0DBC /* app_icon.png in Resources */,
-				F316607E2385D84D00B1DBE6 /* dvd_logo.png in Resources */,
 				F34E0B8B237295C900F14328 /* splash_screen_icon.png in Resources */,
 				F3D9FE6721F2791000B864AA /* LaunchScreen.storyboard in Resources */,
-				F316607D2385D84D00B1DBE6 /* dvd_logo@3x.png in Resources */,
 				F3D9FE6421F2791000B864AA /* Assets.xcassets in Resources */,
-				F31660782385D77500B1DBE6 /* dvd_logo.pdf in Resources */,
-				F316607C2385D84D00B1DBE6 /* dvd_logo@2x.png in Resources */,
 				F3F4C276236500CC005B0DBC /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -347,21 +331,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F3D9FE5F21F2790E00B864AA /* MoviesController.swift in Sources */,
-				F3D9FE6F21F27C1B00B864AA /* MoviesCell.swift in Sources */,
-				F3D9FE7B21F287E200B864AA /* AddNewMovieCell.swift in Sources */,
+				F3D9FE5F21F2790E00B864AA /* DvdsController.swift in Sources */,
+				F3D9FE6F21F27C1B00B864AA /* DvdsCell.swift in Sources */,
+				F3D9FE7B21F287E200B864AA /* AddNewDvdCell.swift in Sources */,
 				F3D9FE5D21F2790E00B864AA /* AppDelegate.swift in Sources */,
 				F3FC3955224DAE7800B2F51F /* UIView+Layout.swift in Sources */,
 				F35C56092232272100885215 /* Service.swift in Sources */,
 				F3469A8322AB07DE00E1DB20 /* LogInController.swift in Sources */,
 				F35C560722321F8D00885215 /* Extensions.swift in Sources */,
-				F31FE2C522E6635400DBC702 /* PassMovieDelegate.swift in Sources */,
+				F31FE2C522E6635400DBC702 /* PassDvdDelegate.swift in Sources */,
 				F3D9FE8421F28E1B00B864AA /* Results.swift in Sources */,
 				F3BA2FC323847EA9002EE1A1 /* WelcomeScreen.swift in Sources */,
-				F3D9FE7921F287D300B864AA /* AddNewMovieController.swift in Sources */,
+				F3D9FE7921F287D300B864AA /* AddNewDvdController.swift in Sources */,
 				F3469A8522AB16EA00E1DB20 /* SignUpController.swift in Sources */,
 				F3FC3957224DAF5F00B2F51F /* BaseListController.swift in Sources */,
-				F3773C1D225E91BD00C1341E /* SavedMovies.swift in Sources */,
+				F3773C1D225E91BD00C1341E /* SavedDvds.swift in Sources */,
 				F3D9FE8221F28D9400B864AA /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -122,8 +122,9 @@ class SignUpController: UIViewController {
     @objc func handleLogInButtonPressed() {
         emailTextField.text = ""
         passwordTextField.text = ""
-        dismiss(animated: true) {
-            self.present(LogInController(), animated: true, completion: nil)
+        dismiss(animated: true)
+        DispatchQueue.main.asyncAfter(deadline: .now()) {
+            self.present(LogInController(), animated: true)
         }
     }
     

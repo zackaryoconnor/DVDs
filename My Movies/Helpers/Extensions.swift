@@ -97,7 +97,9 @@ extension UIViewController {
 let imageCache = NSCache<AnyObject, AnyObject>()
 var imageUrlString: String?
 
-extension UIImageView {
+class CustomImageView: UIImageView {
+    
+    var imageUrlString: String?
     
     func loadImageUsingUrlString(urlString: String) {
         
@@ -108,11 +110,7 @@ extension UIImageView {
         image = nil
         
         if let imageFromCache = imageCache.object(forKey: urlString as AnyObject) as? UIImage {
-            
-            if imageUrlString == urlString {
-                self.image = imageFromCache
-            }
-            
+            self.image = imageFromCache
             return
         }
         
@@ -123,14 +121,15 @@ extension UIImageView {
             }
             
             DispatchQueue.main.async {
-                
                 let imageToCache = UIImage(data: data!)
                 
-                imageCache.setObject(imageToCache!, forKey: urlString as AnyObject)
+                if self.imageUrlString == urlString {
+                    self.image = imageToCache
+                }
                 
-                self.image = UIImage(data: data!)
+                imageCache.setObject(imageToCache!, forKey: urlString as AnyObject)
             }
-            }.resume()
+        }.resume()
     }
 }
 

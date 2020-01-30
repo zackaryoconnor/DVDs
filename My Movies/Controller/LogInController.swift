@@ -88,6 +88,7 @@ class LogInController: UIViewController {
     fileprivate func setupGestures() {
         let swipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(handleTapToDismissKeyboard))
         swipeGesture.direction = [.up, .down]
+        
         view.addGestureRecognizer(swipeGesture)
         view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTapToDismissKeyboard)))
     }
@@ -116,7 +117,10 @@ class LogInController: UIViewController {
     @objc fileprivate func handleSignUpButtonPressed() {
         emailTextField.text = ""
         passwordTextField.text = ""
-        present(SignUpController(), animated: true, completion: nil)
+        let vc = DvdsController()
+        vc.collectionView.reloadData()
+        vc.checkIfUserHasMovies()
+        present(SignUpController(), animated: true)
     }
     
     
@@ -125,6 +129,8 @@ class LogInController: UIViewController {
     }
     
 }
+
+
 
 
 // MARK: - textFieldDelegate

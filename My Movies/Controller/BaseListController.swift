@@ -30,6 +30,7 @@ class BaseListController: UICollectionViewController {
         if Auth.auth().currentUser == nil {
             DispatchQueue.main.async {
                 let vc = WelcomeScreen()
+                vc.modalPresentationStyle = .fullScreen
                 self.present(vc, animated: false)
                 return
             }

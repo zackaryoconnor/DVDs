@@ -135,7 +135,7 @@ class CustomImageView: UIImageView {
 
 
 
-
+// Firebase error messages
 extension AuthErrorCode {
     var errorMessage: String {
         switch self {

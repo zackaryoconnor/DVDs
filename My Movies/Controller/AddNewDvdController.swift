@@ -10,10 +10,10 @@ import UIKit
 import Firebase
 
 class AddNewDvdController: BaseListController {
-
+    
     // MARK: - vars and lets
     fileprivate let noConnectionLabel = UILabel(text: "", textColor: .label, fontSize: 17, fontWeight: .regular, textAlignment: .center, numberOfLines: 0)
-    fileprivate let activitityIndicator = UIActivityIndicatorView(indicatorColor: .darkGray)
+    fileprivate let activitityIndicator = UIActivityIndicatorView(indicatorColor: .systemBackground)
     fileprivate let searchController = UISearchController(searchResultsController: nil)
     fileprivate let cellId = "Cell"
     fileprivate var moviesVC: DvdsController!
@@ -69,7 +69,7 @@ class AddNewDvdController: BaseListController {
             
             if let savedMovies = snapshot.value as? [String: AnyObject] {
                 for (key, _) in savedMovies {
-                    if key == self.popularMovies[indexPath.item].title ?? "" {
+                    if key == "\(self.popularMovies[indexPath.item].id ?? 0)" {
                         self.collectionView.cellForItem(at: indexPath)?.isSelected = true
                     }
                 }
@@ -165,21 +165,26 @@ extension AddNewDvdController: UICollectionViewDelegateFlowLayout  {
         let selectedDvd = self.popularMovies[indexPath.item]
         self.selectedMovie = selectedDvd
         
-        let childRef = firebaseReference.child(firebaseMoviesReference).child(selectedDvd.title ?? "")
+        let childRef = firebaseReference.child(firebaseMoviesReference).child("\(selectedDvd.id ?? 0)")
         
         guard let uid = Auth.auth().currentUser?.uid else { return }
         if uid == uid {
             childRef.observe(.value, with: { (snapshot) in
                 
-                if !snapshot.hasChild(selectedDvd.title ?? "") {
-                    childRef.child(selectedDvd.title ?? "").setValue(["title": selectedDvd.title as AnyObject, "posterPath": selectedDvd.posterPath as AnyObject, "id": selectedDvd.id as AnyObject])
+                
+                if !snapshot.hasChild("\(selectedDvd.id ?? 0)") {
+                    childRef.child(selectedDvd.title ?? "").setValue([
+                        "title": selectedDvd.title as AnyObject,
+                        "posterPath": selectedDvd.posterPath as AnyObject,
+                        "id": selectedDvd.id as AnyObject
+                    ])
                     childRef.updateChildValues(["accountId" : firebaseCurrentUserEmail ?? ""])
                     
                     if indexPath.item > 1 {
                         self.popularMovies.remove(at: indexPath.item)
                         collectionView.reloadData()
                     }
-                
+                    
                     self.delegate?.passDvd(movie: SavedDvds.init(id: selectedDvd.id ?? 0, title: selectedDvd.title ?? "", posterPath: selectedDvd.posterPath  ?? ""))
                     
                     self.searchController.searchBar.text = ""
@@ -196,8 +201,9 @@ extension AddNewDvdController: UICollectionViewDelegateFlowLayout  {
             guard let uid = Auth.auth().currentUser?.uid else { return }
             guard let movieId = childRef.key else { return }
             firebaseReference.child(firebaseAccountMoviesReference).child(uid).updateChildValues([movieId : 0])
+            
         }
-
+        
     }
     
 }
@@ -209,7 +215,7 @@ extension AddNewDvdController: UICollectionViewDelegateFlowLayout  {
 extension AddNewDvdController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         timer?.invalidate()
-
+        
         timer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: false, block: { (_) in
             
             self.collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
@@ -228,7 +234,7 @@ extension AddNewDvdController: UISearchBarDelegate {
                         
                         return
                     }
-
+                    
                     self.popularMovies = result?.results ?? []
                     DispatchQueue.main.async {
                         self.collectionView.reloadData()

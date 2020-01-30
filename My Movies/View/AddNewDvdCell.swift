@@ -45,7 +45,6 @@ class AddNewDvdCell: UICollectionViewCell {
     
     override var isSelected: Bool {
         didSet {
-
             if isSelected == true {
                 movieCoverImageView.layer.opacity = 0.6
                 movieTitleLabel.textColor = .secondaryLabel

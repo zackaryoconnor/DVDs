@@ -40,7 +40,7 @@ class DvdsController: BaseListController {
     
     // MARK: - vars and lets
     fileprivate let cellId = "Cell"
-    lazy var myMovies = [SavedDvds]()
+    lazy var myDvds = [SavedDvds]()
     var filteredDvds = [SavedDvds]()
     var timer: Timer?
     var selectedIndexPath: [IndexPath: Bool] = [:]
@@ -141,7 +141,6 @@ class DvdsController: BaseListController {
     
     fileprivate func fetchUsersMovies() {
         guard let uid = Auth.auth().currentUser?.uid else { return }
-        
         firebaseReference.child(firebaseAccountMoviesReference).child(uid).observe(.childAdded, with: { (snapshot) in
             firebaseReference.child(firebaseMoviesReference).child(snapshot.key).observeSingleEvent(of: .value, with: { (snapshot) in
                 
@@ -154,7 +153,7 @@ class DvdsController: BaseListController {
                     {
                         let movie = SavedDvds(id: id, title: title, posterPath: posterPath)
                         if uid == uid {
-                            self.myMovies.append(movie)
+                            self.myDvds.append(movie)
                         }
                     }
                 }
@@ -182,8 +181,8 @@ class DvdsController: BaseListController {
     
     @objc func handleDeleteButtonPressed() {
         guard let uid = Auth.auth().currentUser?.uid else { return }
-        firebaseReference.child(firebaseAccountMoviesReference).child(uid).child(myMovies[index.item].title ?? "").removeValue()
-        self.myMovies.removeAll()
+        firebaseReference.child(firebaseAccountMoviesReference).child(uid).child("\(myDvds[index.item].id ?? 0)").removeValue()
+        self.myDvds.removeAll()
         self.editMode = .notEditing
     }
     
@@ -207,8 +206,10 @@ class DvdsController: BaseListController {
         }
         
         editMode = .notEditing
-        present(WelcomeScreen(), animated: true, completion: {
-            self.myMovies.removeAll()
+        let welcomeVc = WelcomeScreen()
+        welcomeVc.modalPresentationStyle = .fullScreen
+        present(welcomeVc, animated: true, completion: {
+            self.myDvds.removeAll()
             self.collectionView.reloadData()
         })
     }
@@ -225,7 +226,7 @@ extension DvdsController: UICollectionViewDelegateFlowLayout {
             return filteredDvds.count
         }
         
-        return myMovies.count
+        return myDvds.count
     }
     
     
@@ -233,12 +234,12 @@ extension DvdsController: UICollectionViewDelegateFlowLayout {
         let filteredMovie: SavedDvds
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! DvdsCell
-        cell.dvd = myMovies[indexPath.item]
+        cell.dvd = myDvds[indexPath.item]
         
         if isFiltering() {
             filteredMovie = filteredDvds[indexPath.item]
         } else {
-            filteredMovie = myMovies[indexPath.item]
+            filteredMovie = myDvds[indexPath.item]
         }
         
         cell.movieCoverImageView.loadImageUsingUrlString(urlString: movieCoverImageUrl + (filteredMovie.posterPath ?? ""))
@@ -271,7 +272,7 @@ extension DvdsController: UICollectionViewDelegateFlowLayout {
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         switch editMode {
         case .notEditing:
-            _ = myMovies[indexPath.item]
+            _ = myDvds[indexPath.item]
         case .isEditing:
             navigationItem.rightBarButtonItem?.isEnabled = true
             deleteButton.tintColor = .red
@@ -296,7 +297,7 @@ extension DvdsController: UICollectionViewDelegateFlowLayout {
 // MARK: - PassMovieDelegate
 extension DvdsController: PassDvdDelegate {
     func passDvd(movie: SavedDvds) {
-        self.myMovies.append(movie)
+        self.myDvds.append(movie)
         DispatchQueue.main.async {
             self.collectionView.reloadData()
         }
@@ -323,7 +324,7 @@ extension DvdsController: UISearchResultsUpdating {
     
     
     fileprivate func filterContentForSearchText(_ searchText: String, scope: String = "All") {
-        filteredDvds = myMovies.filter({(movie : SavedDvds) -> Bool in
+        filteredDvds = myDvds.filter({(movie : SavedDvds) -> Bool in
             return movie.title!.lowercased().contains(searchText.lowercased())
         })
         collectionView.reloadData()

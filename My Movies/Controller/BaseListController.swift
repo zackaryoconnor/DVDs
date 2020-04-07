@@ -27,7 +27,7 @@ class BaseListController: UICollectionViewController {
 
 
     func checkIfUserIsLoggedIn() {
-        if Auth.auth().currentUser == nil {
+        if Auth.auth().currentUser?.uid == nil {
             DispatchQueue.main.async {
                 let vc = WelcomeScreen()
                 vc.modalPresentationStyle = .fullScreen

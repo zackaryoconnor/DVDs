@@ -106,11 +106,12 @@ class LogInController: UIViewController {
                 }
                 
                 return
-            } else {
+            } else if Auth.auth().currentUser?.uid == Auth.auth().currentUser?.uid {
                 let vc = DvdsController()
-                vc.collectionView.reloadData()
-                vc.checkIfUserHasMovies()
-                self.presentingViewController?.presentingViewController?.dismiss(animated: true, completion: {})
+                self.presentingViewController?.presentingViewController?.dismiss(animated: true, completion: {
+                    vc.collectionView.reloadData()
+                    vc.checkIfUserHasMovies()
+                })
             }
         }
         

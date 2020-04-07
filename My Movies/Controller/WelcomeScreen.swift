@@ -34,6 +34,7 @@ class WelcomeScreen: UIViewController {
         view.backgroundColor = .systemBackground
         
         GIDSignIn.sharedInstance()?.presentingViewController = self
+        GIDSignIn.sharedInstance()?.delegate = self
         
         //        setupWelcomeLabel()
         setupButtons()
@@ -88,7 +89,7 @@ class WelcomeScreen: UIViewController {
     }
     
     
-    @objc func googleLogin() {
+    @objc fileprivate func googleLogin() {
         GIDSignIn.sharedInstance()?.delegate = self
         GIDSignIn.sharedInstance()?.signIn()
     }
@@ -102,10 +103,11 @@ class WelcomeScreen: UIViewController {
 
 
 
-    // MARK: - Google sign in Delegate
+// MARK: - Google sign in Delegate
 extension WelcomeScreen: GIDSignInDelegate {
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
         if error != nil {
+            print(error.localizedDescription)
             if let errorCode = AuthErrorCode(rawValue: error?._code ?? 0) {
                 self.displayAlertController(title: "Error", message: errorCode.errorMessage, buttonTitle: "ok")
             }
@@ -118,17 +120,18 @@ extension WelcomeScreen: GIDSignInDelegate {
         
         Auth.auth().signInAndRetrieveData(with: credentials) { (authResult, error) in
             if error != nil {
+                print(error?.localizedDescription)
                 if let errorCode = AuthErrorCode(rawValue: error?._code ?? 0) {
                     self.displayAlertController(title: "Error", message: errorCode.errorMessage, buttonTitle: "ok")
                 }
                 return
                 
             } else {
-                print("logged in")
                 let vc = DvdsController()
-                vc.collectionView.reloadData()
-                vc.checkIfUserHasMovies()
-                self.presentingViewController?.dismiss(animated: true)
+                self.presentingViewController?.presentingViewController?.dismiss(animated: true, completion: {
+                    vc.collectionView.reloadData()
+                    vc.checkIfUserHasMovies()
+                })
             }
         }
     }

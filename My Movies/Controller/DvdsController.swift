@@ -84,6 +84,11 @@ class DvdsController: BaseListController {
         setupCollectionView()
         setupActivityIndicatorView()
         setupPlaceholderTextView()
+//        checkIfUserHasMovies()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         checkIfUserHasMovies()
     }
     
@@ -128,14 +133,16 @@ class DvdsController: BaseListController {
     // MARK: - fetch data
     func checkIfUserHasMovies() {
         guard let uid = Auth.auth().currentUser?.uid else { return }
-        firebaseReference.child(firebaseAccountMoviesReference).child(uid).observe(.value, with: { (snapshot) in
-            if !snapshot.hasChildren() {
-                self.activitityIndicator.stopAnimating()
-                self.collectionView.isHidden = true
-                self.placeholderText.isHidden = false
-            }
-            self.fetchUsersMovies()
-        })
+        if uid == uid {
+            firebaseReference.child(firebaseAccountMoviesReference).child(uid).observe(.value, with: { (snapshot) in
+                if !snapshot.hasChildren() {
+                    self.activitityIndicator.stopAnimating()
+                    self.collectionView.isHidden = true
+                    self.placeholderText.isHidden = false
+                }
+                self.fetchUsersMovies()
+            })
+        }
     }
     
     
@@ -251,6 +258,7 @@ extension DvdsController: UICollectionViewDelegateFlowLayout {
     
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        // change height to 116, after the poster path is changed to backdrop path
         return CGSize(width: view.frame.width / 2 - 24, height: 300)
     }
     

@@ -30,8 +30,6 @@ class DvdsCell: UICollectionViewCell {
             movieCoverImageView.loadImageUsingUrlString(urlString: movieCoverImageUrl + posterPath)
                 
             movieTitleLabel.text = dvd.title
-            
-            
         }
     }
     

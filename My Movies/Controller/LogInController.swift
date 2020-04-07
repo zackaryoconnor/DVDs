@@ -95,7 +95,7 @@ class LogInController: UIViewController {
     
     
     // MARK: - @objc methods
-    @objc fileprivate func handleLogIn() {
+    @objc func handleLogIn() {
         guard let email = emailTextField.text, let password = passwordTextField.text else { return }
         
         Auth.auth().signIn(withEmail: email, password: password) { (user, error) in
@@ -107,7 +107,10 @@ class LogInController: UIViewController {
                 
                 return
             } else {
-                self.presentingViewController?.presentingViewController?.dismiss(animated: true)
+                let vc = DvdsController()
+                vc.collectionView.reloadData()
+                vc.checkIfUserHasMovies()
+                self.presentingViewController?.presentingViewController?.dismiss(animated: true, completion: {})
             }
         }
         

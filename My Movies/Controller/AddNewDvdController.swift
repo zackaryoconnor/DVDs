@@ -69,7 +69,7 @@ class AddNewDvdController: BaseListController {
             
             if let savedMovies = snapshot.value as? [String: AnyObject] {
                 for (key, _) in savedMovies {
-                    if key == "\(self.popularMovies[indexPath.item].id ?? 0)" {
+                    if key == "\(self.popularMovies[indexPath.item].title ?? "")(\(self.popularMovies[indexPath.item].id ?? 0))" {
                         self.collectionView.cellForItem(at: indexPath)?.isSelected = true
                     }
                 }
@@ -165,20 +165,20 @@ extension AddNewDvdController: UICollectionViewDelegateFlowLayout  {
         let selectedDvd = self.popularMovies[indexPath.item]
         self.selectedMovie = selectedDvd
         
-        let childRef = firebaseReference.child(firebaseMoviesReference).child("\(selectedDvd.id ?? 0)")
+        let childRef = firebaseReference.child(firebaseMoviesReference).child("\(selectedDvd.title ?? "")(\(selectedDvd.id ?? 0))")
         
         guard let uid = Auth.auth().currentUser?.uid else { return }
         if uid == uid {
             childRef.observe(.value, with: { (snapshot) in
                 
-                
                 if !snapshot.hasChild("\(selectedDvd.id ?? 0)") {
-                    childRef.child(selectedDvd.title ?? "").setValue([
-                        "title": selectedDvd.title as AnyObject,
-                        "posterPath": selectedDvd.posterPath as AnyObject,
-                        "id": selectedDvd.id as AnyObject
-                    ])
-                    childRef.updateChildValues(["accountId" : firebaseCurrentUserEmail ?? ""])
+                    childRef.child(selectedDvd.title ?? "").setValue(["title": selectedDvd.title as AnyObject,
+                                                                      "posterPath": selectedDvd.posterPath as AnyObject,
+                                                                      "id": selectedDvd.id as AnyObject])
+                    
+                    guard let uid = Auth.auth().currentUser?.uid else { return }
+                    guard let movieId = childRef.key else { return }
+                    firebaseReference.child(firebaseAccountMoviesReference).child(uid).updateChildValues([movieId : 0])
                     
                     if indexPath.item > 1 {
                         self.popularMovies.remove(at: indexPath.item)
@@ -198,9 +198,6 @@ extension AddNewDvdController: UICollectionViewDelegateFlowLayout  {
                 }
             }
             
-            guard let uid = Auth.auth().currentUser?.uid else { return }
-            guard let movieId = childRef.key else { return }
-            firebaseReference.child(firebaseAccountMoviesReference).child(uid).updateChildValues([movieId : 0])
             
         }
         

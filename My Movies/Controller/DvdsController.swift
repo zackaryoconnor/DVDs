@@ -108,7 +108,7 @@ class DvdsController: BaseListController {
         collectionView.register(DvdsCell.self, forCellWithReuseIdentifier: cellId)
         collectionView.isScrollEnabled = false
         collectionView.isHidden = true
-        collectionView.reloadData()
+//        collectionView.reloadData()
     }
     
     
@@ -192,7 +192,7 @@ class DvdsController: BaseListController {
         addNewDvdController.delegate = self
         
         let addNewMovieSearchController = baseNavController(viewController: addNewDvdController, title: "Search", searchControllerText: "")
-        present(addNewMovieSearchController, animated: true, completion: nil)
+        present(addNewMovieSearchController, animated: true)
     }
     
     
@@ -231,6 +231,7 @@ extension DvdsController: UICollectionViewDelegateFlowLayout {
     
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
         let filteredMovie: SavedDvds
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! DvdsCell

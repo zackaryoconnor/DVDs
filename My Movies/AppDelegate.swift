@@ -10,7 +10,7 @@ import UIKit
 import Firebase
 import GoogleSignIn
 
-public func baseNavController(viewController: UIViewController, title: String, searchControllerText: String) -> UIViewController {
+public func baseNavController(viewController: UIViewController, title: String, searchControllerText: String? = nil) -> UIViewController {
     let navigationController = UINavigationController(rootViewController: viewController)
     let searchController = UISearchController(searchResultsController: nil)
     
@@ -47,6 +47,33 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         return true
     }
+    
+    
+    func application(_ application: UIApplication, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
+        
+        if shortcutItem.type == "com.zackaryoconnor.My-Movies.SearchAction" {
+            let addNewDvdController = AddNewDvdController()
+            let searchController = baseNavController(viewController: addNewDvdController, title: "Search", searchControllerText: "")
+            window?.rootViewController?.present(searchController, animated: true, completion: {
+                addNewDvdController.searchController.isActive = true
+                DispatchQueue.main.async {
+                    addNewDvdController.searchController.searchBar.becomeFirstResponder()
+                }
+            })
+            
+        } else if shortcutItem.type == "com.zackaryoconnor.My-Movies.ChangeAppIcon" {
+            //            change app icon...
+                        let changeAppIconController = UINavigationController(rootViewController: ChangeAppIconController())
+                        changeAppIconController.navigationBar.prefersLargeTitles = true
+                        changeAppIconController.navigationItem.title = "Change App Icon"
+                        window?.rootViewController?.present(changeAppIconController, animated: true)
+            
+        } else if shortcutItem.type == "com.zackaryoconnor.My-Movies.ShareAction" {
+            //            share app...
+        }
+        
+    }
+    
 }
 
 

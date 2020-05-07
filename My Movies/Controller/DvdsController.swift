@@ -10,6 +10,7 @@ import UIKit
 import Firebase
 import FirebaseDatabase
 
+
 class DvdsController: BaseListController {
     
     // MARK: - views
@@ -40,7 +41,16 @@ class DvdsController: BaseListController {
     
     // MARK: - vars and lets
     fileprivate let cellId = "Cell"
-    lazy var myDvds = [SavedDvds]()
+    
+    var myDvds = [SavedDvds]() {
+        didSet {
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+            }
+        }
+    }
+    
+    
     var filteredDvds = [SavedDvds]()
     var timer: Timer?
     var selectedIndexPath: [IndexPath: Bool] = [:]
@@ -84,12 +94,17 @@ class DvdsController: BaseListController {
         setupCollectionView()
         setupActivityIndicatorView()
         setupPlaceholderTextView()
-//        checkIfUserHasMovies()
     }
+    
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         checkIfUserHasMovies()
+        
+        DispatchQueue.main.async {
+            self.collectionView.reloadData()
+        }
+        
     }
     
     
@@ -113,7 +128,6 @@ class DvdsController: BaseListController {
         collectionView.register(DvdsCell.self, forCellWithReuseIdentifier: cellId)
         collectionView.isScrollEnabled = false
         collectionView.isHidden = true
-//        collectionView.reloadData()
     }
     
     
@@ -131,14 +145,34 @@ class DvdsController: BaseListController {
     
     
     // MARK: - fetch data
+    enum DvdsInCollection {
+        case yes, no
+    }
+
+    func dvdsInCollection(_ dvdsInCollection: DvdsInCollection) {
+        
+        switch dvdsInCollection {
+        case .yes:
+            placeholderText.isHidden = true
+            activitityIndicator.isHidden = true
+            activitityIndicator.stopAnimating()
+            collectionView.isHidden = false
+            collectionView.isScrollEnabled = true
+        default:
+            placeholderText.isHidden = false
+            activitityIndicator.stopAnimating()
+            collectionView.isHidden = true
+            collectionView.isScrollEnabled = false
+        }
+    }
+    
+    
     func checkIfUserHasMovies() {
         guard let uid = Auth.auth().currentUser?.uid else { return }
         if uid == uid {
-            firebaseReference.child(firebaseAccountMoviesReference).child(uid).observe(.value, with: { (snapshot) in
+            firebaseDatabaseReference.child(firebaseAccountMoviesReference).child(uid).observe(.value, with: { (snapshot) in
                 if !snapshot.hasChildren() {
-                    self.activitityIndicator.stopAnimating()
-                    self.collectionView.isHidden = true
-                    self.placeholderText.isHidden = false
+                    self.dvdsInCollection(.no)
                 }
                 self.fetchUsersMovies()
             })
@@ -148,9 +182,13 @@ class DvdsController: BaseListController {
     
     fileprivate func fetchUsersMovies() {
         guard let uid = Auth.auth().currentUser?.uid else { return }
-        firebaseReference.child(firebaseAccountMoviesReference).child(uid).observe(.childAdded, with: { (snapshot) in
-            firebaseReference.child(firebaseMoviesReference).child(snapshot.key).observeSingleEvent(of: .value, with: { (snapshot) in
-                
+        firebaseDatabaseReference.child(firebaseAccountMoviesReference).child(uid).observe(.childAdded, with: { (snapshot) in
+            print(snapshot)
+            self.myDvds.removeAll()
+            self.collectionView.reloadData()
+            
+            firebaseDatabaseReference.child(firebaseMoviesReference).child(snapshot.key).observeSingleEvent(of: .value, with: { (snapshot) in
+                print("2 - \(snapshot)")
                 for child in snapshot.children {
                     if let childSnapshot = child as? DataSnapshot,
                         let dict = childSnapshot.value as? [String : Any],
@@ -164,20 +202,16 @@ class DvdsController: BaseListController {
                         }
                     }
                 }
-                
-                self.placeholderText.isHidden = true
-                self.activitityIndicator.isHidden = true
-                self.activitityIndicator.stopAnimating()
-                self.collectionView.isHidden = false
-                self.collectionView.isScrollEnabled = true
-                
-                DispatchQueue.main.async {
-                    self.collectionView.reloadData()
-                }
-                
+                self.dvdsInCollection(.yes)
+//                DispatchQueue.main.async {
+//                    self.collectionView.reloadData()
+//                }
             })
         })
     }
+    
+
+
     
     
     // MARK: - @objc methods
@@ -187,8 +221,9 @@ class DvdsController: BaseListController {
     
     
     @objc func handleDeleteButtonPressed() {
-        guard let uid = Auth.auth().currentUser?.uid else { return }
-        firebaseReference.child(firebaseAccountMoviesReference).child(uid).child("\(myDvds[index.item].id ?? 0)").removeValue()
+        let dvdToDelete = "\(myDvds[index.item].title ?? "")(\(myDvds[index.item].id ?? 0))"
+        firebaseDatabaseReference.child(firebaseAccountMoviesReference).child(uid ?? "").child(dvdToDelete).removeValue()
+
         self.myDvds.removeAll()
         self.editMode = .notEditing
     }
@@ -308,7 +343,7 @@ extension DvdsController: PassDvdDelegate {
     func passDvd(movie: SavedDvds) {
         self.myDvds.append(movie)
         DispatchQueue.main.async {
-            self.collectionView.reloadData()
+            self.myDvds.removeAll()
         }
     }
     

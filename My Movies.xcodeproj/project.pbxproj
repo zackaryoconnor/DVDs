@@ -8,12 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		B37CDDCAA18BF0E1EF26DF07 /* Pods_My_Movies.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA0F96DB2A7058B5ECA9B853 /* Pods_My_Movies.framework */; };
+		F308D27E24529A54005A3285 /* dark_app_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = F308D27D24529A54005A3285 /* dark_app_icon.png */; };
 		F31FE2C522E6635400DBC702 /* PassDvdDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F31FE2C422E6635400DBC702 /* PassDvdDelegate.swift */; };
-		F3469A8322AB07DE00E1DB20 /* LogInController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3469A8222AB07DE00E1DB20 /* LogInController.swift */; };
+		F3469A8322AB07DE00E1DB20 /* SignInController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3469A8222AB07DE00E1DB20 /* SignInController.swift */; };
 		F3469A8522AB16EA00E1DB20 /* SignUpController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3469A8422AB16EA00E1DB20 /* SignUpController.swift */; };
-		F34E0B8B237295C900F14328 /* splash_screen_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = F34E0B8A237295C800F14328 /* splash_screen_icon.png */; };
+		F34758F62453C3C6008DCE67 /* SigninSignUpUIContoller.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34758F52453C3C6008DCE67 /* SigninSignUpUIContoller.swift */; };
 		F35C560722321F8D00885215 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35C560622321F8D00885215 /* Extensions.swift */; };
 		F35C56092232272100885215 /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35C56082232272100885215 /* Service.swift */; };
+		F36B5648244D638400222D2C /* app_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = F36B5647244D638400222D2C /* app_icon.png */; };
 		F3773C1D225E91BD00C1341E /* SavedDvds.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3773C1C225E91BD00C1341E /* SavedDvds.swift */; };
 		F3BA2FC323847EA9002EE1A1 /* WelcomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3BA2FC223847EA9002EE1A1 /* WelcomeScreen.swift */; };
 		F3D9FE5D21F2790E00B864AA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9FE5C21F2790E00B864AA /* AppDelegate.swift */; };
@@ -25,8 +27,8 @@
 		F3D9FE7B21F287E200B864AA /* AddNewDvdCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9FE7A21F287E200B864AA /* AddNewDvdCell.swift */; };
 		F3D9FE8221F28D9400B864AA /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9FE8121F28D9400B864AA /* Constants.swift */; };
 		F3D9FE8421F28E1B00B864AA /* Results.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9FE8321F28E1B00B864AA /* Results.swift */; };
+		F3ED9874243EE441008140FB /* ChangeAppIconController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3ED9873243EE441008140FB /* ChangeAppIconController.swift */; };
 		F3F4C276236500CC005B0DBC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F3F4C275236500CC005B0DBC /* GoogleService-Info.plist */; };
-		F3F4C2792365016A005B0DBC /* app_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = F3F4C27823650169005B0DBC /* app_icon.png */; };
 		F3FC3955224DAE7800B2F51F /* UIView+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3FC3954224DAE7800B2F51F /* UIView+Layout.swift */; };
 		F3FC3957224DAF5F00B2F51F /* BaseListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3FC3956224DAF5F00B2F51F /* BaseListController.swift */; };
 /* End PBXBuildFile section */
@@ -35,12 +37,14 @@
 		477D256E936B88304336D4EE /* Pods-My Movies.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-My Movies.release.xcconfig"; path = "Pods/Target Support Files/Pods-My Movies/Pods-My Movies.release.xcconfig"; sourceTree = "<group>"; };
 		7BD5226242D983D332869CEA /* Pods-My Movies.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-My Movies.debug.xcconfig"; path = "Pods/Target Support Files/Pods-My Movies/Pods-My Movies.debug.xcconfig"; sourceTree = "<group>"; };
 		DA0F96DB2A7058B5ECA9B853 /* Pods_My_Movies.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_My_Movies.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F308D27D24529A54005A3285 /* dark_app_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = dark_app_icon.png; path = "Assets/App Icons/dark_app_icon.png"; sourceTree = SOURCE_ROOT; };
 		F31FE2C422E6635400DBC702 /* PassDvdDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassDvdDelegate.swift; sourceTree = "<group>"; };
-		F3469A8222AB07DE00E1DB20 /* LogInController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogInController.swift; sourceTree = "<group>"; };
+		F3469A8222AB07DE00E1DB20 /* SignInController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInController.swift; sourceTree = "<group>"; };
 		F3469A8422AB16EA00E1DB20 /* SignUpController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpController.swift; sourceTree = "<group>"; };
-		F34E0B8A237295C800F14328 /* splash_screen_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = splash_screen_icon.png; path = Assets/splash_screen_icon.png; sourceTree = SOURCE_ROOT; };
+		F34758F52453C3C6008DCE67 /* SigninSignUpUIContoller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SigninSignUpUIContoller.swift; sourceTree = "<group>"; };
 		F35C560622321F8D00885215 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		F35C56082232272100885215 /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
+		F36B5647244D638400222D2C /* app_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = app_icon.png; sourceTree = "<group>"; };
 		F3773C1C225E91BD00C1341E /* SavedDvds.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedDvds.swift; sourceTree = "<group>"; };
 		F3970C84227681FB008FCE78 /* My Movies.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "My Movies.entitlements"; sourceTree = "<group>"; };
 		F3BA2FC223847EA9002EE1A1 /* WelcomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeScreen.swift; sourceTree = "<group>"; };
@@ -55,8 +59,8 @@
 		F3D9FE7A21F287E200B864AA /* AddNewDvdCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNewDvdCell.swift; sourceTree = "<group>"; };
 		F3D9FE8121F28D9400B864AA /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		F3D9FE8321F28E1B00B864AA /* Results.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Results.swift; sourceTree = "<group>"; };
+		F3ED9873243EE441008140FB /* ChangeAppIconController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeAppIconController.swift; sourceTree = "<group>"; };
 		F3F4C275236500CC005B0DBC /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		F3F4C27823650169005B0DBC /* app_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = app_icon.png; path = Assets/app_icon.png; sourceTree = SOURCE_ROOT; };
 		F3FC3954224DAE7800B2F51F /* UIView+Layout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Layout.swift"; sourceTree = "<group>"; };
 		F3FC3956224DAF5F00B2F51F /* BaseListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseListController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -133,8 +137,10 @@
 				F3FC3956224DAF5F00B2F51F /* BaseListController.swift */,
 				F3D9FE5E21F2790E00B864AA /* DvdsController.swift */,
 				F3D9FE7821F287D300B864AA /* AddNewDvdController.swift */,
-				F3469A8222AB07DE00E1DB20 /* LogInController.swift */,
+				F3469A8222AB07DE00E1DB20 /* SignInController.swift */,
 				F3469A8422AB16EA00E1DB20 /* SignUpController.swift */,
+				F34758F52453C3C6008DCE67 /* SigninSignUpUIContoller.swift */,
+				F3ED9873243EE441008140FB /* ChangeAppIconController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -171,8 +177,8 @@
 		F3F4C2772365015C005B0DBC /* Icons */ = {
 			isa = PBXGroup;
 			children = (
-				F3F4C27823650169005B0DBC /* app_icon.png */,
-				F34E0B8A237295C800F14328 /* splash_screen_icon.png */,
+				F36B5647244D638400222D2C /* app_icon.png */,
+				F308D27D24529A54005A3285 /* dark_app_icon.png */,
 			);
 			path = Icons;
 			sourceTree = "<group>";
@@ -256,8 +262,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F3F4C2792365016A005B0DBC /* app_icon.png in Resources */,
-				F34E0B8B237295C900F14328 /* splash_screen_icon.png in Resources */,
+				F36B5648244D638400222D2C /* app_icon.png in Resources */,
+				F308D27E24529A54005A3285 /* dark_app_icon.png in Resources */,
 				F3D9FE6721F2791000B864AA /* LaunchScreen.storyboard in Resources */,
 				F3D9FE6421F2791000B864AA /* Assets.xcassets in Resources */,
 				F3F4C276236500CC005B0DBC /* GoogleService-Info.plist in Resources */,
@@ -330,9 +336,11 @@
 				F3D9FE6F21F27C1B00B864AA /* DvdsCell.swift in Sources */,
 				F3D9FE7B21F287E200B864AA /* AddNewDvdCell.swift in Sources */,
 				F3D9FE5D21F2790E00B864AA /* AppDelegate.swift in Sources */,
+				F34758F62453C3C6008DCE67 /* SigninSignUpUIContoller.swift in Sources */,
 				F3FC3955224DAE7800B2F51F /* UIView+Layout.swift in Sources */,
 				F35C56092232272100885215 /* Service.swift in Sources */,
-				F3469A8322AB07DE00E1DB20 /* LogInController.swift in Sources */,
+				F3469A8322AB07DE00E1DB20 /* SignInController.swift in Sources */,
+				F3ED9874243EE441008140FB /* ChangeAppIconController.swift in Sources */,
 				F35C560722321F8D00885215 /* Extensions.swift in Sources */,
 				F31FE2C522E6635400DBC702 /* PassDvdDelegate.swift in Sources */,
 				F3D9FE8421F28E1B00B864AA /* Results.swift in Sources */,
@@ -479,7 +487,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7BD5226242D983D332869CEA /* Pods-My Movies.debug.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = ZZE62SD4Y5;
@@ -501,7 +508,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 477D256E936B88304336D4EE /* Pods-My Movies.release.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = ZZE62SD4Y5;

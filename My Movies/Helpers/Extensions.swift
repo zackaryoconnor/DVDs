@@ -9,53 +9,56 @@
 import UIKit
 import Firebase
 
+
 extension UILabel {
-    convenience init(text: String, textColor: UIColor, fontSize: CGFloat, fontWeight: UIFont.Weight, textAlignment: NSTextAlignment, numberOfLines: Int) {
+    convenience init(text: String? = nil, textColor: UIColor? = .label, fontSize: CGFloat? = 17, fontWeight: UIFont.Weight? = .regular, textAlignment: NSTextAlignment? = .left, numberOfLines: Int? = 0) {
         self.init(frame: .zero)
         self.text = text
         self.textColor = textColor
-        self.font = UIFont.systemFont(ofSize: fontSize, weight: fontWeight)
-        self.textAlignment = textAlignment
-        self.numberOfLines = numberOfLines
+        self.font = UIFont.systemFont(ofSize: fontSize ?? 17, weight: fontWeight ?? .regular)
+        self.textAlignment = textAlignment ?? .left
+        self.numberOfLines = numberOfLines ?? 0
     }
 }
 
+
 extension UIImageView {
-    convenience init(image: String, cornerRadius: CGFloat) {
+    convenience init(image: String? = nil, cornerRadius: CGFloat? = 0) {
         self.init(image: nil)
-        self.image = UIImage(named: "\(image)")
-        self.layer.cornerRadius = cornerRadius
+        self.image = UIImage(named: "\(image ?? "")")
+        self.layer.cornerRadius = cornerRadius ?? 0
         self.clipsToBounds = true
         self.contentMode = .scaleAspectFill
     }
 }
 
+
 extension UIButton {
-    convenience init(title: String, backgroundColor: UIColor, setTitleColor: UIColor, font: UIFont, cornerRadius: CGFloat) {
+    convenience init(title: String? = nil, backgroundColor: UIColor? = .systemBlue, setTitleColor: UIColor? = .label, font: UIFont? = nil, cornerRadius: CGFloat? = nil) {
         self.init(type: .system)
         self.setTitle(title, for: .normal)
         self.backgroundColor = backgroundColor
         self.setTitleColor(setTitleColor, for: .normal)
         self.titleLabel?.font = font
-        self.layer.cornerRadius = cornerRadius
+        self.layer.cornerRadius = cornerRadius ?? 0
     }
 }
 
 
 extension UITextField {
-    convenience init(placeholder: String, keyboardType: UIKeyboardType, returnKeyType: UIReturnKeyType, autocorrectionType: UITextAutocorrectionType) {
+    convenience init(placeholder: String? = nil, keyboardType: UIKeyboardType? = .default, returnKeyType: UIReturnKeyType? = .default, autocorrectionType: UITextAutocorrectionType? = .default) {
         self.init(frame: .zero)
         self.placeholder = placeholder
-        self.keyboardType = keyboardType
-        self.returnKeyType = returnKeyType
+        self.keyboardType = keyboardType ?? .default
+        self.returnKeyType = returnKeyType ?? .default
         self.enablesReturnKeyAutomatically = true
-        self.autocorrectionType = autocorrectionType
+        self.autocorrectionType = autocorrectionType ?? .default
     }
 }
 
 
 extension UIView {
-    convenience init(backgroundColor: UIColor) {
+    convenience init(backgroundColor: UIColor? = .none) {
         self.init(frame: .zero)
         self.backgroundColor = backgroundColor
     }
@@ -63,10 +66,11 @@ extension UIView {
 
 
 extension UIStackView {
-    convenience init(arrangedSubviews: [UIView], customSpacing: CGFloat = 0, axis: NSLayoutConstraint.Axis = .vertical) {
+    convenience init(arrangedSubviews: [UIView], customSpacing: CGFloat = 0, axis: NSLayoutConstraint.Axis = .vertical, distribution: UIStackView.Distribution = .fillEqually) {
         self.init(arrangedSubviews: arrangedSubviews)
         self.spacing = customSpacing
         self.axis = axis
+        self.distribution = distribution
     }
 }
 
@@ -82,7 +86,7 @@ extension UIActivityIndicatorView {
 
 
 extension UIViewController {
-    func displayAlertController(title: String, message: String, buttonTitle: String) {
+    func displayAlertController(title: String? = nil, message: String? = nil, buttonTitle: String? = nil) {
         DispatchQueue.main.async {
             let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: buttonTitle, style: .default, handler: nil))
@@ -132,6 +136,7 @@ class CustomImageView: UIImageView {
         }.resume()
     }
 }
+
 
 
 

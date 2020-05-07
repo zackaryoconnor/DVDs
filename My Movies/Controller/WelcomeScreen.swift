@@ -15,15 +15,16 @@ class WelcomeScreen: UIViewController {
     
     // MARK: - views
     let dvdLogo = UIImageView(image: "", cornerRadius: 0)
+    
     let buttonCornerRadius: CGFloat = 12
     
-    let welcomeLabel = UILabel(text: "Welcome to DVD's", textColor: .label, fontSize: 36, fontWeight: .bold, textAlignment: .center, numberOfLines: 2)
+    let welcomeLabel = UILabel(text: "Welcome to DVDs", textColor: .label, fontSize: 36, fontWeight: .bold, textAlignment: .center, numberOfLines: 2)
     let welcomeDescriptionLabel = UILabel(text: "The best way to see what movies and TV Shows you own on DVD or Blu-ray", textColor: .label, fontSize: 17, fontWeight: .regular, textAlignment: .center, numberOfLines: 0)
     
-    lazy var logInButton = UIButton(title: "Sign in with email", backgroundColor: .systemBlue, setTitleColor: .white, font: .systemFont(ofSize: 17, weight: .medium), cornerRadius: buttonCornerRadius)
+    lazy var signInWithEmailButton = UIButton(title: "Sign in with email", backgroundColor: .systemBlue, setTitleColor: .white, font: .systemFont(ofSize: 17, weight: .medium), cornerRadius: buttonCornerRadius)
     let signUpButton = UIButton(title: "Don't have an accout? Sign up here", backgroundColor: .clear, setTitleColor: .lightGray, font: .systemFont(ofSize: 14, weight: .regular), cornerRadius: 0)
     
-    let googleButton = GIDSignInButton()
+    lazy var googleButton = UIButton(title: "Sign in with Google", backgroundColor: .white, setTitleColor: .systemGray2, font: .systemFont(ofSize: 17, weight: .medium), cornerRadius: buttonCornerRadius)
     
     
     // MARK: - view life cycle
@@ -36,7 +37,7 @@ class WelcomeScreen: UIViewController {
         GIDSignIn.sharedInstance()?.presentingViewController = self
         GIDSignIn.sharedInstance()?.delegate = self
         
-        //        setupWelcomeLabel()
+        setupWelcomeLabel()
         setupButtons()
     }
     
@@ -47,6 +48,7 @@ class WelcomeScreen: UIViewController {
         dvdLogo.constrainWidth(constant: 150)
         dvdLogo.clipsToBounds = true
         dvdLogo.contentMode = .scaleAspectFit
+        dvdLogo.backgroundColor = .systemGray3
         
         let welcomeStack = UIStackView(arrangedSubviews: [
             welcomeLabel,
@@ -64,34 +66,36 @@ class WelcomeScreen: UIViewController {
     
     
     fileprivate func setupButtons() {
-        logInButton.constrainHeight(constant: 54)
-        logInButton.addTarget(self, action: #selector(handleLogIn), for: .touchUpInside)
+        let buttonHeight: CGFloat = 54
+        
+        signInWithEmailButton.constrainHeight(constant: buttonHeight)
+        signInWithEmailButton.addTarget(self, action: #selector(handleLogIn), for: .touchUpInside)
         
         signUpButton.addTarget(self, action: #selector(handleSignUpButtonPressed), for: .touchUpInside)
         
-        googleButton.style = .wide
-        googleButton.colorScheme = .light
-        googleButton.addTarget(self, action: #selector(googleLogin), for: .touchUpInside)
+        let googleLogoImageView = UIImageView(image: "btn_google_light_normal_ios", cornerRadius: 0)
+        googleButton.constrainHeight(constant: buttonHeight)
+        googleButton.addTarget(self, action: #selector(handleGoogleLogin), for: .touchUpInside)
+        googleButton.addSubview(googleLogoImageView)
+        googleLogoImageView.anchor(top: googleButton.topAnchor, leading: googleButton.leadingAnchor, bottom: googleButton.bottomAnchor, trailing: nil, padding: .init(top: 4, left: 4, bottom: 4, right: 0))
         
         let logInButtonsStackview = UIStackView(arrangedSubviews: [
             googleButton,
-            logInButton,
-            UIView(),
-            signUpButton], customSpacing: 12)
+            signInWithEmailButton,
+            signUpButton], customSpacing: 12, distribution: .fillProportionally)
         view.addSubview(logInButtonsStackview)
         logInButtonsStackview.anchor(top: nil, leading: view.safeAreaLayoutGuide.leadingAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 0, left: 16, bottom: 16, right: 16))
     }
     
     
     // MARK: - @objc methods
-    @objc fileprivate func handleLogIn() {
-        present(LogInController(), animated: true, completion: nil)
+    @objc fileprivate func handleGoogleLogin() {
+        GIDSignIn.sharedInstance()?.signIn()
     }
     
     
-    @objc fileprivate func googleLogin() {
-        GIDSignIn.sharedInstance()?.delegate = self
-        GIDSignIn.sharedInstance()?.signIn()
+    @objc fileprivate func handleLogIn() {
+        present(SignInController(), animated: true, completion: nil)
     }
     
     
@@ -120,7 +124,6 @@ extension WelcomeScreen: GIDSignInDelegate {
         
         Auth.auth().signInAndRetrieveData(with: credentials) { (authResult, error) in
             if error != nil {
-                print(error?.localizedDescription)
                 if let errorCode = AuthErrorCode(rawValue: error?._code ?? 0) {
                     self.displayAlertController(title: "Error", message: errorCode.errorMessage, buttonTitle: "ok")
                 }
@@ -128,7 +131,7 @@ extension WelcomeScreen: GIDSignInDelegate {
                 
             } else {
                 let vc = DvdsController()
-                self.presentingViewController?.presentingViewController?.dismiss(animated: true, completion: {
+                self.presentingViewController?.dismiss(animated: true, completion: {
                     vc.collectionView.reloadData()
                     vc.checkIfUserHasMovies()
                 })

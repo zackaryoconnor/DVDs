@@ -73,6 +73,7 @@ class AddNewDvdCell: UICollectionViewCell {
         
         movieCoverImageView.constrainHeight(constant: frame.height)
         movieCoverImageView.constrainWidth(constant: 64)
+        movieCoverImageView.backgroundColor = .quaternarySystemFill
         
         let movieTitleAndDateStackView = UIStackView(arrangedSubviews: [
             movieTitleLabel,

@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class SignInController: SigninSignUpUIContoller {
+class SignInController: SignInSignUpUIContoller {
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,10 +30,9 @@ class SignInController: SigninSignUpUIContoller {
                 
                 return
             } else if Auth.auth().currentUser?.uid == Auth.auth().currentUser?.uid {
-                let vc = DvdsController()
                 self.presentingViewController?.presentingViewController?.dismiss(animated: true, completion: {
-                    vc.collectionView.reloadData()
-                    vc.checkIfUserHasMovies()
+                    dvdsController.collectionView.reloadData()
+                    dvdsController.checkIfUserHasMovies()
                 })
             }
         }
@@ -44,10 +43,12 @@ class SignInController: SigninSignUpUIContoller {
     @objc fileprivate func handleNeedAccountButtonPressed() {
         emailTextField.text = ""
         passwordTextField.text = ""
-        let vc = DvdsController()
-        vc.collectionView.reloadData()
-        vc.checkIfUserHasMovies()
-        present(SignUpController(), animated: true)
+        
+        weak var presentingController = self.presentingViewController
+        dismiss(animated: true, completion: {
+            presentingController?.present(SignUpController(), animated: true)
+        })
+        
     }
     
 }

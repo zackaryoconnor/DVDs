@@ -11,9 +11,12 @@ import Firebase
 
 class AddNewDvdCell: UICollectionViewCell {
     
+    static let identifier = "addNewDvdCellIdentifier"
+    
     var movie: Results! {
         didSet {
             guard let posterPath = movie.posterPath else { return }
+            guard let backdropPath = movie.backdropPath else { return }
             
             movieCoverImageView.loadImageUsingUrlString(urlString: movieCoverImageUrl + posterPath)
             
@@ -71,8 +74,8 @@ class AddNewDvdCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        movieCoverImageView.constrainHeight(constant: frame.height)
-        movieCoverImageView.constrainWidth(constant: 64)
+        movieCoverImageView.constrainHeight(constant: 95)
+        movieCoverImageView.constrainWidth(constant: 63.33)
         movieCoverImageView.backgroundColor = .quaternarySystemFill
         
         let movieTitleAndDateStackView = UIStackView(arrangedSubviews: [

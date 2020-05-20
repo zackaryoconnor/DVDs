@@ -165,3 +165,20 @@ extension AuthErrorCode {
         }
     }
 }
+
+
+
+
+let customGoogleButton: UIButton = {
+    let button = UIButton(title: "Sign in with Google", backgroundColor: .white, setTitleColor: .systemGray, font: .systemFont(ofSize: 17, weight: .medium), cornerRadius: buttonCornerRadius)
+    
+    let googleLogoImageView = UIImageView(image: "btn_google_light_normal_ios", cornerRadius: 0)
+    
+    button.constrainHeight(constant: buttonHeight)
+    button.layer.borderColor = UIColor.systemGray2.cgColor
+    button.layer.borderWidth = 0.5
+    button.addSubview(googleLogoImageView)
+    googleLogoImageView.anchor(top: button.topAnchor, leading: button.leadingAnchor, bottom: button.bottomAnchor, trailing: nil, padding: .init(top: 4, left: 4, bottom: 4, right: 0))
+    
+    return button
+}()

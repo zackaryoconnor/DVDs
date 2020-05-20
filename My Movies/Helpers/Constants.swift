@@ -10,17 +10,11 @@ import Foundation
 import Firebase
 
 
-enum EditMode {
-    case notEditing
-    case isEditing
-}
+let dvdsController = DvdsController()
+let addNewDvdController = AddNewDvdController()
+let welcomeController = WelcomeScreen()
 
-
-
-
-struct firebase {
-    
-}
+struct firebase {}
 
 let uid = Auth.auth().currentUser?.uid
 

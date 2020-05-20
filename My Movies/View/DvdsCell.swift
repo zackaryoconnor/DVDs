@@ -26,13 +26,15 @@ class DvdsCell: UICollectionViewCell {
     var dvd: SavedDvds! {
         didSet {
             guard let posterPath = dvd.posterPath else { return }
+            guard let backdropPath = dvd.backdropPath else { return }
             
             movieCoverImageView.loadImageUsingUrlString(urlString: movieCoverImageUrl + posterPath)
-                
+            
             movieTitleLabel.text = dvd.title
         }
     }
     
+    static let identifier = "dvdsCellIdentifier"
     
     let movieCoverImageView: CustomImageView = {
         let imageView = CustomImageView(image: "", cornerRadius: 6)
@@ -48,15 +50,15 @@ class DvdsCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        let posterHeight = frame.height - movieTitleLabel.frame.height - 36
-        movieCoverImageView.constrainWidth(constant: frame.width)
-        movieCoverImageView.constrainHeight(constant: posterHeight)
+        //        let posterHeight = frame.height - movieTitleLabel.frame.height - 36
+        movieCoverImageView.constrainWidth(constant: 164.67)
+        movieCoverImageView.constrainHeight(constant: 247)
+        //        movieCoverImageView.contentMode = .scaleAspectFill
+        movieCoverImageView.clipsToBounds = true
         movieCoverImageView.addSubview(redView)
         
-        let stackView = UIStackView(arrangedSubviews: [
-            movieCoverImageView,
-            movieTitleLabel
-            ])
+        let stackView = UIStackView(arrangedSubviews: [movieCoverImageView,
+                                                       movieTitleLabel])
         
         addSubview(stackView)
         stackView.axis = .vertical

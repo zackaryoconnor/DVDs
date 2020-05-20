@@ -11,20 +11,23 @@ import Firebase
 import FirebaseAuth
 import GoogleSignIn
 
+let buttonCornerRadius: CGFloat = 12
+let buttonHeight: CGFloat = 54
+
 class WelcomeScreen: UIViewController {
     
     // MARK: - views
     let dvdLogo = UIImageView(image: "", cornerRadius: 0)
     
-    let buttonCornerRadius: CGFloat = 12
-    
     let welcomeLabel = UILabel(text: "Welcome to DVDs", textColor: .label, fontSize: 36, fontWeight: .bold, textAlignment: .center, numberOfLines: 2)
-    let welcomeDescriptionLabel = UILabel(text: "The best way to see what movies and TV Shows you own on DVD or Blu-ray", textColor: .label, fontSize: 17, fontWeight: .regular, textAlignment: .center, numberOfLines: 0)
+    
+    let welcomeDescriptionLabel = UILabel(text: "The best way to keep track of the Movies and TV Shows you own on DVD or Blu-ray.", textColor: .label, fontSize: 17, fontWeight: .regular, textAlignment: .center, numberOfLines: 0)
     
     lazy var signInWithEmailButton = UIButton(title: "Sign in with email", backgroundColor: .systemBlue, setTitleColor: .white, font: .systemFont(ofSize: 17, weight: .medium), cornerRadius: buttonCornerRadius)
-    let signUpButton = UIButton(title: "Don't have an accout? Sign up here", backgroundColor: .clear, setTitleColor: .lightGray, font: .systemFont(ofSize: 14, weight: .regular), cornerRadius: 0)
+   
+    let signUpButton = UIButton(title: "Don't have an accout? Sign up here", backgroundColor: .clear, setTitleColor: .systemGray2, font: .systemFont(ofSize: 14, weight: .regular), cornerRadius: 0)
     
-    lazy var googleButton = UIButton(title: "Sign in with Google", backgroundColor: .white, setTitleColor: .systemGray2, font: .systemFont(ofSize: 17, weight: .medium), cornerRadius: buttonCornerRadius)
+    lazy var googleButton = customGoogleButton
     
     
     // MARK: - view life cycle
@@ -66,18 +69,12 @@ class WelcomeScreen: UIViewController {
     
     
     fileprivate func setupButtons() {
-        let buttonHeight: CGFloat = 54
-        
         signInWithEmailButton.constrainHeight(constant: buttonHeight)
         signInWithEmailButton.addTarget(self, action: #selector(handleLogIn), for: .touchUpInside)
         
         signUpButton.addTarget(self, action: #selector(handleSignUpButtonPressed), for: .touchUpInside)
         
-        let googleLogoImageView = UIImageView(image: "btn_google_light_normal_ios", cornerRadius: 0)
-        googleButton.constrainHeight(constant: buttonHeight)
         googleButton.addTarget(self, action: #selector(handleGoogleLogin), for: .touchUpInside)
-        googleButton.addSubview(googleLogoImageView)
-        googleLogoImageView.anchor(top: googleButton.topAnchor, leading: googleButton.leadingAnchor, bottom: googleButton.bottomAnchor, trailing: nil, padding: .init(top: 4, left: 4, bottom: 4, right: 0))
         
         let logInButtonsStackview = UIStackView(arrangedSubviews: [
             googleButton,
@@ -130,10 +127,9 @@ extension WelcomeScreen: GIDSignInDelegate {
                 return
                 
             } else {
-                let vc = DvdsController()
                 self.presentingViewController?.dismiss(animated: true, completion: {
-                    vc.collectionView.reloadData()
-                    vc.checkIfUserHasMovies()
+                    dvdsController.collectionView.reloadData()
+                    dvdsController.checkIfUserHasMovies()
                 })
             }
         }

@@ -1,5 +1,5 @@
 //
-//  SigninSignUpUIContoller.swift
+//  SignInSignUpUIContoller.swift
 //  My Movies
 //
 //  Created by Zackary O'Connor on 4/24/20.
@@ -9,10 +9,15 @@
 import UIKit
 import Firebase
 
-class SigninSignUpUIContoller: UIViewController, UITextFieldDelegate {
+class SignInSignUpUIContoller: UIViewController {
    
     // MARK: - views
-    let welcomeLabel = UILabel(text: "", textColor: .label, fontSize: 36, fontWeight: .bold, textAlignment: .left, numberOfLines: 0)
+    let scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        return scrollView
+    }()
+    
+    let welcomeLabel = UILabel(fontSize: 36, fontWeight: .bold)
     
     let emailTextField = UITextField(placeholder: "Email", keyboardType: .emailAddress, returnKeyType: .next, autocorrectionType: .no)
     let emailSeperatorView = UIView(backgroundColor: .lightGray)
@@ -20,15 +25,13 @@ class SigninSignUpUIContoller: UIViewController, UITextFieldDelegate {
     let passwordTextField = UITextField(placeholder: "Password", keyboardType: .default, returnKeyType: .go, autocorrectionType: .no)
     let passwordSeperatorView = UIView(backgroundColor: .lightGray)
 
-    let signInSignUpButton = UIButton(title: "", backgroundColor: .systemBlue, setTitleColor: .white, font: .systemFont(ofSize: 17, weight: .medium), cornerRadius: 12)
-    let needOrAlreadyHaveAccountButton = UIButton(title: "", backgroundColor: .clear, setTitleColor: .lightGray, font: .systemFont(ofSize: 14, weight: .regular), cornerRadius: 0)
+    let signInSignUpButton = UIButton(setTitleColor: .white, font: .systemFont(ofSize: 17, weight: .medium), cornerRadius: 12)
+    let needOrAlreadyHaveAccountButton = UIButton(backgroundColor: .clear, setTitleColor: .lightGray, font: .systemFont(ofSize: 14, weight: .regular), cornerRadius: 0)
     
     
     // MARK: - vars and lets
     let dividerHeight: CGFloat = 0.5
     let textFieldHeight: CGFloat = 46
-    
-    let moviesController = DvdsController()
     
     
     // MARK: - view life cycle
@@ -62,9 +65,8 @@ class SigninSignUpUIContoller: UIViewController, UITextFieldDelegate {
     
     fileprivate func setupWelcomeLabel() {
         view.addSubview(welcomeLabel)
-        welcomeLabel.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.safeAreaLayoutGuide.leadingAnchor, bottom: nil, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 64, left: padding, bottom: 0, right: padding))
+        welcomeLabel.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.safeAreaLayoutGuide.leadingAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 64, left: padding, bottom: 0, right: padding))
     }
-    
     
     
     fileprivate func setupTextFields() {
@@ -81,7 +83,12 @@ class SigninSignUpUIContoller: UIViewController, UITextFieldDelegate {
             UIStackView(arrangedSubviews: [emailTextField, emailSeperatorView], customSpacing: -4, distribution: .fillProportionally),
             UIStackView(arrangedSubviews: [passwordTextField, passwordSeperatorView], customSpacing: -4, distribution: .fillProportionally)
             ], customSpacing: 42)
-        view.addSubview(textFieldsStackview)
+        
+        view.addSubview(scrollView)
+        scrollView.fillSuperview()
+        
+        [textFieldsStackview].forEach { scrollView.addSubview($0) }
+        
         textFieldsStackview.centerInSuperview()
         textFieldsStackview.constrainWidth(constant: view.frame.width - 32)
     }
@@ -94,7 +101,7 @@ class SigninSignUpUIContoller: UIViewController, UITextFieldDelegate {
                                                                    needOrAlreadyHaveAccountButton], customSpacing: 16)
         
         view.addSubview(logInButtonsStackview)
-        logInButtonsStackview.anchor(top: nil, leading: view.safeAreaLayoutGuide.leadingAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 0, left: padding, bottom: padding, right: padding))
+        logInButtonsStackview.anchor(leading: view.safeAreaLayoutGuide.leadingAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 0, left: padding, bottom: padding, right: padding))
     }
     
     
@@ -112,4 +119,20 @@ class SigninSignUpUIContoller: UIViewController, UITextFieldDelegate {
         view.endEditing(true)
     }
     
+}
+
+
+
+
+extension SignInSignUpUIContoller: UITextFieldDelegate {
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        if textField == passwordTextField {
+            scrollView.setContentOffset(CGPoint(x: 0, y: 42), animated: true)
+        }
+    }
+    
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
+    }
 }

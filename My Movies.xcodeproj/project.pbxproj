@@ -8,15 +8,19 @@
 
 /* Begin PBXBuildFile section */
 		B37CDDCAA18BF0E1EF26DF07 /* Pods_My_Movies.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA0F96DB2A7058B5ECA9B853 /* Pods_My_Movies.framework */; };
-		F308D27E24529A54005A3285 /* dark_app_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = F308D27D24529A54005A3285 /* dark_app_icon.png */; };
+		F30B85232464ED1C005E2357 /* CheckForConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = F30B85222464ED1C005E2357 /* CheckForConnection.swift */; };
+		F30B85272464F610005E2357 /* BaseNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F30B85262464F610005E2357 /* BaseNavigationController.swift */; };
+		F30B852924664CA0005E2357 /* AddNewDvdHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F30B852824664CA0005E2357 /* AddNewDvdHeaderCell.swift */; };
 		F31FE2C522E6635400DBC702 /* PassDvdDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F31FE2C422E6635400DBC702 /* PassDvdDelegate.swift */; };
 		F3469A8322AB07DE00E1DB20 /* SignInController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3469A8222AB07DE00E1DB20 /* SignInController.swift */; };
 		F3469A8522AB16EA00E1DB20 /* SignUpController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3469A8422AB16EA00E1DB20 /* SignUpController.swift */; };
-		F34758F62453C3C6008DCE67 /* SigninSignUpUIContoller.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34758F52453C3C6008DCE67 /* SigninSignUpUIContoller.swift */; };
+		F34758F62453C3C6008DCE67 /* SignInSignUpUIContoller.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34758F52453C3C6008DCE67 /* SignInSignUpUIContoller.swift */; };
 		F35C560722321F8D00885215 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35C560622321F8D00885215 /* Extensions.swift */; };
 		F35C56092232272100885215 /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35C56082232272100885215 /* Service.swift */; };
-		F36B5648244D638400222D2C /* app_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = F36B5647244D638400222D2C /* app_icon.png */; };
+		F36C7FCA2475A144009CE7B8 /* App_Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = F36C7FC92475A144009CE7B8 /* App_Icon.png */; };
 		F3773C1D225E91BD00C1341E /* SavedDvds.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3773C1C225E91BD00C1341E /* SavedDvds.swift */; };
+		F37E898D246652AA00E753CD /* HandleSignout.swift in Sources */ = {isa = PBXBuildFile; fileRef = F37E898C246652AA00E753CD /* HandleSignout.swift */; };
+		F390132B246FA2A100C4792A /* DvdsFooterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F390132A246FA2A100C4792A /* DvdsFooterCell.swift */; };
 		F3BA2FC323847EA9002EE1A1 /* WelcomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3BA2FC223847EA9002EE1A1 /* WelcomeScreen.swift */; };
 		F3D9FE5D21F2790E00B864AA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9FE5C21F2790E00B864AA /* AppDelegate.swift */; };
 		F3D9FE5F21F2790E00B864AA /* DvdsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9FE5E21F2790E00B864AA /* DvdsController.swift */; };
@@ -37,15 +41,19 @@
 		477D256E936B88304336D4EE /* Pods-My Movies.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-My Movies.release.xcconfig"; path = "Pods/Target Support Files/Pods-My Movies/Pods-My Movies.release.xcconfig"; sourceTree = "<group>"; };
 		7BD5226242D983D332869CEA /* Pods-My Movies.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-My Movies.debug.xcconfig"; path = "Pods/Target Support Files/Pods-My Movies/Pods-My Movies.debug.xcconfig"; sourceTree = "<group>"; };
 		DA0F96DB2A7058B5ECA9B853 /* Pods_My_Movies.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_My_Movies.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		F308D27D24529A54005A3285 /* dark_app_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = dark_app_icon.png; path = "Assets/App Icons/dark_app_icon.png"; sourceTree = SOURCE_ROOT; };
+		F30B85222464ED1C005E2357 /* CheckForConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckForConnection.swift; sourceTree = "<group>"; };
+		F30B85262464F610005E2357 /* BaseNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseNavigationController.swift; sourceTree = "<group>"; };
+		F30B852824664CA0005E2357 /* AddNewDvdHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNewDvdHeaderCell.swift; sourceTree = "<group>"; };
 		F31FE2C422E6635400DBC702 /* PassDvdDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassDvdDelegate.swift; sourceTree = "<group>"; };
 		F3469A8222AB07DE00E1DB20 /* SignInController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInController.swift; sourceTree = "<group>"; };
 		F3469A8422AB16EA00E1DB20 /* SignUpController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpController.swift; sourceTree = "<group>"; };
-		F34758F52453C3C6008DCE67 /* SigninSignUpUIContoller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SigninSignUpUIContoller.swift; sourceTree = "<group>"; };
+		F34758F52453C3C6008DCE67 /* SignInSignUpUIContoller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInSignUpUIContoller.swift; sourceTree = "<group>"; };
 		F35C560622321F8D00885215 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		F35C56082232272100885215 /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
-		F36B5647244D638400222D2C /* app_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = app_icon.png; sourceTree = "<group>"; };
+		F36C7FC92475A144009CE7B8 /* App_Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = App_Icon.png; path = "Assets/App Icons/App_Icon.png"; sourceTree = SOURCE_ROOT; };
 		F3773C1C225E91BD00C1341E /* SavedDvds.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedDvds.swift; sourceTree = "<group>"; };
+		F37E898C246652AA00E753CD /* HandleSignout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandleSignout.swift; sourceTree = "<group>"; };
+		F390132A246FA2A100C4792A /* DvdsFooterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DvdsFooterCell.swift; sourceTree = "<group>"; };
 		F3970C84227681FB008FCE78 /* My Movies.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "My Movies.entitlements"; sourceTree = "<group>"; };
 		F3BA2FC223847EA9002EE1A1 /* WelcomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeScreen.swift; sourceTree = "<group>"; };
 		F3D9FE5921F2790E00B864AA /* My Movies.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "My Movies.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -133,14 +141,17 @@
 		F3D9FE7C21F28CFD00B864AA /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				F30B85262464F610005E2357 /* BaseNavigationController.swift */,
 				F3BA2FC223847EA9002EE1A1 /* WelcomeScreen.swift */,
 				F3FC3956224DAF5F00B2F51F /* BaseListController.swift */,
 				F3D9FE5E21F2790E00B864AA /* DvdsController.swift */,
 				F3D9FE7821F287D300B864AA /* AddNewDvdController.swift */,
+				F30B85222464ED1C005E2357 /* CheckForConnection.swift */,
 				F3469A8222AB07DE00E1DB20 /* SignInController.swift */,
 				F3469A8422AB16EA00E1DB20 /* SignUpController.swift */,
-				F34758F52453C3C6008DCE67 /* SigninSignUpUIContoller.swift */,
+				F34758F52453C3C6008DCE67 /* SignInSignUpUIContoller.swift */,
 				F3ED9873243EE441008140FB /* ChangeAppIconController.swift */,
+				F37E898C246652AA00E753CD /* HandleSignout.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -150,6 +161,8 @@
 			children = (
 				F3D9FE6E21F27C1B00B864AA /* DvdsCell.swift */,
 				F3D9FE7A21F287E200B864AA /* AddNewDvdCell.swift */,
+				F390132A246FA2A100C4792A /* DvdsFooterCell.swift */,
+				F30B852824664CA0005E2357 /* AddNewDvdHeaderCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -177,8 +190,7 @@
 		F3F4C2772365015C005B0DBC /* Icons */ = {
 			isa = PBXGroup;
 			children = (
-				F36B5647244D638400222D2C /* app_icon.png */,
-				F308D27D24529A54005A3285 /* dark_app_icon.png */,
+				F36C7FC92475A144009CE7B8 /* App_Icon.png */,
 			);
 			path = Icons;
 			sourceTree = "<group>";
@@ -262,10 +274,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F36B5648244D638400222D2C /* app_icon.png in Resources */,
-				F308D27E24529A54005A3285 /* dark_app_icon.png in Resources */,
 				F3D9FE6721F2791000B864AA /* LaunchScreen.storyboard in Resources */,
 				F3D9FE6421F2791000B864AA /* Assets.xcassets in Resources */,
+				F36C7FCA2475A144009CE7B8 /* App_Icon.png in Resources */,
 				F3F4C276236500CC005B0DBC /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -333,13 +344,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				F3D9FE5F21F2790E00B864AA /* DvdsController.swift in Sources */,
+				F30B852924664CA0005E2357 /* AddNewDvdHeaderCell.swift in Sources */,
 				F3D9FE6F21F27C1B00B864AA /* DvdsCell.swift in Sources */,
+				F390132B246FA2A100C4792A /* DvdsFooterCell.swift in Sources */,
 				F3D9FE7B21F287E200B864AA /* AddNewDvdCell.swift in Sources */,
 				F3D9FE5D21F2790E00B864AA /* AppDelegate.swift in Sources */,
-				F34758F62453C3C6008DCE67 /* SigninSignUpUIContoller.swift in Sources */,
+				F34758F62453C3C6008DCE67 /* SignInSignUpUIContoller.swift in Sources */,
 				F3FC3955224DAE7800B2F51F /* UIView+Layout.swift in Sources */,
+				F37E898D246652AA00E753CD /* HandleSignout.swift in Sources */,
 				F35C56092232272100885215 /* Service.swift in Sources */,
 				F3469A8322AB07DE00E1DB20 /* SignInController.swift in Sources */,
+				F30B85272464F610005E2357 /* BaseNavigationController.swift in Sources */,
 				F3ED9874243EE441008140FB /* ChangeAppIconController.swift in Sources */,
 				F35C560722321F8D00885215 /* Extensions.swift in Sources */,
 				F31FE2C522E6635400DBC702 /* PassDvdDelegate.swift in Sources */,
@@ -348,6 +363,7 @@
 				F3D9FE7921F287D300B864AA /* AddNewDvdController.swift in Sources */,
 				F3469A8522AB16EA00E1DB20 /* SignUpController.swift in Sources */,
 				F3FC3957224DAF5F00B2F51F /* BaseListController.swift in Sources */,
+				F30B85232464ED1C005E2357 /* CheckForConnection.swift in Sources */,
 				F3773C1D225E91BD00C1341E /* SavedDvds.swift in Sources */,
 				F3D9FE8221F28D9400B864AA /* Constants.swift in Sources */,
 			);

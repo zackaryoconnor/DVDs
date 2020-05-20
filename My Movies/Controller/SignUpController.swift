@@ -9,12 +9,12 @@
 import UIKit
 import Firebase
 
-class SignUpController: SigninSignUpUIContoller {
+class SignUpController: SignInSignUpUIContoller {
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setupUI(welcomeLabelText: "Sign Up", signInSignUpButtonText: "Sign Up cuz", signInSignUpButtonSelector: #selector(handleSignUpUser), needOrAlreadyHaveAccountButtonText: "Already have an accout? Tap here.", needOrAlreadyHaveAccountButtonSelector: #selector(handleAlreadyHaveAccountButtonPressed))
+        setupUI(welcomeLabelText: "Sign Up", signInSignUpButtonText: "Sign Up", signInSignUpButtonSelector: #selector(handleSignUpUser), needOrAlreadyHaveAccountButtonText: "Already have an accout? Tap here.", needOrAlreadyHaveAccountButtonSelector: #selector(handleAlreadyHaveAccountButtonPressed))
     }
     
     
@@ -42,10 +42,12 @@ class SignUpController: SigninSignUpUIContoller {
     @objc func handleAlreadyHaveAccountButtonPressed() {
         emailTextField.text = ""
         passwordTextField.text = ""
-        dismiss(animated: true)
-        DispatchQueue.main.asyncAfter(deadline: .now()) {
-            self.present(SignInController(), animated: true)
-        }
+        
+        weak var presentingController = self.presentingViewController
+        dismiss(animated: true, completion: {
+            presentingController?.present(SignInController(), animated: true)
+        })
+        
     }
     
 }

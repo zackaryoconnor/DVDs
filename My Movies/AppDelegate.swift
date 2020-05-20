@@ -10,23 +10,6 @@ import UIKit
 import Firebase
 import GoogleSignIn
 
-public func baseNavController(viewController: UIViewController, title: String, searchControllerText: String? = nil) -> UIViewController {
-    let navigationController = UINavigationController(rootViewController: viewController)
-    let searchController = UISearchController(searchResultsController: nil)
-    
-    navigationController.navigationBar.prefersLargeTitles = true
-    
-    searchController.searchBar.placeholder = searchControllerText
-    searchController.obscuresBackgroundDuringPresentation = false
-    searchController.definesPresentationContext = true
-    
-    viewController.navigationItem.searchController = searchController
-    viewController.navigationItem.title = title
-    viewController.view.backgroundColor = .systemBackground
-    
-    return navigationController    
-}
-
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -42,7 +25,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         GIDSignIn.sharedInstance().delegate = self
         
         window = UIWindow(frame: UIScreen.main.bounds)
-        window?.rootViewController = baseNavController(viewController: DvdsController(), title: "Library", searchControllerText: "Search movies you own...")
+//        window?.rootViewController = baseNavController(viewController: DvdsController(), title: "Library", searchControllerText: "Search movies you own...")
+        window?.rootViewController = BaseNavigationController.shared.controller(viewController: DvdsController(), title: "Library", searchControllerText: "Search movies you own...")
         window?.makeKeyAndVisible()
         
         return true
@@ -53,7 +37,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         if shortcutItem.type == "com.zackaryoconnor.My-Movies.SearchAction" {
             let addNewDvdController = AddNewDvdController()
-            let searchController = baseNavController(viewController: addNewDvdController, title: "Search", searchControllerText: "")
+//            let searchController = baseNavController(viewController: addNewDvdController, title: "Search", searchControllerText: "")
+            let searchController = BaseNavigationController.shared.controller(viewController: addNewDvdController, title: "Search", searchControllerText: "")
             window?.rootViewController?.present(searchController, animated: true, completion: {
                 addNewDvdController.searchController.isActive = true
                 DispatchQueue.main.async {

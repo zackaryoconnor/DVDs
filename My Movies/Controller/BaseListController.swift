@@ -10,6 +10,10 @@ import UIKit
 import Firebase
 
 class BaseListController: UICollectionViewController {
+    
+    static let shared = BaseListController()
+    
+    let searchController = UISearchController(searchResultsController: nil)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,6 +25,11 @@ class BaseListController: UICollectionViewController {
         collectionView.isUserInteractionEnabled = true
         collectionView.alwaysBounceVertical = true
         collectionView.allowsSelection = false
+        
+        navigationItem.searchController = self.searchController
+        searchController.searchResultsUpdater = self
+        searchController.searchBar.delegate = self
+        searchController.obscuresBackgroundDuringPresentation = false
         
         checkIfUserIsLoggedIn()
     }
@@ -36,7 +45,8 @@ class BaseListController: UICollectionViewController {
             }
         }
     }
-
+    
+    
 
     init() {
         super.init(collectionViewLayout: UICollectionViewFlowLayout())
@@ -49,3 +59,22 @@ class BaseListController: UICollectionViewController {
 }
 
 
+
+
+extension BaseListController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {}
+    
+    func searchBarIsEmpty() -> Bool {
+        return searchController.searchBar.text?.isEmpty ?? true
+    }
+    
+    
+    func isFiltering() -> Bool {
+        return searchController.isActive && !searchBarIsEmpty()
+    }
+}
+
+
+
+
+extension BaseListController: UISearchBarDelegate {}

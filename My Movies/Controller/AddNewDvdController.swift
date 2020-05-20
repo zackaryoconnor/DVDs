@@ -15,17 +15,13 @@ class AddNewDvdController: BaseListController {
     fileprivate let noConnectionLabel = UILabel(text: "", textColor: .label, fontSize: 17, fontWeight: .regular, textAlignment: .center, numberOfLines: 0)
     fileprivate let activitityIndicator = UIActivityIndicatorView(indicatorColor: .systemBackground)
     
-    let searchController = UISearchController(searchResultsController: nil)
-    fileprivate let cellId = "Cell"
-    fileprivate var moviesVC: DvdsController!
     fileprivate var timer: Timer?
     lazy fileprivate var popularMovies = [Results]()
     var delegate: PassDvdDelegate?
     var selectedMovie: Results?
     
-    fileprivate let headerCellId = "headerCellId"
     
-    
+
     
     // MARK: - view life cycle
     override func viewDidLoad() {
@@ -35,25 +31,22 @@ class AddNewDvdController: BaseListController {
         setupActivityIndicatorView()
         setUpNavBar()
         fetchPopularMovies()
-        checkForConnection()
+        
+        CheckForConnection.shared.connectionStatusOf(self)
     }
     
     
     // MARK: - setup
     fileprivate func setupCollectionView() {
-        collectionView.register(AddNewDvdCell.self, forCellWithReuseIdentifier: cellId)
+        collectionView.register(AddNewDvdCell.self, forCellWithReuseIdentifier: AddNewDvdCell.identifier)
         collectionView.allowsMultipleSelection = true
     
-        collectionView.register(UICollectionViewCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerCellId)
+        collectionView.register(AddNewDvdHeaderCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: AddNewDvdHeaderCell.identifier)
     }
     
     
     fileprivate func setUpNavBar() {
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(handleDismissController))
-        navigationItem.searchController = self.searchController
-        
-        searchController.searchBar.delegate = self
-        searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.placeholder = "Search for a DVD..."
     }
     
@@ -81,35 +74,6 @@ class AddNewDvdController: BaseListController {
                 }
             }
         })
-    }
-    
-    
-    fileprivate func checkForConnection() {
-        firebaseCheckForConnectionReference.observe(.value) { (snapshot) in
-            if let connected = snapshot.value as? Bool, connected {
-                self.collectionView.isHidden = false
-                self.noConnectionLabel.isHidden = true
-                
-                self.searchController.searchBar.isHidden = false
-                self.navigationItem.title = "Search"
-            } else {
-                
-                self.collectionView.isHidden = true
-                self.view.backgroundColor = .systemBackground
-                
-                let attributedString = NSMutableAttributedString(string: "Cannot connect to the Internet.", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 36)])
-                let normalString = NSMutableAttributedString(string: "\n\nYou must connect to WI-Fi or cellular data network to access the search feature.")
-                attributedString.append(normalString)
-                
-                self.view.addSubview(self.noConnectionLabel)
-                self.noConnectionLabel.attributedText = attributedString
-                self.noConnectionLabel.isHidden = false
-                self.noConnectionLabel.fillSuperview(padding: .init(top: padding, left: padding, bottom: padding, right: padding))
-                
-                self.searchController.searchBar.isHidden = true
-                self.navigationItem.title = ""
-            }
-        }
     }
     
     
@@ -149,7 +113,7 @@ extension AddNewDvdController: UICollectionViewDelegateFlowLayout  {
         
         checkForMovies(indexPath: indexPath)
         
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! AddNewDvdCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AddNewDvdCell.identifier, for: indexPath) as! AddNewDvdCell
         cell.movie = self.popularMovies[indexPath.item]
         return cell
     }
@@ -179,6 +143,7 @@ extension AddNewDvdController: UICollectionViewDelegateFlowLayout  {
                 if !snapshot.hasChild("\(selectedDvd.id ?? 0)") {
                     childRef.child(selectedDvd.title ?? "").setValue(["title": selectedDvd.title as AnyObject,
                                                                       "posterPath": selectedDvd.posterPath as AnyObject,
+                                                                      "backdropPath": selectedDvd.backdropPath as AnyObject,
                                                                       "id": selectedDvd.id as AnyObject])
                     
                     guard let uid = Auth.auth().currentUser?.uid else { return }
@@ -190,7 +155,7 @@ extension AddNewDvdController: UICollectionViewDelegateFlowLayout  {
                         collectionView.reloadData()
                     }
                     
-                    self.delegate?.passDvd(movie: SavedDvds.init(id: selectedDvd.id ?? 0, title: selectedDvd.title ?? "", posterPath: selectedDvd.posterPath  ?? ""))
+                    self.delegate?.passDvd(movie: SavedDvds.init(id: selectedDvd.id ?? 0, title: selectedDvd.title ?? "", posterPath: selectedDvd.posterPath  ?? "", backdropPath: selectedDvd.backdropPath ?? ""))
                     
                     self.searchController.searchBar.text = ""
                     self.fetchPopularMovies()
@@ -211,19 +176,12 @@ extension AddNewDvdController: UICollectionViewDelegateFlowLayout  {
     
     
     
-    
 //    header
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerCellId, for: indexPath)
-        header.backgroundColor = .secondarySystemBackground
-        let label = UILabel(text: "Unfortunately you can not add the TV shows you own on DVD just yet. ☹️", textColor: .label, fontSize: 17, fontWeight: .regular, textAlignment: .left, numberOfLines: 0)
-        
-        header.addSubview(label)
-        let inset: CGFloat = 16
-        label.fillSuperview(padding: .init(top: inset, left: inset, bottom: inset, right: inset))
-        
+        let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: AddNewDvdHeaderCell.identifier, for: indexPath) as! AddNewDvdHeaderCell
         return header
     }
+ 
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         return .init(width: view.frame.width, height: 80)
@@ -235,7 +193,7 @@ extension AddNewDvdController: UICollectionViewDelegateFlowLayout  {
 
 
 // MARK: - searchBarDelegate
-extension AddNewDvdController: UISearchBarDelegate {
+extension AddNewDvdController {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         timer?.invalidate()
         

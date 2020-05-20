@@ -10,5 +10,5 @@ import UIKit
 
 struct SavedDvds {
     let id: Int?
-    let title, posterPath: String?
+    let title, posterPath, backdropPath: String?
 }

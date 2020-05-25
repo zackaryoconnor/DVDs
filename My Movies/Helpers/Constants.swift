@@ -26,15 +26,12 @@ let firebaseAccountMoviesReference = "account-movies"
 let firebaseCurrentUserEmail = Auth.auth().currentUser?.email
 
 
-
 fileprivate let apiKey = "c74a05860eaa0b6c8f22aa1b8342691c"
 let query = "&query="
 let language = "&language=en-US"
 let includeAdultContent = "&include_adult=false"
 
-struct tmdb {
-    
-}
+struct tmdb {}
 
 let movieCoverImageUrl = "https://image.tmdb.org/t/p/w500/"
 let moviesUrl = "https://api.themoviedb.org/3/movie/popular?api_key=\(apiKey)\(language)"

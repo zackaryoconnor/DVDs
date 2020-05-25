@@ -12,20 +12,14 @@ struct BaseNavigationController {
     
     static let shared = BaseNavigationController()
     
-    
-    
-    func controller(viewController: UIViewController, title: String, searchControllerText: String? = nil, searchControllerPlaceholderText: String? = nil) -> UIViewController {
+    func controller(viewController: UIViewController, title: String, searchControllerPlaceholderText: String?) -> UIViewController {
         
         let navigationController = UINavigationController(rootViewController: viewController)
         navigationController.navigationBar.prefersLargeTitles = true
         
-        let searchController = UISearchController(searchResultsController: nil)
-        searchController.obscuresBackgroundDuringPresentation = false
-        searchController.definesPresentationContext = true
-        searchController.searchBar.placeholder = searchControllerText
-        searchController.searchBar.placeholder = searchControllerPlaceholderText
         
-        viewController.navigationItem.searchController = searchController
+        
+//        viewController.navigationItem.searchController = searchController
         viewController.navigationItem.title = title
         viewController.view.backgroundColor = .systemBackground
         

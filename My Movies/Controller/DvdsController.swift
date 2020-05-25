@@ -5,7 +5,6 @@
 //  Created by Zackary O'Connor on 1/18/19.
 //  Copyright © 2019 Zackary O'Connor. All rights reserved.
 //
-
 import UIKit
 import Firebase
 import FirebaseDatabase
@@ -16,6 +15,7 @@ class DvdsController: BaseListController {
     // MARK: - views
     let activitityIndicator = UIActivityIndicatorView(indicatorColor: .darkGray)
     let placeholderText = UILabel(text: "\n\nClick the '+' to add a movie\n to your library.", textColor: .label, fontSize: 24, fontWeight: .medium, textAlignment: .center, numberOfLines: 0)
+    let searchController = UISearchController(searchResultsController: nil)
     
     lazy var editButton: UIBarButtonItem = {
         let button = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(handleEditButtonPressed))
@@ -23,7 +23,7 @@ class DvdsController: BaseListController {
     }()
     
     lazy var logoutButton: UIBarButtonItem = {
-        let button = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleSignout))
+        let button = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogOut))
         return button
     }()
     
@@ -39,6 +39,8 @@ class DvdsController: BaseListController {
     
     
     // MARK: - vars and lets
+    fileprivate let cellId = "Cell"
+    
     var myDvds = [SavedDvds]() {
         didSet {
             DispatchQueue.main.async {
@@ -53,39 +55,38 @@ class DvdsController: BaseListController {
     var selectedIndexPath: [IndexPath: Bool] = [:]
     var index: IndexPath!
     
+   enum EditMode {
+            case notEditing
+            case isEditing
+        }
     
-    enum EditMode {
-        case notEditing
-        case isEditing
-    }
-
-    var editMode: EditMode = .notEditing {
-        didSet {
-            switch editMode {
-            case .notEditing:
-                for (key, value) in selectedIndexPath {
-                    if value {
-                        collectionView.deselectItem(at: key, animated: true)
+        var editMode: EditMode = .notEditing {
+            didSet {
+                switch editMode {
+                case .notEditing:
+                    for (key, value) in selectedIndexPath {
+                        if value {
+                            collectionView.deselectItem(at: key, animated: true)
+                        }
                     }
+    
+                    editButton.title = "Edit"
+                    navigationItem.leftBarButtonItems = [editButton]
+                    navigationItem.rightBarButtonItem = addNewMovieButton
+                    collectionView.allowsMultipleSelection = false
+                    collectionView.allowsSelection = false
+    
+                case .isEditing:
+                    editButton.title = "Cancel"
+                    logoutButton.tintColor = .red
+                    navigationItem.leftBarButtonItems = [editButton, logoutButton]
+                    navigationItem.rightBarButtonItem = deleteButton
+                    navigationItem.rightBarButtonItem?.isEnabled = false
+                    collectionView.allowsMultipleSelection = false
+                    collectionView.allowsSelection = true
                 }
-
-                editButton.title = "Edit"
-                navigationItem.leftBarButtonItems = [editButton]
-                navigationItem.rightBarButtonItem = addNewMovieButton
-                collectionView.allowsMultipleSelection = false
-                collectionView.allowsSelection = false
-
-            case .isEditing:
-                editButton.title = "Cancel"
-                logoutButton.tintColor = .red
-                navigationItem.leftBarButtonItems = [editButton, logoutButton]
-                navigationItem.rightBarButtonItem = deleteButton
-                navigationItem.rightBarButtonItem?.isEnabled = false
-                collectionView.allowsMultipleSelection = false
-                collectionView.allowsSelection = true
             }
         }
-    }
     
     
     // MARK: - view life cycle
@@ -93,6 +94,7 @@ class DvdsController: BaseListController {
         super.viewDidLoad()
         
         setUpNavBar()
+        setUpSearchBar()
         setupCollectionView()
         setupActivityIndicatorView()
         setupPlaceholderTextView()
@@ -101,12 +103,12 @@ class DvdsController: BaseListController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
         checkIfUserHasMovies()
         
         DispatchQueue.main.async {
             self.collectionView.reloadData()
         }
+        
     }
     
     
@@ -116,13 +118,18 @@ class DvdsController: BaseListController {
         navigationItem.leftBarButtonItem = editButton
         navigationItem.hidesSearchBarWhenScrolling = true
         navigationItem.searchController = searchController
+    }
+    
+    
+    fileprivate func setUpSearchBar() {
+        searchController.searchResultsUpdater = self
+        searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.placeholder = "Search movies you own..."
     }
     
     
     fileprivate func setupCollectionView() {
-        collectionView.register(DvdsCell.self, forCellWithReuseIdentifier: DvdsCell.identifier)
-        collectionView.register(DvdsFooterCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: DvdsFooterCell.identifier)
+        collectionView.register(DvdsCell.self, forCellWithReuseIdentifier: cellId)
         collectionView.isScrollEnabled = false
         collectionView.isHidden = true
     }
@@ -145,8 +152,9 @@ class DvdsController: BaseListController {
     enum DvdsInCollection {
         case yes, no
     }
-    
+
     func dvdsInCollection(_ dvdsInCollection: DvdsInCollection) {
+        
         switch dvdsInCollection {
         case .yes:
             placeholderText.isHidden = true
@@ -174,15 +182,15 @@ class DvdsController: BaseListController {
             })
         }
     }
-
     
-
+    
     fileprivate func fetchUsersMovies() {
         guard let uid = Auth.auth().currentUser?.uid else { return }
         firebaseDatabaseReference.child(firebaseAccountMoviesReference).child(uid).observe(.childAdded, with: { (snapshot) in
+            
             self.myDvds.removeAll()
             self.collectionView.reloadData()
-
+            
             firebaseDatabaseReference.child(firebaseMoviesReference).child(snapshot.key).observeSingleEvent(of: .value, with: { (snapshot) in
                 for child in snapshot.children {
                     if let childSnapshot = child as? DataSnapshot,
@@ -203,62 +211,51 @@ class DvdsController: BaseListController {
         })
     }
     
-    
-    
+
+
     
     
     // MARK: - @objc methods
     @objc func handleEditButtonPressed() {
         editMode = editMode == .notEditing ? .isEditing : .notEditing
-        
     }
     
     
     @objc func handleDeleteButtonPressed() {
         let dvdToDelete = "\(myDvds[index.item].title ?? "")(\(myDvds[index.item].id ?? 0))"
         firebaseDatabaseReference.child(firebaseAccountMoviesReference).child(uid ?? "").child(dvdToDelete).removeValue()
-        
+
         self.myDvds.removeAll()
-        editMode = .notEditing
+        self.editMode = .notEditing
     }
     
     
-    @objc fileprivate func handleAddNewMovie() {
-        addNewDvdController.delegate = self
+   @objc fileprivate func handleAddNewMovie() {
+            addNewDvdController.delegate = self
     
-        let addNewMovieSearchController = BaseNavigationController.shared.controller(viewController: addNewDvdController, title: "Search", searchControllerText: "")
-        present(addNewMovieSearchController, animated: true)
-    }
+            let addNewMovieSearchController = BaseNavigationController.shared.controller(viewController: addNewDvdController, title: "Search", searchControllerPlaceholderText: "")
+            present(addNewMovieSearchController, animated: true)
+        }
     
     
-    @objc func handleSignout() {
-        HandleSignout().signout(completion: {
-            editMode = .notEditing
-            present(welcomeController, animated: true, completion: {
-                self.myDvds.removeAll()
-                self.collectionView.reloadData()
-            })
-        })
+    @objc  func handleLogOut() {
+        do {
+            try Auth.auth().signOut()
+        } catch let signOutError {
+            if let errorCode = AuthErrorCode(rawValue: signOutError._code) {
+                self.displayAlertController(title: "Error", message: errorCode.errorMessage, buttonTitle: "ok")
+            }
+        }
         
+        editMode = .notEditing
+        let welcomeVc = WelcomeScreen()
+        welcomeVc.modalPresentationStyle = .fullScreen
+        present(welcomeVc, animated: true, completion: {
+            self.myDvds.removeAll()
+            self.collectionView.reloadData()
+        })
     }
     
-}
-
-
-
-
-// MARK: - footer
-extension DvdsController {
-    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let footer = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: DvdsFooterCell.identifier, for: indexPath) as! DvdsFooterCell
-        footer.label.text = "Total DVDs: \(myDvds.count)"
-        return footer
-    }
-    
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-        return .init(width: view.frame.width, height: 54)
-    }
 }
 
 
@@ -279,7 +276,7 @@ extension DvdsController: UICollectionViewDelegateFlowLayout {
         
         let filteredMovie: SavedDvds
         
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DvdsCell.identifier, for: indexPath) as! DvdsCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! DvdsCell
         cell.dvd = myDvds[indexPath.item]
         
         if isFiltering() {
@@ -287,7 +284,6 @@ extension DvdsController: UICollectionViewDelegateFlowLayout {
         } else {
             filteredMovie = myDvds[indexPath.item]
         }
-        
         
         cell.movieCoverImageView.loadImageUsingUrlString(urlString: movieCoverImageUrl + (filteredMovie.posterPath ?? ""))
         cell.movieTitleLabel.text = filteredMovie.title
@@ -298,12 +294,12 @@ extension DvdsController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         // change height to 116, after the poster path is changed to backdrop path
-        return CGSize(width: view.frame.width / 2 - 24, height: 276)
+        return CGSize(width: view.frame.width / 2 - 24, height: 300)
     }
     
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
+        return UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
     }
     
     
@@ -357,12 +353,17 @@ extension DvdsController: PassDvdDelegate {
 
 
 // MARK: - searchResults methods
-extension DvdsController {
-    override func updateSearchResults(for searchController: UISearchController) {
+extension DvdsController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
         timer?.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: false, block: { (_) in
             self.filterContentForSearchText(searchController.searchBar.text!)
         })
+    }
+    
+    
+    fileprivate func searchBarIsEmpty() -> Bool {
+        return searchController.searchBar.text?.isEmpty ?? true
     }
     
     
@@ -371,6 +372,11 @@ extension DvdsController {
             return movie.title!.lowercased().contains(searchText.lowercased())
         })
         collectionView.reloadData()
+    }
+    
+    
+    fileprivate func isFiltering() -> Bool {
+        return searchController.isActive && !searchBarIsEmpty()
     }
     
 }

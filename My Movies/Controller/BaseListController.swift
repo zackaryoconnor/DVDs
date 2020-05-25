@@ -13,7 +13,7 @@ class BaseListController: UICollectionViewController {
     
     static let shared = BaseListController()
     
-    let searchController = UISearchController(searchResultsController: nil)
+    fileprivate let searchController = UISearchController(searchResultsController: nil)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,10 +26,6 @@ class BaseListController: UICollectionViewController {
         collectionView.alwaysBounceVertical = true
         collectionView.allowsSelection = false
         
-        navigationItem.searchController = self.searchController
-        searchController.searchResultsUpdater = self
-        searchController.searchBar.delegate = self
-        searchController.obscuresBackgroundDuringPresentation = false
         
         checkIfUserIsLoggedIn()
     }
@@ -61,20 +57,20 @@ class BaseListController: UICollectionViewController {
 
 
 
-extension BaseListController: UISearchResultsUpdating {
-    func updateSearchResults(for searchController: UISearchController) {}
-    
-    func searchBarIsEmpty() -> Bool {
-        return searchController.searchBar.text?.isEmpty ?? true
-    }
-    
-    
-    func isFiltering() -> Bool {
-        return searchController.isActive && !searchBarIsEmpty()
-    }
-}
+//extension BaseListController: UISearchResultsUpdating {
+//    func updateSearchResults(for searchController: UISearchController) {}
+//
+//    func searchBarIsEmpty() -> Bool {
+//        return searchController.searchBar.text?.isEmpty ?? true
+//    }
+//
+//
+//    func isFiltering() -> Bool {
+//        return searchController.isActive && !searchBarIsEmpty()
+//    }
+//}
 
 
 
 
-extension BaseListController: UISearchBarDelegate {}
+//extension BaseListController: UISearchBarDelegate {}

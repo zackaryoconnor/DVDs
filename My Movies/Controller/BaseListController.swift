@@ -26,7 +26,6 @@ class BaseListController: UICollectionViewController {
         collectionView.alwaysBounceVertical = true
         collectionView.allowsSelection = false
         
-        
         checkIfUserIsLoggedIn()
     }
 
@@ -53,24 +52,3 @@ class BaseListController: UICollectionViewController {
         fatalError("init(coder:) has not been implemented")
     }
 }
-
-
-
-
-//extension BaseListController: UISearchResultsUpdating {
-//    func updateSearchResults(for searchController: UISearchController) {}
-//
-//    func searchBarIsEmpty() -> Bool {
-//        return searchController.searchBar.text?.isEmpty ?? true
-//    }
-//
-//
-//    func isFiltering() -> Bool {
-//        return searchController.isActive && !searchBarIsEmpty()
-//    }
-//}
-
-
-
-
-//extension BaseListController: UISearchBarDelegate {}

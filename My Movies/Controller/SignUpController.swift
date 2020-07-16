@@ -32,7 +32,7 @@ class SignUpController: SignInSignUpUIContoller {
             }
 
             guard let uid = Auth.auth().currentUser?.uid else { return }
-            firebaseDatabaseReference.child(firebaseUsersReference).child(uid).updateChildValues(["email": email])
+            firebase.databaseReference.child(firebase.usersReference).child(uid).updateChildValues(["email": email])
             
             self.presentingViewController?.presentingViewController?.dismiss(animated: true)
         }

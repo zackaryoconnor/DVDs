@@ -12,33 +12,19 @@ import FirebaseDatabase
 
 class DvdsController: BaseListController {
     
-    // MARK: - views
     let activitityIndicator = UIActivityIndicatorView(indicatorColor: .darkGray)
-    let placeholderText = UILabel(text: "\n\nClick the '+' to add a movie\n to your library.", textColor: .label, fontSize: 24, fontWeight: .medium, textAlignment: .center, numberOfLines: 0)
+    let placeholderText = UILabel(text: "\n\nClick the '+' to add a DVD\n to your library.", textColor: .label, fontSize: 24, fontWeight: .medium, textAlignment: .center, numberOfLines: 0)
     let searchController = UISearchController(searchResultsController: nil)
     
-    lazy var editButton: UIBarButtonItem = {
-        let button = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(handleEditButtonPressed))
-        return button
-    }()
+    lazy var editButton = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(handleEditButtonPressed))
     
-    lazy var logoutButton: UIBarButtonItem = {
-        let button = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogOut))
-        return button
-    }()
+    lazy var logoutButton = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogOut))
     
-    lazy var deleteButton: UIBarButtonItem = {
-        let button = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(handleDeleteButtonPressed))
-        return button
-    }()
+    lazy var deleteButton = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(handleDeleteButtonPressed))
     
-    lazy var addNewMovieButton: UIBarButtonItem = {
-        let button = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(handleAddNewMovie))
-        return button
-    }()
+    lazy var addNewDvdButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(handleAddNewDvd))
     
     
-    // MARK: - vars and lets
     fileprivate let cellId = "Cell"
     
     var myDvds = [SavedDvds]() {
@@ -72,7 +58,7 @@ class DvdsController: BaseListController {
     
                     editButton.title = "Edit"
                     navigationItem.leftBarButtonItems = [editButton]
-                    navigationItem.rightBarButtonItem = addNewMovieButton
+                    navigationItem.rightBarButtonItem = addNewDvdButton
                     collectionView.allowsMultipleSelection = false
                     collectionView.allowsSelection = false
     
@@ -89,7 +75,6 @@ class DvdsController: BaseListController {
         }
     
     
-    // MARK: - view life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -103,7 +88,8 @@ class DvdsController: BaseListController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        checkIfUserHasMovies()
+        
+        checkIfUserHasDvds()
         
         DispatchQueue.main.async {
             self.collectionView.reloadData()
@@ -112,9 +98,8 @@ class DvdsController: BaseListController {
     }
     
     
-    // MARK: - setup
     fileprivate func setUpNavBar() {
-        navigationItem.rightBarButtonItem = addNewMovieButton
+        navigationItem.rightBarButtonItem = addNewDvdButton
         navigationItem.leftBarButtonItem = editButton
         navigationItem.hidesSearchBarWhenScrolling = true
         navigationItem.searchController = searchController
@@ -124,7 +109,7 @@ class DvdsController: BaseListController {
     fileprivate func setUpSearchBar() {
         searchController.searchResultsUpdater = self
         searchController.obscuresBackgroundDuringPresentation = false
-        searchController.searchBar.placeholder = "Search movies you own..."
+        searchController.searchBar.placeholder = "Search DVDs you own..."
     }
     
     
@@ -147,14 +132,13 @@ class DvdsController: BaseListController {
         placeholderText.isHidden = true
     }
     
-    
-    // MARK: - fetch data
+
     enum DvdsInCollection {
         case yes, no
     }
 
+    
     func dvdsInCollection(_ dvdsInCollection: DvdsInCollection) {
-        
         switch dvdsInCollection {
         case .yes:
             placeholderText.isHidden = true
@@ -171,51 +155,67 @@ class DvdsController: BaseListController {
     }
     
     
-    func checkIfUserHasMovies() {
-        guard let uid = Auth.auth().currentUser?.uid else { return }
-        if uid == uid {
-            firebaseDatabaseReference.child(firebaseAccountMoviesReference).child(uid).observe(.value, with: { (snapshot) in
+    func checkIfUserHasDvds() {
+        if firebase.uid == firebase.uid {
+            firebase.databaseReference.child(firebase.accountDvdsReference).child(firebase.uid ?? "").observe(.value, with: { (snapshot) in
                 if !snapshot.hasChildren() {
                     self.dvdsInCollection(.no)
                 }
-                self.fetchUsersMovies()
+                self.fetchUsersDvds()
             })
         }
     }
     
     
-    fileprivate func fetchUsersMovies() {
-        guard let uid = Auth.auth().currentUser?.uid else { return }
-        firebaseDatabaseReference.child(firebaseAccountMoviesReference).child(uid).observe(.childAdded, with: { (snapshot) in
+    fileprivate func fetchUsersDvds() {
+        firebase.databaseReference.child(firebase.accountDvdsReference).child(firebase.uid ?? "").observe(.childAdded, with: { (snapshot) in
             
             self.myDvds.removeAll()
             self.collectionView.reloadData()
             
-            firebaseDatabaseReference.child(firebaseMoviesReference).child(snapshot.key).observeSingleEvent(of: .value, with: { (snapshot) in
-                for child in snapshot.children {
-                    if let childSnapshot = child as? DataSnapshot,
-                        let dict = childSnapshot.value as? [String : Any],
-                        let id = dict["id"] as? Int,
-                        let title = dict["title"] as? String,
-                        let posterPath = dict["posterPath"] as? String,
-                        let backdropPath = dict["backdropPath"] as? String
-                    {
-                        let movie = SavedDvds(id: id, title: title, posterPath: posterPath, backdropPath: backdropPath)
-                        if uid == uid {
-                            self.myDvds.append(movie)
-                        }
-                    }
+            firebase.databaseReference.child(firebase.dvdsReference).child(snapshot.key).observeSingleEvent(of: .value, with: { (snapshot) in
+//                print(snapshot)
+//                for child in snapshot.children {
+//                    if let childSnapshot = child as? DataSnapshot,
+//                        let dictionary = childSnapshot.value as? [String : Any],
+//                        let id = dictionary["id"] as? Int,
+//                        let mediaType = dictionary["mediaType"] as? String,
+//                        let title = dictionary["title"] as? String,
+//                        let name = dictionary["name"] as? String,
+//                        let posterPath = dictionary["posterPath"] as? String,
+//                        let backdropPath = dictionary["backdropPath"] as? String {
+//
+//                        let dvd = SavedDvds(id: id, mediaType: mediaType, title: title, name: name, posterPath: posterPath, backdropPath: backdropPath)
+//
+//                        if firebase.uid == firebase.uid {
+//                            self.myDvds.append(dvd)
+//                            print(self.myDvds)
+//                        }
+//
+//                    }
+//                }
+                
+                let value = snapshot.value as? NSDictionary
+                let id = value?["id"] as? Int ?? 0
+                let mediaType = value?["mediaType"] as? String ?? ""
+                let title = value?["title"] as? String ?? ""
+                let name = value?["name"] as? String ?? ""
+                let posterPath = value?["posterPath"] as? String ?? ""
+                let backdropPath = value?["backdropPath"] as? String ?? ""
+                
+                let dvd = SavedDvds(id: id, mediaType: mediaType, title: title, name: name, posterPath: posterPath, backdropPath: backdropPath)
+                
+                if firebase.uid == firebase.uid {
+                    self.myDvds.append(dvd)
+                    print(dvd)
                 }
+                
                 self.dvdsInCollection(.yes)
             })
         })
     }
     
-
-
-    
-    
-    // MARK: - @objc methods
+        
     @objc func handleEditButtonPressed() {
         editMode = editMode == .notEditing ? .isEditing : .notEditing
     }
@@ -223,18 +223,17 @@ class DvdsController: BaseListController {
     
     @objc func handleDeleteButtonPressed() {
         let dvdToDelete = "\(myDvds[index.item].title ?? "")(\(myDvds[index.item].id ?? 0))"
-        firebaseDatabaseReference.child(firebaseAccountMoviesReference).child(uid ?? "").child(dvdToDelete).removeValue()
+        firebase.databaseReference.child(firebase.accountDvdsReference).child(firebase.uid ?? "").child(dvdToDelete).removeValue()
 
         self.myDvds.removeAll()
         self.editMode = .notEditing
     }
     
     
-   @objc fileprivate func handleAddNewMovie() {
+   @objc fileprivate func handleAddNewDvd() {
             addNewDvdController.delegate = self
-    
-            let addNewMovieSearchController = BaseNavigationController.shared.controller(viewController: addNewDvdController, title: "Search", searchControllerPlaceholderText: "")
-            present(addNewMovieSearchController, animated: true)
+            let addNewDvdSearchController = BaseNavigationController.controller(addNewDvdController, title: "Search", searchControllerPlaceholderText: "")
+            present(addNewDvdSearchController, animated: true)
         }
     
     
@@ -248,9 +247,7 @@ class DvdsController: BaseListController {
         }
         
         editMode = .notEditing
-        let welcomeVc = WelcomeScreen()
-        welcomeVc.modalPresentationStyle = .fullScreen
-        present(welcomeVc, animated: true, completion: {
+        present(welcomeController, animated: true, completion: {
             self.myDvds.removeAll()
             self.collectionView.reloadData()
         })
@@ -261,7 +258,6 @@ class DvdsController: BaseListController {
 
 
 
-// MARK: - collectionViewDelegate
 extension DvdsController: UICollectionViewDelegateFlowLayout {
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if isFiltering() {
@@ -274,19 +270,24 @@ extension DvdsController: UICollectionViewDelegateFlowLayout {
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        let filteredMovie: SavedDvds
+        let filteredDvd: SavedDvds
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! DvdsCell
         cell.dvd = myDvds[indexPath.item]
         
         if isFiltering() {
-            filteredMovie = filteredDvds[indexPath.item]
+            filteredDvd = filteredDvds[indexPath.item]
         } else {
-            filteredMovie = myDvds[indexPath.item]
+            filteredDvd = myDvds[indexPath.item]
         }
         
-        cell.movieCoverImageView.loadImageUsingUrlString(urlString: movieCoverImageUrl + (filteredMovie.posterPath ?? ""))
-        cell.movieTitleLabel.text = filteredMovie.title
+        cell.dvdCoverImageView.loadImageUsingUrlString(urlString: tmdb.dvdCoverImageUrl + (filteredDvd.posterPath ?? ""))
+        
+        if filteredDvd.mediaType == "tv" {
+            cell.dvdTitleLabel.text = filteredDvd.name
+        } else {
+            cell.dvdTitleLabel.text = filteredDvd.title
+        }
         
         return cell
     }
@@ -299,7 +300,7 @@ extension DvdsController: UICollectionViewDelegateFlowLayout {
     
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
+        return UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
     }
     
     
@@ -319,7 +320,7 @@ extension DvdsController: UICollectionViewDelegateFlowLayout {
             _ = myDvds[indexPath.item]
         case .isEditing:
             navigationItem.rightBarButtonItem?.isEnabled = true
-            deleteButton.tintColor = .red
+            deleteButton.tintColor = .systemRed
             selectedIndexPath[indexPath] = true
             index = indexPath
         }
@@ -338,21 +339,18 @@ extension DvdsController: UICollectionViewDelegateFlowLayout {
 
 
 
-// MARK: - PassMovieDelegate
 extension DvdsController: PassDvdDelegate {
-    func passDvd(movie: SavedDvds) {
-        self.myDvds.append(movie)
+    func passDvd(dvd: SavedDvds) {
+        self.myDvds.append(dvd)
         DispatchQueue.main.async {
             self.myDvds.removeAll()
         }
     }
-    
 }
 
 
 
 
-// MARK: - searchResults methods
 extension DvdsController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         timer?.invalidate()
@@ -368,10 +366,18 @@ extension DvdsController: UISearchResultsUpdating {
     
     
     fileprivate func filterContentForSearchText(_ searchText: String, scope: String = "All") {
-        filteredDvds = myDvds.filter({(movie : SavedDvds) -> Bool in
-            return movie.title!.lowercased().contains(searchText.lowercased())
+        filteredDvds = myDvds.filter({(dvd : SavedDvds) -> Bool in
+            
+            if dvd.mediaType == "tv" {
+                return dvd.name!.lowercased().contains(searchText.lowercased())
+            } else {
+                return dvd.title!.lowercased().contains(searchText.lowercased())
+            }
         })
-        collectionView.reloadData()
+        
+        DispatchQueue.main.async {
+            self.collectionView.reloadData()
+        }
     }
     
     

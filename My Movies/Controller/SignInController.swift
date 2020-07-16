@@ -32,7 +32,7 @@ class SignInController: SignInSignUpUIContoller {
             } else if Auth.auth().currentUser?.uid == Auth.auth().currentUser?.uid {
                 self.presentingViewController?.presentingViewController?.dismiss(animated: true, completion: {
                     dvdsController.collectionView.reloadData()
-                    dvdsController.checkIfUserHasMovies()
+                    dvdsController.checkIfUserHasDvds()
                 })
             }
         }

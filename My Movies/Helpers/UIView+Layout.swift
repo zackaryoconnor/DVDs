@@ -12,6 +12,7 @@ import UIKit
 
 public let padding: CGFloat = 16
 public let inset: CGFloat = 16
+public let spacing: CGFloat = 16
 
 extension UIView {
     

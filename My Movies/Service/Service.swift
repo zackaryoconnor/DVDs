@@ -9,15 +9,19 @@
 import Foundation
 
 class Service {
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///change all functions to static
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     static let shared = Service()
     
-    func fetchMovies(url: String, completion: @escaping (WebsiteResultData?, Error?) ->  ()) {
+    func fetchDvds(url: String, completion: @escaping (WebsiteResultData?, Error?) ->  ()) {
         fetchGenericJsonData(urlString: url, completion: completion)
     }
     
     
-    func fetchSearchedMovie(searchTerm: String, completion: @escaping (WebsiteResultData?, Error?) ->  ()) {
-        let url = "\(baseSearchUrl)\(searchTerm)\(includeAdultContent)"
+    func fetchSearchedDvds(searchTerm: String, completion: @escaping (WebsiteResultData?, Error?) ->  ()) {
+        let url = "\(tmdb.baseSearchUrl)\(searchTerm)\(tmdb.includeAdultContent)"
         fetchGenericJsonData(urlString: url, completion: completion)
     }
     

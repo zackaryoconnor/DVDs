@@ -17,13 +17,13 @@ let buttonHeight: CGFloat = 54
 class WelcomeScreen: UIViewController {
     
     // MARK: - views
-    let dvdLogo = UIImageView(image: "", cornerRadius: 0)
+    let dvdLogo = UIImageView()
     
     let welcomeLabel = UILabel(text: "Welcome to DVDs", textColor: .label, fontSize: 36, fontWeight: .bold, textAlignment: .center, numberOfLines: 2)
     
-    let welcomeDescriptionLabel = UILabel(text: "The best way to keep track of the Movies and TV Shows you own on DVD or Blu-ray.", textColor: .label, fontSize: 17, fontWeight: .regular, textAlignment: .center, numberOfLines: 0)
+    let welcomeDescriptionLabel = UILabel(text: "The best way to keep track of the Movies and TV Shows you own on DVD or Blu-ray.", textAlignment: .center, numberOfLines: 0)
     
-    lazy var signInWithEmailButton = UIButton(title: "Sign in with email", backgroundColor: .systemBlue, setTitleColor: .white, font: .systemFont(ofSize: 17, weight: .medium), cornerRadius: buttonCornerRadius)
+    lazy var signInWithEmailButton = UIButton(title: "Sign in with email", setTitleColor: .white, font: .systemFont(ofSize: 17, weight: .medium), cornerRadius: buttonCornerRadius)
    
     let signUpButton = UIButton(title: "Don't have an accout? Sign up here", backgroundColor: .clear, setTitleColor: .systemGray2, font: .systemFont(ofSize: 14, weight: .regular), cornerRadius: 0)
     
@@ -53,18 +53,18 @@ class WelcomeScreen: UIViewController {
         dvdLogo.contentMode = .scaleAspectFit
         dvdLogo.backgroundColor = .systemGray3
         
-        let welcomeStack = UIStackView(arrangedSubviews: [
+        let welcomeStackView = UIStackView(arrangedSubviews: [
             welcomeLabel,
             welcomeDescriptionLabel
         ], customSpacing: 8, axis: .vertical)
         
-        [dvdLogo, welcomeStack].forEach({ view.addSubview($0) })
+        [dvdLogo, welcomeStackView].forEach({ view.addSubview($0) })
         
-        welcomeStack.centerInSuperview()
-        welcomeStack.constrainWidth(constant: view.frame.width - 16 * 2)
+        welcomeStackView.centerInSuperview()
+        welcomeStackView.constrainWidth(constant: view.frame.width - 16 * 2)
         
         dvdLogo.centerXInSuperview()
-        dvdLogo.anchor(top: nil, leading: nil, bottom: welcomeStack.topAnchor, trailing: nil, padding: .init(top: 16, left: 0, bottom: 0, right: 0))
+        dvdLogo.anchor(top: nil, leading: nil, bottom: welcomeStackView.topAnchor, trailing: nil, padding: .init(top: padding, left: 0, bottom: 0, right: 0))
     }
     
     
@@ -81,7 +81,7 @@ class WelcomeScreen: UIViewController {
             signInWithEmailButton,
             signUpButton], customSpacing: 12, distribution: .fillProportionally)
         view.addSubview(logInButtonsStackview)
-        logInButtonsStackview.anchor(top: nil, leading: view.safeAreaLayoutGuide.leadingAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 0, left: 16, bottom: 16, right: 16))
+        logInButtonsStackview.anchor(top: nil, leading: view.safeAreaLayoutGuide.leadingAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 0, left: padding, bottom: padding, right: padding))
     }
     
     
@@ -129,7 +129,7 @@ extension WelcomeScreen: GIDSignInDelegate {
             } else {
                 self.presentingViewController?.dismiss(animated: true, completion: {
                     dvdsController.collectionView.reloadData()
-                    dvdsController.checkIfUserHasMovies()
+                    dvdsController.checkIfUserHasDvds()
                 })
             }
         }

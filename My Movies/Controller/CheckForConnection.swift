@@ -12,12 +12,12 @@ class CheckForConnection {
     
     static let shared = CheckForConnection()
     
-    let noConnectionLabel = UILabel(text: "", textColor: .label, fontSize: 17, fontWeight: .regular, textAlignment: .center, numberOfLines: 0)
+    let noConnectionLabel = UILabel(textAlignment: .center)
     
     let searchController = UISearchController(searchResultsController: nil)
     
     func connectionStatusOf(_ controller: UICollectionViewController) {
-        firebaseCheckForConnectionReference.observe(.value) { (snapshot) in
+        firebase.checkForConnectionReference.observe(.value) { (snapshot) in
             if let connected = snapshot.value as? Bool, connected {
                 controller.collectionView.isHidden = false
                 self.noConnectionLabel.isHidden = true

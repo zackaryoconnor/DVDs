@@ -14,13 +14,13 @@ struct WebsiteResultData: Decodable {
 
 struct Results: Decodable {
     let id: Int?
-    let posterPath, title, releaseDate, mediaType, name, firstAirDate, backdropPath: String?
+    let mediaType, title, name, releaseDate, firstAirDate, posterPath, backdropPath: String?
     
     private enum CodingKeys: String, CodingKey {
-        case posterPath = "poster_path"
-        case releaseDate = "release_date"
         case mediaType = "media_type"
+        case releaseDate = "release_date"
         case firstAirDate = "first_air_date"
+        case posterPath = "poster_path"
         case backdropPath = "backdrop_path"
         case id, title, name
     }

@@ -9,29 +9,33 @@
 import UIKit
 import Firebase
 
+
 class AddNewDvdCell: UICollectionViewCell {
     
     static let identifier = "addNewDvdCellIdentifier"
     
-    var movie: Results! {
+    var dvd: Results! {
         didSet {
-            guard let posterPath = movie.posterPath else { return }
-            guard let backdropPath = movie.backdropPath else { return }
+            guard let posterPath = dvd.posterPath else { return }
+            guard let backdropPath = dvd.backdropPath else { return }
             
-            movieCoverImageView.loadImageUsingUrlString(urlString: movieCoverImageUrl + posterPath)
+            dvdCoverImageView.loadImageUsingUrlString(urlString: tmdb.dvdCoverImageUrl + posterPath)
             
-            if movie.mediaType == "tv" {
-                movieTitleLabel.text = movie.name
-                yearReleasedLabel.text = movie.firstAirDate
+            if dvd.mediaType == "tv" {
+                dvdTitleLabel.text = dvd.name
+                yearReleasedLabel.text = dvd.firstAirDate
             } else {
-                movieTitleLabel.text = movie.title
-                yearReleasedLabel.text = movie.releaseDate
+                dvdTitleLabel.text = dvd.title
+                yearReleasedLabel.text = dvd.releaseDate
             }
 
-            let dateReleased = movie.releaseDate
-            let tvShowDateReleased = movie.firstAirDate
+            let dateReleased = dvd.releaseDate
+            let tvShowDateReleased = dvd.firstAirDate
+            
             let formatter = DateFormatter()
+            
             formatter.dateFormat = "yyyy-MM-dd"
+            
             if let date = formatter.date(from: dateReleased ?? "") {
                 let displayFormatter = DateFormatter()
                 displayFormatter.dateFormat = "yyyy"
@@ -41,6 +45,7 @@ class AddNewDvdCell: UICollectionViewCell {
                 displayFormatter.dateFormat = "yyyy"
                 yearReleasedLabel.text = displayFormatter.string(from: date)
             }
+            
         }
         
     }
@@ -49,51 +54,43 @@ class AddNewDvdCell: UICollectionViewCell {
     override var isSelected: Bool {
         didSet {
             if isSelected == true {
-                movieCoverImageView.layer.opacity = 0.6
-                movieTitleLabel.textColor = .secondaryLabel
+                dvdCoverImageView.layer.opacity = 0.6
+                dvdTitleLabel.textColor = .secondaryLabel
                 isUserInteractionEnabled = false
             } else {
-                movieTitleLabel.textColor = .label
-                movieCoverImageView.layer.opacity = 1.0
+                dvdTitleLabel.textColor = .label
+                dvdCoverImageView.layer.opacity = 1.0
                 isUserInteractionEnabled = true
             }
-
         }
-
     }
     
     
-   let movieCoverImageView: CustomImageView = {
-        let imageView = CustomImageView(image: "", cornerRadius: 4)
+   let dvdCoverImageView: CustomImageView = {
+        let imageView = CustomImageView(cornerRadius: 4)
         return imageView
     }()
     
-    let movieTitleLabel = UILabel(text: "", textColor: .label, fontSize: 18, fontWeight: .medium, textAlignment: .left, numberOfLines: 2)
-    let yearReleasedLabel = UILabel(text: "", textColor: .secondaryLabel, fontSize: 16, fontWeight: .regular, textAlignment: .left, numberOfLines: 1)
+    let dvdTitleLabel = UILabel(fontWeight: .medium, numberOfLines: 2)
+    let yearReleasedLabel = UILabel(textColor: .secondaryLabel, fontSize: 16, numberOfLines: 1)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        movieCoverImageView.constrainHeight(constant: 95)
-        movieCoverImageView.constrainWidth(constant: 63.33)
-        movieCoverImageView.backgroundColor = .quaternarySystemFill
+        dvdCoverImageView.constrainHeight(constant: 95)
+        dvdCoverImageView.constrainWidth(constant: 63.33)
+        dvdCoverImageView.backgroundColor = .quaternarySystemFill
         
-        let movieTitleAndDateStackView = UIStackView(arrangedSubviews: [
-            movieTitleLabel,
-            yearReleasedLabel
-            ])
+        let titleDateStackView = UIStackView(arrangedSubviews: [dvdTitleLabel,
+                                                                yearReleasedLabel], axis: .vertical)
         
-        movieTitleAndDateStackView.axis = .vertical
         
-        let movieStackView = UIStackView(arrangedSubviews: [
-            movieCoverImageView,
-            movieTitleAndDateStackView
-            ])
+        let StackView = UIStackView(arrangedSubviews: [dvdCoverImageView,
+                                                            titleDateStackView], customSpacing: 8,axis: .horizontal , distribution: .fill)
         
-        addSubview(movieStackView)
-        movieStackView.fillSuperview(padding: .init(top: 8, left: 16, bottom: 8, right: 16))
-        movieStackView.spacing = 8
-        movieStackView.alignment = .center
+        addSubview(StackView)
+        StackView.fillSuperview(padding: .init(top: 8, left: padding, bottom: 8, right: padding))
+        StackView.alignment = .center
     }
 
     

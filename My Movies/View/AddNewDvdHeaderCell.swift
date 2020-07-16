@@ -12,7 +12,8 @@ class AddNewDvdHeaderCell: UICollectionReusableView {
     
     static let identifier = "addNewDvdHeaderCellIdentifier"
     
-    let label = UILabel(text: "Unfortunately you can not add the TV shows you own on DVD just yet. ☹️", textColor: .label, fontSize: 17, fontWeight: .regular, textAlignment: .left, numberOfLines: 0)
+//    Popular Movies
+    let label = UILabel(text: "Unfortunately you can not add the TV shows you own on DVD just yet. ☹️", fontWeight: .medium)
     
 
     override init(frame: CGRect) {
@@ -21,7 +22,7 @@ class AddNewDvdHeaderCell: UICollectionReusableView {
         backgroundColor = .secondarySystemBackground
         addSubview(label)
         
-        label.fillSuperview(padding: .init(top: inset, left: inset, bottom: inset, right: inset))
+        label.fillSuperview(padding: .init(top: padding, left: padding, bottom: padding, right: padding))
     }
     
     

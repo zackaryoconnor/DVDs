@@ -10,9 +10,9 @@ import UIKit
 
 struct BaseNavigationController {
     
-    static let shared = BaseNavigationController()
+//    static let shared = BaseNavigationController()
     
-    func controller(viewController: UIViewController, title: String, searchControllerPlaceholderText: String?) -> UIViewController {
+    static func controller(_ viewController: UIViewController, title: String, searchControllerPlaceholderText: String?) -> UIViewController {
         
         let navigationController = UINavigationController(rootViewController: viewController)
         navigationController.navigationBar.prefersLargeTitles = true

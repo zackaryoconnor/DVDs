@@ -10,7 +10,7 @@ import UIKit
 
 class ChangeAppIconController: UIViewController {
     
-    let messageLabel = UILabel(text: "Change app icon", textColor: .label, fontSize: 32, fontWeight: .medium, textAlignment: .left)
+    let messageLabel = UILabel(text: "Change app icon", fontSize: 32, fontWeight: .medium)
     
     let lightIcon = UIButton(type: .custom)
     let darkIcon = UIButton(type: .custom)
@@ -26,7 +26,7 @@ class ChangeAppIconController: UIViewController {
     
     private func setupLabel() {
         view.addSubview(messageLabel)
-        messageLabel.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.safeAreaLayoutGuide.leadingAnchor, padding: .init(top: 32, left: 16, bottom: 0, right: 0))
+        messageLabel.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.safeAreaLayoutGuide.leadingAnchor, padding: .init(top: 32, left: padding, bottom: 0, right: 0))
     }
     
     
@@ -47,11 +47,11 @@ class ChangeAppIconController: UIViewController {
         darkIcon.layer.cornerRadius = buttonCornerRadius
         darkIcon.clipsToBounds = true
         
-        let stack = UIStackView(arrangedSubviews: [lightIcon,
-                                                   darkIcon], customSpacing: 32, axis: .horizontal, distribution: .fillEqually)
+        let stackView = UIStackView(arrangedSubviews: [lightIcon,
+                                                   darkIcon], customSpacing: 32, axis: .horizontal)
         
-        view.addSubview(stack)
-        stack.centerInSuperview()
+        view.addSubview(stackView)
+        stackView.centerInSuperview()
     }
     
     

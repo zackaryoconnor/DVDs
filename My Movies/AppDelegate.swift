@@ -26,7 +26,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         window = UIWindow(frame: UIScreen.main.bounds)
 //        window?.rootViewController = baseNavController(viewController: DvdsController(), title: "Library", searchControllerText: "Search movies you own...")
-        window?.rootViewController = BaseNavigationController.shared.controller(viewController: DvdsController(), title: "Library", searchControllerPlaceholderText: "Search movies you own...")
+        window?.rootViewController = BaseNavigationController.controller(DvdsController(), title: "Library", searchControllerPlaceholderText: "Search movies you own...")
         window?.makeKeyAndVisible()
         
         return true
@@ -38,7 +38,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if shortcutItem.type == "com.zackaryoconnor.My-Movies.SearchAction" {
             let addNewDvdController = AddNewDvdController()
 //            let searchController = baseNavController(viewController: addNewDvdController, title: "Search", searchControllerText: "")
-            let searchController = BaseNavigationController.shared.controller(viewController: addNewDvdController, title: "Search", searchControllerPlaceholderText: "")
+            let searchController = BaseNavigationController.controller(addNewDvdController, title: "Search", searchControllerPlaceholderText: "")
             window?.rootViewController?.present(searchController, animated: true, completion: {
                 addNewDvdController.searchController.isActive = true
                 DispatchQueue.main.async {

@@ -28,20 +28,27 @@ class DvdsCell: UICollectionViewCell {
             guard let posterPath = dvd.posterPath else { return }
             guard let backdropPath = dvd.backdropPath else { return }
             
-            movieCoverImageView.loadImageUsingUrlString(urlString: movieCoverImageUrl + posterPath)
+            dvdCoverImageView.loadImageUsingUrlString(urlString: tmdb.dvdCoverImageUrl + posterPath)
             
-            movieTitleLabel.text = dvd.title
+            if dvd.mediaType == "tv" {
+                dvdTitleLabel.text = dvd.name
+            } else {
+                dvdTitleLabel.text = dvd.title
+            }
         }
     }
     
     static let identifier = "dvdsCellIdentifier"
     
-    let movieCoverImageView: CustomImageView = {
-        let imageView = CustomImageView(image: "", cornerRadius: 6)
+    let dvdCoverImageView: CustomImageView = {
+        let imageView = CustomImageView(cornerRadius: 6)
+        imageView.backgroundColor = .systemGray2
+        imageView.layer.borderColor = UIColor.black.withAlphaComponent(0.16).cgColor
+        imageView.layer.borderWidth = 0.5
         return imageView
     }()
     
-    let movieTitleLabel = UILabel(text: "", textColor: .label, fontSize: 17, fontWeight: .medium, textAlignment: .left, numberOfLines: 1)
+    let dvdTitleLabel = UILabel(fontWeight: .medium, numberOfLines: 1)
     let checkmarkImageView = UIImageView(image: UIImage(systemName: "checkmark.circle.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 24, weight: .black, scale: .large)))
     let redView = UIView(backgroundColor: UIColor.systemRed.withAlphaComponent(0.7))
     
@@ -50,18 +57,19 @@ class DvdsCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        //        let posterHeight = frame.height - movieTitleLabel.frame.height - 36
-        movieCoverImageView.constrainWidth(constant: 164.67)
-        movieCoverImageView.constrainHeight(constant: 247)
-        //        movieCoverImageView.contentMode = .scaleAspectFill
-        movieCoverImageView.clipsToBounds = true
-        movieCoverImageView.addSubview(redView)
+        dvdCoverImageView.constrainWidth(constant: 164.67)
+        dvdCoverImageView.constrainHeight(constant: 247)
+        dvdCoverImageView.clipsToBounds = true
+        dvdCoverImageView.addSubview(redView)
         
-        let stackView = UIStackView(arrangedSubviews: [movieCoverImageView,
-                                                       movieTitleLabel])
+        let stackView = UIStackView(arrangedSubviews: [dvdCoverImageView,
+                                                       dvdTitleLabel])
         
         addSubview(stackView)
         stackView.axis = .vertical
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ///fix vertical alignment
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         stackView.fillSuperview()
         
         setupSelectedCell()
@@ -75,10 +83,10 @@ class DvdsCell: UICollectionViewCell {
         
         redView.isHidden = true
         
-        [redView, checkmarkImageView].forEach { movieCoverImageView.addSubview($0) }
+        [redView, checkmarkImageView].forEach { dvdCoverImageView.addSubview($0) }
         redView.fillSuperview()
         checkmarkImageView.centerXInSuperview()
-        checkmarkImageView.bottomAnchor.constraint(equalTo: movieCoverImageView.bottomAnchor, constant: -16).isActive = true
+        checkmarkImageView.bottomAnchor.constraint(equalTo: dvdCoverImageView.bottomAnchor, constant: -padding).isActive = true
     }
     
     

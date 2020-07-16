@@ -11,39 +11,32 @@ import Firebase
 class AddNewDvdController: BaseListController {
     
     // MARK: - vars and lets
-    fileprivate let noConnectionLabel = UILabel(text: "", textColor: .label, fontSize: 17, fontWeight: .regular, textAlignment: .center, numberOfLines: 0)
+    fileprivate let noConnectionLabel = UILabel(textAlignment: .center)
     fileprivate let activitityIndicator = UIActivityIndicatorView(indicatorColor: .systemBackground)
     
     let searchController = UISearchController(searchResultsController: nil)
-    fileprivate let cellId = "Cell"
-    fileprivate var moviesVC: DvdsController!
     fileprivate var timer: Timer?
-    lazy fileprivate var popularMovies = [Results]()
+    lazy fileprivate var popularDvds = [Results]()
     var delegate: PassDvdDelegate?
-    var selectedMovie: Results?
+    var selectedDvd: Results?
     
-    fileprivate let headerCellId = "headerCellId"
-    
-    
-    
-    // MARK: - view life cycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupCollectionView()
         setupActivityIndicatorView()
         setUpNavBar()
-        fetchPopularMovies()
+        fetchPopularDvds()
         checkForConnection()
     }
     
     
-    // MARK: - setup
     fileprivate func setupCollectionView() {
-        collectionView.register(AddNewDvdCell.self, forCellWithReuseIdentifier: cellId)
+        collectionView.register(AddNewDvdCell.self, forCellWithReuseIdentifier: AddNewDvdCell.identifier)
         collectionView.allowsMultipleSelection = true
     
-        collectionView.register(UICollectionViewCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerCellId)
+        collectionView.register(AddNewDvdHeaderCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: AddNewDvdHeaderCell.identifier)
     }
     
     
@@ -68,13 +61,13 @@ class AddNewDvdController: BaseListController {
     
     
     // MARK: - check for data
-    func checkForMovies(indexPath: IndexPath) {
+    func checkForDvds(indexPath: IndexPath) {
         guard let uid = Auth.auth().currentUser?.uid else { return }
-        firebaseDatabaseReference.child(firebaseAccountMoviesReference).child(uid).observeSingleEvent(of: .value, with: { snapshot in
+        firebase.databaseReference.child(firebase.accountDvdsReference).child(uid).observeSingleEvent(of: .value, with: { snapshot in
             
-            if let savedMovies = snapshot.value as? [String: AnyObject] {
-                for (key, _) in savedMovies {
-                    if key == "\(self.popularMovies[indexPath.item].title ?? "")(\(self.popularMovies[indexPath.item].id ?? 0))" {
+            if let savedDvds = snapshot.value as? [String: AnyObject] {
+                for (key, _) in savedDvds {
+                    if key == "\(self.popularDvds[indexPath.item].title ?? "")(\(self.popularDvds[indexPath.item].id ?? 0))" {
                         self.collectionView.cellForItem(at: indexPath)?.isSelected = true
                     }
                 }
@@ -84,7 +77,7 @@ class AddNewDvdController: BaseListController {
     
     
     fileprivate func checkForConnection() {
-        firebaseCheckForConnectionReference.observe(.value) { (snapshot) in
+        firebase.checkForConnectionReference.observe(.value) { (snapshot) in
             if let connected = snapshot.value as? Bool, connected {
                 self.collectionView.isHidden = false
                 self.noConnectionLabel.isHidden = true
@@ -113,9 +106,9 @@ class AddNewDvdController: BaseListController {
     
     
     // MARK: - fetch data
-    fileprivate func fetchPopularMovies() {
-        Service.shared.fetchMovies(url: moviesUrl) { (result, error) in
-            self.popularMovies = result?.results ?? []
+    fileprivate func fetchPopularDvds() {
+        Service.shared.fetchDvds(url: tmdb.dvdsUrl) { (result, error) in
+            self.popularDvds = result?.results ?? []
             
             DispatchQueue.main.async {
                 self.activitityIndicator.isHidden = true
@@ -140,16 +133,16 @@ class AddNewDvdController: BaseListController {
 // MARK: - collectionVeiwDelegate
 extension AddNewDvdController: UICollectionViewDelegateFlowLayout  {
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return popularMovies.count
+        return popularDvds.count
     }
     
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        checkForMovies(indexPath: indexPath)
+        checkForDvds(indexPath: indexPath)
         
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! AddNewDvdCell
-        cell.movie = self.popularMovies[indexPath.item]
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AddNewDvdCell.identifier, for: indexPath) as! AddNewDvdCell
+        cell.dvd = self.popularDvds[indexPath.item]
         return cell
     }
     
@@ -166,34 +159,37 @@ extension AddNewDvdController: UICollectionViewDelegateFlowLayout  {
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        let selectedDvd = self.popularMovies[indexPath.item]
-        self.selectedMovie = selectedDvd
+        let selectedDvd = self.popularDvds[indexPath.item]
+        self.selectedDvd = selectedDvd
         
-        let childRef = firebaseDatabaseReference.child(firebaseMoviesReference).child("\(selectedDvd.title ?? "")(\(selectedDvd.id ?? 0))")
+        let childRef = firebase.databaseReference.child(firebase.dvdsReference).child("\(selectedDvd.title ?? "")\(selectedDvd.name ?? "")(\(selectedDvd.id ?? 0))")
         
-        guard let uid = Auth.auth().currentUser?.uid else { return }
+        guard let uid = firebase.uid else { return }
         if uid == uid {
             childRef.observe(.value, with: { (snapshot) in
                 
                 if !snapshot.hasChild("\(selectedDvd.id ?? 0)") {
-                    childRef.child(selectedDvd.title ?? "").setValue(["title": selectedDvd.title as AnyObject,
-                                                                      "posterPath": selectedDvd.posterPath as AnyObject,
-                                                                      "backdropPath": selectedDvd.backdropPath as AnyObject,
-                                                                      "id": selectedDvd.id as AnyObject])
+                    childRef.setValue(["mediaType": selectedDvd.mediaType as AnyObject,
+                                       "title": selectedDvd.title as AnyObject,
+                                       "name": selectedDvd.name as AnyObject,
+                                       "posterPath": selectedDvd.posterPath as AnyObject,
+                                       "backdropPath": selectedDvd.backdropPath as AnyObject,
+                                       "id": selectedDvd.id as AnyObject])
                     
                     guard let uid = Auth.auth().currentUser?.uid else { return }
-                    guard let movieId = childRef.key else { return }
-                    firebaseDatabaseReference.child(firebaseAccountMoviesReference).child(uid).updateChildValues([movieId : 0])
+                    guard let dvdId = childRef.key else { return }
+                    
+                    firebase.databaseReference.child(firebase.accountDvdsReference).child(uid).updateChildValues([dvdId : 0])
                     
                     if indexPath.item > 1 {
-                        self.popularMovies.remove(at: indexPath.item)
+                        self.popularDvds.remove(at: indexPath.item)
                         collectionView.reloadData()
                     }
                     
-                    self.delegate?.passDvd(movie: SavedDvds.init(id: selectedDvd.id ?? 0, title: selectedDvd.title ?? "", posterPath: selectedDvd.posterPath  ?? "", backdropPath: selectedDvd.backdropPath ?? ""))
+                    self.delegate?.passDvd(dvd: SavedDvds.init(id: selectedDvd.id ?? 0, mediaType: selectedDvd.mediaType ?? "", title: selectedDvd.title ?? "", name: selectedDvd.name ?? "", posterPath: selectedDvd.posterPath ?? "", backdropPath: selectedDvd.backdropPath ?? ""))
                     
                     self.searchController.searchBar.text = ""
-                    self.fetchPopularMovies()
+                    self.fetchPopularDvds()
                 }
                 
             }) { (error) in
@@ -211,16 +207,9 @@ extension AddNewDvdController: UICollectionViewDelegateFlowLayout  {
     
     
     
-    
 //    header
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerCellId, for: indexPath)
-        header.backgroundColor = .secondarySystemBackground
-        let label = UILabel(text: "Unfortunately you can not add the TV shows you own on DVD just yet. ☹️", textColor: .label, fontSize: 17, fontWeight: .regular, textAlignment: .left, numberOfLines: 0)
-        
-        header.addSubview(label)
-        let inset: CGFloat = 16
-        label.fillSuperview(padding: .init(top: inset, left: inset, bottom: inset, right: inset))
+        let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: AddNewDvdHeaderCell.identifier, for: indexPath) as! AddNewDvdHeaderCell
         
         return header
     }
@@ -247,7 +236,7 @@ extension AddNewDvdController: UISearchBarDelegate {
             let finalSearchTerm = searchTerm.replacingOccurrences(of: " ", with: "%20")
             
             if searchText != "" {
-                Service.shared.fetchSearchedMovie(searchTerm: finalSearchTerm) { (result, error) in
+                Service.shared.fetchSearchedDvds(searchTerm: finalSearchTerm) { (result, error) in
                     
                     if let error = error {
                         if let errorCode = AuthErrorCode(rawValue: error._code) {
@@ -257,14 +246,14 @@ extension AddNewDvdController: UISearchBarDelegate {
                         return
                     }
                     
-                    self.popularMovies = result?.results ?? []
+                    self.popularDvds = result?.results ?? []
                     DispatchQueue.main.async {
                         self.collectionView.reloadData()
                     }
                     
                 }
             } else {
-                self.fetchPopularMovies()
+                self.fetchPopularDvds()
             }
             
         })
@@ -273,7 +262,7 @@ extension AddNewDvdController: UISearchBarDelegate {
     
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        fetchPopularMovies()
+        fetchPopularDvds()
     }
     
 }

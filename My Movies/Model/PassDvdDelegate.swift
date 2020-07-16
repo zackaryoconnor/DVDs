@@ -9,5 +9,5 @@
 import Foundation
 
 protocol PassDvdDelegate {
-    func passDvd(movie: SavedDvds)
+    func passDvd(dvd: SavedDvds)
 }

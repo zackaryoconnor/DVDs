@@ -18,7 +18,7 @@ class DvdsFooterCell: UICollectionReusableView {
             super.init(frame: frame)
             
             addSubview(label)
-            label.fillSuperview(padding: .init(top: inset, left: inset, bottom: inset, right: inset))
+            label.fillSuperview(padding: .init(top: padding, left: padding, bottom: padding, right: padding))
         }
         
         

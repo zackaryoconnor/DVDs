@@ -19,7 +19,7 @@ class AddNewDvdCell: UICollectionViewCell {
             guard let posterPath = dvd.posterPath else { return }
             guard let backdropPath = dvd.backdropPath else { return }
             
-            dvdCoverImageView.loadImageUsingUrlString(urlString: tmdb.dvdCoverImageUrl + posterPath)
+            dvdCoverImageView.loadImageUsingUrlString(urlString: tmdb.dvdCoverImageUrl + backdropPath)
             
             if dvd.mediaType == "tv" {
                 dvdTitleLabel.text = dvd.name
@@ -71,14 +71,14 @@ class AddNewDvdCell: UICollectionViewCell {
         return imageView
     }()
     
-    let dvdTitleLabel = UILabel(fontWeight: .medium, numberOfLines: 2)
+    let dvdTitleLabel = UILabel(fontWeight: .medium, numberOfLines: 1)
     let yearReleasedLabel = UILabel(textColor: .secondaryLabel, fontSize: 16, numberOfLines: 1)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        dvdCoverImageView.constrainHeight(constant: 95)
-        dvdCoverImageView.constrainWidth(constant: 63.33)
+        dvdCoverImageView.constrainWidth(constant: 114)
+        dvdCoverImageView.constrainHeight(constant: 64)
         dvdCoverImageView.backgroundColor = .quaternarySystemFill
         
         let titleDateStackView = UIStackView(arrangedSubviews: [dvdTitleLabel,

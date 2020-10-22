@@ -10,7 +10,7 @@ import UIKit
 import Firebase
 
 class SignInSignUpUIContoller: UIViewController {
-   
+    
     // MARK: - views
     let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -21,11 +21,16 @@ class SignInSignUpUIContoller: UIViewController {
     
     let emailTextField = UITextField(placeholder: "Email", keyboardType: .emailAddress, returnKeyType: .next, autocorrectionType: .no)
     let emailSeperatorView = UIView(backgroundColor: .lightGray)
-
+    
     let passwordTextField = UITextField(placeholder: "Password", keyboardType: .default, returnKeyType: .go, autocorrectionType: .no)
     let passwordSeperatorView = UIView(backgroundColor: .lightGray)
-
-    let signInSignUpButton = UIButton(setTitleColor: .white, font: .systemFont(ofSize: 17, weight: .medium), cornerRadius: 12)
+    
+    let signInSignUpButton: UIButton = {
+        let button = UIButton(setTitleColor: .white, font: .systemFont(ofSize: 17, weight: .medium), cornerRadius: 12)
+        button.constrainHeight(constant: 54)
+        return button
+    }()
+    
     let needOrAlreadyHaveAccountButton = UIButton(backgroundColor: .clear, setTitleColor: .lightGray, font: .systemFont(ofSize: 14, weight: .regular), cornerRadius: 0)
     
     
@@ -73,16 +78,15 @@ class SignInSignUpUIContoller: UIViewController {
         emailSeperatorView.constrainHeight(constant: dividerHeight)
         emailTextField.constrainHeight(constant: textFieldHeight)
         emailTextField.autocapitalizationType = .none
-
+        
         passwordSeperatorView.constrainHeight(constant: dividerHeight)
         passwordTextField.isSecureTextEntry = true
         passwordTextField.constrainHeight(constant: textFieldHeight)
         passwordTextField.autocapitalizationType = .none
-
-        let textFieldsStackview = UIStackView(arrangedSubviews: [
-            UIStackView(arrangedSubviews: [emailTextField, emailSeperatorView], customSpacing: -4, distribution: .fillProportionally),
-            UIStackView(arrangedSubviews: [passwordTextField, passwordSeperatorView], customSpacing: -4, distribution: .fillProportionally)
-            ], customSpacing: 42)
+        
+        let textFieldsStackview = UIStackView(arrangedSubviews: [UIStackView(arrangedSubviews: [emailTextField, emailSeperatorView], customSpacing: -4, distribution: .fillProportionally),
+                                                                 UIStackView(arrangedSubviews: [passwordTextField, passwordSeperatorView], customSpacing: -4, distribution: .fillProportionally)
+        ], customSpacing: 42)
         
         view.addSubview(scrollView)
         scrollView.fillSuperview()
@@ -95,8 +99,6 @@ class SignInSignUpUIContoller: UIViewController {
     
     
     fileprivate func setupButtons() {
-        signInSignUpButton.constrainHeight(constant: 54)
-        
         let logInButtonsStackview = UIStackView(arrangedSubviews: [signInSignUpButton,
                                                                    needOrAlreadyHaveAccountButton], customSpacing: 16)
         

@@ -17,17 +17,39 @@ let buttonHeight: CGFloat = 54
 class WelcomeScreen: UIViewController {
     
     // MARK: - views
-    let dvdLogo = UIImageView()
-    
     let welcomeLabel = UILabel(text: "Welcome to DVDs", textColor: .label, fontSize: 36, fontWeight: .bold, textAlignment: .center, numberOfLines: 2)
     
-    let welcomeDescriptionLabel = UILabel(text: "The best way to keep track of the Movies and TV Shows you own on DVD or Blu-ray.", textAlignment: .center, numberOfLines: 0)
-    
-    lazy var signInWithEmailButton = UIButton(title: "Sign in with email", setTitleColor: .white, font: .systemFont(ofSize: 17, weight: .medium), cornerRadius: buttonCornerRadius)
-   
-    let signUpButton = UIButton(title: "Don't have an accout? Sign up here", backgroundColor: .clear, setTitleColor: .systemGray2, font: .systemFont(ofSize: 14, weight: .regular), cornerRadius: 0)
+    let welcomeDescriptionLabel = UILabel(text: "Easily keep track of the Movies and TV Shows you own on DVD or Blu-ray.", textAlignment: .center, numberOfLines: 0)
     
     lazy var googleButton = customGoogleButton
+    
+    let appleButton: UIButton = {
+        let button = UIButton(title: "Sign in with Apple", backgroundColor: .systemOrange , setTitleColor: .label, font: .systemFont(ofSize: 17, weight: .regular), cornerRadius: buttonCornerRadius)
+        button.constrainHeight(constant: buttonHeight)
+        return button
+    }()
+    
+    let orLabel = UILabel(text: "- or -", textColor: .tertiaryLabel, fontSize: 14, textAlignment: .center)
+    
+    lazy var signInWithEmailButton: UIButton = {
+        let button = UIButton(title: "Sign in with email", backgroundColor: .clear , setTitleColor: .secondaryLabel, font: .systemFont(ofSize: 17, weight: .regular), cornerRadius: buttonCornerRadius)
+        button.constrainHeight(constant: 36)
+        return button
+    }()
+    
+    let spacer: UIView = {
+        let view = UIView()
+        view.constrainHeight(constant: 36)
+        return view
+    }()
+    
+    let signUpButton: UIButton = {
+        let button = UIButton(title: "Don't have an accout? Sign up here", backgroundColor: .clear, setTitleColor: .tertiaryLabel, font: .systemFont(ofSize: 14, weight: .regular), cornerRadius: 0)
+        button.constrainHeight(constant: 42)
+        return button
+    }()
+    
+    
     
     
     // MARK: - view life cycle
@@ -48,23 +70,16 @@ class WelcomeScreen: UIViewController {
     // MARK: - setup
     fileprivate func setupWelcomeLabel() {
         
-        dvdLogo.constrainWidth(constant: 150)
-        dvdLogo.clipsToBounds = true
-        dvdLogo.contentMode = .scaleAspectFit
-        dvdLogo.backgroundColor = .systemGray3
-        
         let welcomeStackView = UIStackView(arrangedSubviews: [
             welcomeLabel,
             welcomeDescriptionLabel
         ], customSpacing: 8, axis: .vertical)
         
-        [dvdLogo, welcomeStackView].forEach({ view.addSubview($0) })
+        [welcomeStackView].forEach({ view.addSubview($0) })
         
-        welcomeStackView.centerInSuperview()
-        welcomeStackView.constrainWidth(constant: view.frame.width - 16 * 2)
-        
-        dvdLogo.centerXInSuperview()
-        dvdLogo.anchor(top: nil, leading: nil, bottom: welcomeStackView.topAnchor, trailing: nil, padding: .init(top: padding, left: 0, bottom: 0, right: 0))
+//        welcomeStackView.centerInSuperview()
+//        welcomeStackView.constrainWidth(constant: view.frame.width - 16 * 2)
+        welcomeStackView.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.safeAreaLayoutGuide.leadingAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 142, left: padding, bottom: 0, right: padding))
     }
     
     
@@ -77,11 +92,16 @@ class WelcomeScreen: UIViewController {
         googleButton.addTarget(self, action: #selector(handleGoogleLogin), for: .touchUpInside)
         
         let logInButtonsStackview = UIStackView(arrangedSubviews: [
-            googleButton,
-            signInWithEmailButton,
-            signUpButton], customSpacing: 12, distribution: .fillProportionally)
+                                                    googleButton,
+                                                    appleButton,
+                                                    UIView(),
+                                                    orLabel,
+                                                    signInWithEmailButton,
+                                                    spacer,
+                                                    signUpButton], customSpacing: 8, distribution: .equalSpacing)
+        
         view.addSubview(logInButtonsStackview)
-        logInButtonsStackview.anchor(top: nil, leading: view.safeAreaLayoutGuide.leadingAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 0, left: padding, bottom: padding, right: padding))
+        logInButtonsStackview.anchor(top: nil, leading: view.safeAreaLayoutGuide.leadingAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 0, left: padding, bottom: 8, right: padding))
     }
     
     

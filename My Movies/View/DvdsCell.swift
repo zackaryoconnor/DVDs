@@ -28,7 +28,7 @@ class DvdsCell: UICollectionViewCell {
             guard let posterPath = dvd.posterPath else { return }
             guard let backdropPath = dvd.backdropPath else { return }
             
-            dvdCoverImageView.loadImageUsingUrlString(urlString: tmdb.dvdCoverImageUrl + posterPath)
+            dvdCoverImageView.loadImageUsingUrlString(urlString: tmdb.dvdCoverImageUrl + backdropPath)
             
             if dvd.mediaType == "tv" {
                 dvdTitleLabel.text = dvd.name
@@ -42,9 +42,10 @@ class DvdsCell: UICollectionViewCell {
     
     let dvdCoverImageView: CustomImageView = {
         let imageView = CustomImageView(cornerRadius: 6)
-        imageView.backgroundColor = .systemGray2
-        imageView.layer.borderColor = UIColor.black.withAlphaComponent(0.16).cgColor
-        imageView.layer.borderWidth = 0.5
+        imageView.backgroundColor = .systemGray6
+//        imageView.layer.borderColor = UIColor.black.withAlphaComponent(0.16).cgColor
+//        imageView.layer.borderWidth = 0.5
+        imageView.contentMode = .scaleAspectFit
         return imageView
     }()
     
@@ -57,19 +58,18 @@ class DvdsCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        dvdCoverImageView.constrainWidth(constant: 164.67)
-        dvdCoverImageView.constrainHeight(constant: 247)
+        // 164.67
+        // 247
+        dvdCoverImageView.constrainWidth(constant: 163)
+        dvdCoverImageView.constrainHeight(constant: 92)
         dvdCoverImageView.clipsToBounds = true
         dvdCoverImageView.addSubview(redView)
         
         let stackView = UIStackView(arrangedSubviews: [dvdCoverImageView,
-                                                       dvdTitleLabel])
+                                                       dvdTitleLabel], customSpacing: 4, distribution: .equalSpacing)
         
         addSubview(stackView)
         stackView.axis = .vertical
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        ///fix vertical alignment
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         stackView.fillSuperview()
         
         setupSelectedCell()

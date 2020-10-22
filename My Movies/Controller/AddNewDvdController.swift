@@ -148,7 +148,7 @@ extension AddNewDvdController: UICollectionViewDelegateFlowLayout  {
     
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: view.frame.width, height: 112)
+        return CGSize(width: view.frame.width, height: 86)
     }
     
     
@@ -199,7 +199,6 @@ extension AddNewDvdController: UICollectionViewDelegateFlowLayout  {
                 }
             }
             
-            
         }
         
     }
@@ -215,7 +214,7 @@ extension AddNewDvdController: UICollectionViewDelegateFlowLayout  {
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return .init(width: view.frame.width, height: 80)
+        return .init(width: view.frame.width, height: 0)
     }
     
 }

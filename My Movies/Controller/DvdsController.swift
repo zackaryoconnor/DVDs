@@ -207,7 +207,6 @@ class DvdsController: BaseListController {
                 
                 if firebase.uid == firebase.uid {
                     self.myDvds.append(dvd)
-                    print(dvd)
                 }
                 
                 self.dvdsInCollection(.yes)
@@ -281,7 +280,7 @@ extension DvdsController: UICollectionViewDelegateFlowLayout {
             filteredDvd = myDvds[indexPath.item]
         }
         
-        cell.dvdCoverImageView.loadImageUsingUrlString(urlString: tmdb.dvdCoverImageUrl + (filteredDvd.posterPath ?? ""))
+        cell.dvdCoverImageView.loadImageUsingUrlString(urlString: tmdb.dvdCoverImageUrl + (filteredDvd.backdropPath ?? ""))
         
         if filteredDvd.mediaType == "tv" {
             cell.dvdTitleLabel.text = filteredDvd.name
@@ -294,8 +293,8 @@ extension DvdsController: UICollectionViewDelegateFlowLayout {
     
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        // change height to 116, after the poster path is changed to backdrop path
-        return CGSize(width: view.frame.width / 2 - 24, height: 300)
+        // change height to 116, after the poster path is changed to backdrop path // 300 for large
+        return CGSize(width: view.frame.width / 2 - 24, height: 120)
     }
     
     

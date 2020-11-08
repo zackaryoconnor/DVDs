@@ -31,7 +31,24 @@ class SignInSignUpUIContoller: UIViewController {
         return button
     }()
     
-    let needOrAlreadyHaveAccountButton = UIButton(backgroundColor: .clear, setTitleColor: .lightGray, font: .systemFont(ofSize: 14, weight: .regular), cornerRadius: 0)
+    let forgotPasswordButton: UIButton = {
+        let button = UIButton(title: "Forgot Password", backgroundColor: .clear, setTitleColor: .tertiaryLabel, font: .systemFont(ofSize: 14), cornerRadius: 0)
+        button.constrainHeight(constant: 36)
+        button.addTarget(self, action: #selector(handleForgotPasswordButtonPressed), for: .touchUpInside)
+        return button
+    }()
+    
+    let spacer: UIView = {
+        let view = UIView()
+        view.constrainHeight(constant: 36)
+        return view
+    }()
+    
+    let needOrAlreadyHaveAccountButton: UIButton = {
+        let button = UIButton(backgroundColor: .clear, setTitleColor: .lightGray, font: .systemFont(ofSize: 14, weight: .regular), cornerRadius: 0)
+        button.constrainHeight(constant: 36)
+        return button
+    }()
     
     
     // MARK: - vars and lets
@@ -70,7 +87,7 @@ class SignInSignUpUIContoller: UIViewController {
     
     fileprivate func setupWelcomeLabel() {
         view.addSubview(welcomeLabel)
-        welcomeLabel.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.safeAreaLayoutGuide.leadingAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 64, left: padding, bottom: 0, right: padding))
+        welcomeLabel.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.safeAreaLayoutGuide.leadingAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 76, left: padding, bottom: 0, right: padding))
     }
     
     
@@ -100,7 +117,9 @@ class SignInSignUpUIContoller: UIViewController {
     
     fileprivate func setupButtons() {
         let logInButtonsStackview = UIStackView(arrangedSubviews: [signInSignUpButton,
-                                                                   needOrAlreadyHaveAccountButton], customSpacing: 16)
+                                                                   forgotPasswordButton,
+                                                                   spacer,
+                                                                   needOrAlreadyHaveAccountButton], customSpacing: 8, distribution: .fillProportionally)
         
         view.addSubview(logInButtonsStackview)
         logInButtonsStackview.anchor(leading: view.safeAreaLayoutGuide.leadingAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 0, left: padding, bottom: padding, right: padding))
@@ -119,6 +138,31 @@ class SignInSignUpUIContoller: UIViewController {
     // MARK: - @objc methods
     @objc fileprivate func handleTapToDismissKeyboard() {
         view.endEditing(true)
+    }
+    
+    @objc func handleForgotPasswordButtonPressed() {
+        
+        guard let email = emailTextField.text, email != "" else {
+            displayAlertController(title: "Please enter email.", message: "Enter your email address and we will send you instructions to reset your password.", buttonTitle: "Ok")
+            return
+        }
+        
+        resetPassword(email: email)
+    }
+     
+    func resetPassword(email: String) {
+        Auth.auth().sendPasswordReset(withEmail: email) { (error) in
+            if error == nil {
+                self.displayAlertController(title: "Success!", message: "We've sent you instructions on how to reset your password.", buttonTitle: "Awesomesauce!")
+                DispatchQueue.main.asyncAfter(deadline: .now() + 4.0) {
+                    self.presentingViewController?.dismiss(animated: true)
+                }
+            } else {
+                self.displayAlertController(title: "Oops!", message: "Please check that your email address is correct.", buttonTitle: "Oh, my bad.")
+                error?.localizedDescription
+                print(error?.localizedDescription)
+            }
+        }
     }
     
 }

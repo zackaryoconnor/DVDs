@@ -14,7 +14,10 @@ class SignUpController: SignInSignUpUIContoller {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setupUI(welcomeLabelText: "Sign Up", signInSignUpButtonText: "Sign Up", signInSignUpButtonSelector: #selector(handleSignUpUser), needOrAlreadyHaveAccountButtonText: "Already have an accout? Tap here.", needOrAlreadyHaveAccountButtonSelector: #selector(handleAlreadyHaveAccountButtonPressed))
+        setupUI(welcomeLabelText: "Sign up with \nemail", signInSignUpButtonText: "Sign Up", signInSignUpButtonSelector: #selector(handleSignUpUser), needOrAlreadyHaveAccountButtonText: "Already have an accout? Tap here.", needOrAlreadyHaveAccountButtonSelector: #selector(handleAlreadyHaveAccountButtonPressed))
+        
+        forgotPasswordButton.isEnabled = false
+        forgotPasswordButton.layer.opacity = 0
     }
     
     

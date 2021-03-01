@@ -8,7 +8,7 @@ target 'My Movies' do
   # Pods for My Movies
 
 pod 'Firebase/Core'
-pod 'Firebase/Auth'
+pod 'Firebase/Auth', '~> 6.13'
 pod 'Firebase/Database'
 pod 'GoogleSignIn'
 

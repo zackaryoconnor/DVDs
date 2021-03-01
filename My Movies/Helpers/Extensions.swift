@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import AuthenticationServices
 
 
 extension UILabel {
@@ -169,7 +170,7 @@ extension AuthErrorCode {
 
 
 
-let customGoogleButton: UIButton = {
+let googleSignInButton: UIButton = {
     let button = UIButton(title: "Sign in with Google", backgroundColor: .white, setTitleColor: UIColor.black.withAlphaComponent(0.75), font: .systemFont(ofSize: 17, weight: .medium), cornerRadius: buttonCornerRadius)
     
     let googleLogoImageView = UIImageView(image: "btn_google_light_normal_ios", cornerRadius: 0)
@@ -180,5 +181,13 @@ let customGoogleButton: UIButton = {
     button.addSubview(googleLogoImageView)
     googleLogoImageView.anchor(top: button.topAnchor, leading: button.leadingAnchor, bottom: button.bottomAnchor, trailing: nil, padding: .init(top: 4, left: 4, bottom: 4, right: 0))
     
+    return button
+}()
+
+
+
+let appleSignInButton: ASAuthorizationAppleIDButton = {
+    let button = ASAuthorizationAppleIDButton(type: .signIn, style: .white)
+    button.constrainHeight(constant: buttonHeight)
     return button
 }()

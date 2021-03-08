@@ -14,7 +14,7 @@ class SignInController: SignInSignUpUIContoller {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setupUI(welcomeLabelText: "Sign in with \nemail", signInSignUpButtonText: "Sign In", signInSignUpButtonSelector:  #selector(handleSignInUser), needOrAlreadyHaveAccountButtonText: "Don't have an accout? Tap here.", needOrAlreadyHaveAccountButtonSelector: #selector(handleNeedAccountButtonPressed))
+        setupUI(welcomeLabelText: "Sign In With \nEmail", signInSignUpButtonText: "Sign In", signInSignUpButtonSelector:  #selector(handleSignInUser), needOrAlreadyHaveAccountButtonText: "Don't have an accout? Tap here.", needOrAlreadyHaveAccountButtonSelector: #selector(handleNeedAccountButtonPressed))
     }
     
     

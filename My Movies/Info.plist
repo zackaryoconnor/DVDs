@@ -12,10 +12,22 @@
 		<dict>
 			<key>CFBundleIconFiles</key>
 			<array>
-				<string>  </string>
+				<string>App_Icon.png</string>
 			</array>
 			<key>UIPrerenderedIcon</key>
 			<false/>
+		</dict>
+		<key>CFBundleAlternateIcons</key>
+		<dict>
+			<key>dark_app_icon.png</key>
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>dark_app_icon.png</string>
+				</array>
+				<key>UIPrerenderedIcon</key>
+				<false/>
+			</dict>
 		</dict>
 	</dict>
 	<key>CFBundleIdentifier</key>
@@ -62,56 +74,28 @@
 	</array>
 	<key>LSApplicationCategoryType</key>
 	<string></string>
-   <key>UIApplicationShortcutItems</key>
-   <array>
-       <dict>
-           <key>UIApplicationShortcutItemType</key>
-           <string>com.zackaryoconnor.My-Movies.SearchAction</string>
-           <key>UIApplicationShortcutItemIconType</key>
-           <string>UIApplicationShortcutIconTypeSearch</string>
-           <key>UIApplicationShortcutItemTitle</key>
-           <string>Search for a DVD</string>
-       </dict>
-       <dict>
-           <key>UIApplicationShortcutItemType</key>
-           <string>com.zackaryoconnor.My-Movies.ChangeAppIcon</string>
-<!--           <key>UIApplicationShortcutItemIconType</key>-->
-<!--           <string>UIApplicationShortcutIconTypeShare</string>-->
-<!--           <key>UIApplicationShortcutItemTitle</key>-->
-<!--           <string>Change app icon</string>-->
-       </dict>
-       <dict>
-           <key>UIApplicationShortcutItemType</key>
-           <string>com.zackaryoconnor.My-Movies.ShareAction</string>
-           <key>UIApplicationShortcutItemIconType</key>
-           <string>UIApplicationShortcutIconTypeShare</string>
-           <key>UIApplicationShortcutItemTitle</key>
-           <string>Share App</string>
-       </dict>
-   </array>
-   <key>CFBundleIcons</key>
-   <dict>
-       <key>CFBundlePrimaryIcon</key>
-       <dict>
-           <key>CFBundleIconFiles</key>
-           <array>
-               <string>App_Icon.png</string>
-           </array>
-           <key>UIPrerenderedIcon</key>
-           <false/>
-       </dict>
-       <key>CFBundleAlternateIcons</key>
-       <dict>
-           <key>dark_app_icon.png</key>
-           <dict>
-               <key>CFBundleIconFiles</key>
-               <array>
-                   <string>dark_app_icon.png</string>
-               </array>
-               <key>UIPrerenderedIcon</key>
-               <false/>
-           </dict>
-       </dict>
-   </dict>
+	<key>UIApplicationShortcutItems</key>
+	<array>
+		<dict>
+			<key>UIApplicationShortcutItemType</key>
+			<string>com.zackaryoconnor.My-Movies.SearchAction</string>
+			<key>UIApplicationShortcutItemIconType</key>
+			<string>UIApplicationShortcutIconTypeSearch</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Search for a DVD</string>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemType</key>
+			<string>com.zackaryoconnor.My-Movies.ChangeAppIcon</string>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemType</key>
+			<string>com.zackaryoconnor.My-Movies.ShareAction</string>
+			<key>UIApplicationShortcutItemIconType</key>
+			<string>UIApplicationShortcutIconTypeShare</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Share App</string>
+		</dict>
+	</array>
 </dict>
 </plist>

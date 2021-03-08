@@ -17,9 +17,22 @@ struct BaseNavigationController {
         let navigationController = UINavigationController(rootViewController: viewController)
         navigationController.navigationBar.prefersLargeTitles = true
         
+//
+//        UINavigationBar.appearance().largeTitleTextAttributes = [NSAttributedString.Key.font: UIFont.init(descriptor: UIFontDescriptor.preferredFontDescriptor(withTextStyle: .largeTitle).withDesign(.serif) ?? .preferredFontDescriptor(withTextStyle: .largeTitle), size: 16)]
+//
         
+//        let label: UILabel = {
+//            let label = UILabel(text: "navbar", textColor: .blue, fontSize: 14, fontWeight: .heavy, textAlignment: .left, numberOfLines: 1)
+//            return label
+//        }()
         
-//        viewController.navigationItem.searchController = searchController
+        let attributes = [
+            NSAttributedString.Key.foregroundColor: UIColor.systemBlue
+        ]
+        
+        UINavigationBar.appearance().titleTextAttributes = attributes
+        UINavigationBar.appearance().largeTitleTextAttributes = attributes
+        
         viewController.navigationItem.title = title
         viewController.view.backgroundColor = .systemBackground
         

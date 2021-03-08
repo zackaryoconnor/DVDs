@@ -171,15 +171,18 @@ extension AuthErrorCode {
 
 
 let googleSignInButton: UIButton = {
-    let button = UIButton(title: "Sign in with Google", backgroundColor: .white, setTitleColor: UIColor.black.withAlphaComponent(0.75), font: .systemFont(ofSize: 17, weight: .medium), cornerRadius: buttonCornerRadius)
-    
+    var button = UIButton(title: "Sign in with Google", backgroundColor: .white, setTitleColor: UIColor.black, font: .systemFont(ofSize: 20, weight: .medium), cornerRadius: 6)
     let googleLogoImageView = UIImageView(image: "btn_google_light_normal_ios", cornerRadius: 0)
     
+    button.titleEdgeInsets = .init(top: 0, left: 16, bottom: 0, right: 0)
     button.constrainHeight(constant: buttonHeight)
-    button.layer.borderColor = UIColor.systemGray2.cgColor
+    button.layer.borderColor = UIColor.black.cgColor
     button.layer.borderWidth = 0.5
     button.addSubview(googleLogoImageView)
-    googleLogoImageView.anchor(top: button.topAnchor, leading: button.leadingAnchor, bottom: button.bottomAnchor, trailing: nil, padding: .init(top: 4, left: 4, bottom: 4, right: 0))
+    
+    googleLogoImageView.anchor(top: button.topAnchor, leading: nil, bottom: button.bottomAnchor, trailing: button.titleLabel?.leadingAnchor, padding: .init(top: 4, left: 0, bottom: 4, right: 0))
+    googleLogoImageView.contentMode = .scaleAspectFit
+    googleLogoImageView.constrainWidth(constant: 32)
     
     return button
 }()
@@ -187,7 +190,7 @@ let googleSignInButton: UIButton = {
 
 
 let appleSignInButton: ASAuthorizationAppleIDButton = {
-    let button = ASAuthorizationAppleIDButton(type: .signIn, style: .white)
+    let button = ASAuthorizationAppleIDButton(type: .default, style: .whiteOutline)
     button.constrainHeight(constant: buttonHeight)
     return button
 }()

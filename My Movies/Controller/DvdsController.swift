@@ -13,7 +13,21 @@ import FirebaseDatabase
 class DvdsController: BaseListController {
     
     let activitityIndicator = UIActivityIndicatorView(indicatorColor: .darkGray)
-    let placeholderText = UILabel(text: "\n\nClick the '+' to add a DVD\n to your library.", textColor: .label, fontSize: 24, fontWeight: .medium, textAlignment: .center, numberOfLines: 0)
+    
+    
+    let placeholderImageView: UIImageView = {
+        let imageView = UIImageView(image: "undraw_new_entries_nh3h", cornerRadius: 0)
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+    
+    
+    let placeholderText: UILabel = {
+        let label = UILabel(text: "Click the '+' to add a DVD\n to your library.", textColor: .label, fontSize: 24, fontWeight: .medium, textAlignment: .center, numberOfLines: 2)
+        label.constrainHeight(constant: 86)
+        return label
+    }()
+
     let searchController = UISearchController(searchResultsController: nil)
     
     lazy var editButton = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(handleEditButtonPressed))
@@ -94,7 +108,6 @@ class DvdsController: BaseListController {
         DispatchQueue.main.async {
             self.collectionView.reloadData()
         }
-        
     }
     
     
@@ -127,8 +140,16 @@ class DvdsController: BaseListController {
     
     
     fileprivate func setupPlaceholderTextView() {
-        view.addSubview(placeholderText)
-        placeholderText.centerInSuperview(size: .init(width: view.frame.width - 32, height: 500))
+        
+        let stack = UIStackView(arrangedSubviews: [placeholderImageView,
+                                                   placeholderText],
+                                axis: .vertical,
+                                distribution: .equalCentering)
+        
+        view.addSubview(stack)
+        stack.centerInSuperview(size: CGSize(width: view.frame.width - (padding * 2),
+                                             height: 250))
+        placeholderImageView.isHidden = true
         placeholderText.isHidden = true
     }
     
@@ -141,16 +162,20 @@ class DvdsController: BaseListController {
     func dvdsInCollection(_ dvdsInCollection: DvdsInCollection) {
         switch dvdsInCollection {
         case .yes:
+            placeholderImageView.isHidden = true
             placeholderText.isHidden = true
             activitityIndicator.isHidden = true
             activitityIndicator.stopAnimating()
             collectionView.isHidden = false
             collectionView.isScrollEnabled = true
+            navigationItem.searchController = searchController
         default:
+            placeholderImageView.isHidden = false
             placeholderText.isHidden = false
             activitityIndicator.stopAnimating()
             collectionView.isHidden = true
             collectionView.isScrollEnabled = false
+            navigationItem.searchController = nil
         }
     }
     

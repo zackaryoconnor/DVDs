@@ -21,6 +21,7 @@
 		F3773C1D225E91BD00C1341E /* SavedDvds.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3773C1C225E91BD00C1341E /* SavedDvds.swift */; };
 		F37E898D246652AA00E753CD /* HandleSignout.swift in Sources */ = {isa = PBXBuildFile; fileRef = F37E898C246652AA00E753CD /* HandleSignout.swift */; };
 		F390132B246FA2A100C4792A /* DvdsFooterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F390132A246FA2A100C4792A /* DvdsFooterCell.swift */; };
+		F3AC220F25F5C3AB001CAE94 /* DVDs-master in Resources */ = {isa = PBXBuildFile; fileRef = F3AC220E25F5C3AA001CAE94 /* DVDs-master */; };
 		F3BA2FC323847EA9002EE1A1 /* WelcomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3BA2FC223847EA9002EE1A1 /* WelcomeScreen.swift */; };
 		F3D9FE5D21F2790E00B864AA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9FE5C21F2790E00B864AA /* AppDelegate.swift */; };
 		F3D9FE5F21F2790E00B864AA /* DvdsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9FE5E21F2790E00B864AA /* DvdsController.swift */; };
@@ -55,6 +56,7 @@
 		F37E898C246652AA00E753CD /* HandleSignout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandleSignout.swift; sourceTree = "<group>"; };
 		F390132A246FA2A100C4792A /* DvdsFooterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DvdsFooterCell.swift; sourceTree = "<group>"; };
 		F3970C84227681FB008FCE78 /* My Movies.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "My Movies.entitlements"; sourceTree = "<group>"; };
+		F3AC220E25F5C3AA001CAE94 /* DVDs-master */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "DVDs-master"; sourceTree = "<group>"; };
 		F3BA2FC223847EA9002EE1A1 /* WelcomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeScreen.swift; sourceTree = "<group>"; };
 		F3D9FE5921F2790E00B864AA /* My Movies.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "My Movies.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F3D9FE5C21F2790E00B864AA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -104,6 +106,7 @@
 		F3D9FE5021F2790E00B864AA = {
 			isa = PBXGroup;
 			children = (
+				F3AC220E25F5C3AA001CAE94 /* DVDs-master */,
 				F3D9FE5B21F2790E00B864AA /* My Movies */,
 				F3D9FE5A21F2790E00B864AA /* Products */,
 				F7DE03F520189BA8EE87F195 /* Pods */,
@@ -276,6 +279,7 @@
 			files = (
 				F3D9FE6721F2791000B864AA /* LaunchScreen.storyboard in Resources */,
 				F3D9FE6421F2791000B864AA /* Assets.xcassets in Resources */,
+				F3AC220F25F5C3AB001CAE94 /* DVDs-master in Resources */,
 				F36C7FCA2475A144009CE7B8 /* App_Icon.png in Resources */,
 				F3F4C276236500CC005B0DBC /* GoogleService-Info.plist in Resources */,
 			);
@@ -503,6 +507,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7BD5226242D983D332869CEA /* Pods-My Movies.debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "My Movies/My Movies.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = ZZE62SD4Y5;
@@ -524,6 +529,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 477D256E936B88304336D4EE /* Pods-My Movies.release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "My Movies/My Movies.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = ZZE62SD4Y5;

@@ -19,30 +19,69 @@ let buttonHeight: CGFloat = 54
 class WelcomeScreen: UIViewController {
     
     // MARK: - views
-    let welcomeLabel = UILabel(text: "Welcome to DVDs", textColor: .label, fontSize: 36, fontWeight: .bold, textAlignment: .center, numberOfLines: 2)
+    let welcomeLabel: UILabel = {
+        let label: UILabel = {
+            let label = UILabel(textColor: .label, textAlignment: .center, numberOfLines: 2)
+            
+            let string = "Welcome to DVDs"
+            let attString = NSMutableAttributedString(string: string)
+            attString.addAttributes([.foregroundColor : UIColor.systemBlue], range: NSRange(location: 11, length: 4))
+            label.attributedText = attString
+            
+            if let fontDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .largeTitle).withDesign(.serif)?.withSymbolicTraits(.traitBold) {
+                label.font = UIFont(descriptor: fontDescriptor , size: 32)
+            }
+            
+            label.constrainHeight(constant: 24)
+            
+            return label
+        }()
+        
+        return label
+    }()
     
-    let welcomeDescriptionLabel = UILabel(text: "Easily keep track of the Movies and TV Shows you own on DVD or Blu-ray.", textAlignment: .center, numberOfLines: 0)
+    let welcomeDescriptionLabel: UILabel = {
+        let label = UILabel(text: "Easily keep track of the Movies and TV Shows you own on DVD or Blu-ray.", fontSize: 20, textAlignment: .center, numberOfLines: 2)
+        label.constrainHeight(constant: 64)
+        return label
+    }()
+    
+    let heroImage: UIImageView = {
+        let imageView = UIImageView(image: "undraw_home_cinema_l7yl", cornerRadius: 0)
+//        imageView.constrainHeight(constant: 192)
+        imageView.constrainHeight(constant: 250)
+//        imageView.backgroundColor = .systemOrange
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
     
     lazy var googleButton = googleSignInButton
     
     lazy var appleButton = appleSignInButton
     
-    let orLabel = UILabel(text: "- or -", textColor: .tertiaryLabel, fontSize: 14, textAlignment: .center)
+    let orLabel: UILabel = {
+        let label = UILabel(text: "⎯⎯⎯⎯⎯⎯⎯ or ⎯⎯⎯⎯⎯⎯⎯", textColor: .systemBlue, textAlignment: .center)
+        if let fontDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .largeTitle).withDesign(.serif) {
+            label.font = UIFont(descriptor: fontDescriptor , size: 16)
+            label.constrainHeight(constant: 12)
+        }
+        return label
+    }()
     
     lazy var signInWithEmailButton: UIButton = {
-        let button = UIButton(title: "Sign in with email", backgroundColor: .clear , setTitleColor: .secondaryLabel, font: .systemFont(ofSize: 17, weight: .regular), cornerRadius: buttonCornerRadius)
-        button.constrainHeight(constant: 36)
+        let button = UIButton(title: "Sign in with email", backgroundColor: .clear , setTitleColor: .secondaryLabel, font: .systemFont(ofSize: 16, weight: .regular))
+        button.constrainHeight(constant: 32)
         return button
     }()
     
     let spacer: UIView = {
         let view = UIView()
-        view.constrainHeight(constant: 36)
+        view.constrainHeight(constant: 32)
         return view
     }()
     
     let signUpButton: UIButton = {
-        let button = UIButton(title: "Don't have an accout? Sign up here", backgroundColor: .clear, setTitleColor: .tertiaryLabel, font: .systemFont(ofSize: 14, weight: .regular), cornerRadius: 0)
+        let button = UIButton(title: "Don't have an account? Sign up here.", backgroundColor: .clear, setTitleColor: .secondaryLabel, font: .systemFont(ofSize: 14, weight: .regular), cornerRadius: 0)
         button.constrainHeight(constant: 42)
         return button
     }()
@@ -68,20 +107,24 @@ class WelcomeScreen: UIViewController {
     // MARK: - setup
     fileprivate func setupWelcomeLabel() {
         
-        let welcomeStackView = UIStackView(arrangedSubviews: [
-            welcomeLabel,
-            welcomeDescriptionLabel
-        ], customSpacing: 8, axis: .vertical)
+        let welcomeStackView = UIStackView(arrangedSubviews: [UIView(),
+                                                              welcomeLabel,
+                                                              welcomeDescriptionLabel,
+                                                              UIView(),
+                                                              heroImage]
+                                           , customSpacing: 8, distribution: .fill)
+//        welcomeStackView.constrainHeight(constant: 300)
         
-        [welcomeStackView].forEach({ view.addSubview($0) })
+//        [welcomeStackView].forEach({ view.addSubview($0) })
         
         //        welcomeStackView.centerInSuperview()
         //        welcomeStackView.constrainWidth(constant: view.frame.width - 16 * 2)
-        welcomeStackView.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.safeAreaLayoutGuide.leadingAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 142, left: padding, bottom: 0, right: padding))
-    }
-    
-    
-    fileprivate func setupButtons() {
+//        welcomeStackView.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.safeAreaLayoutGuide.leadingAnchor,trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 124, left: padding, bottom: 0, right: padding))
+//        welcomeStackView.constrainHeight(constant: 300)
+        
+        
+        
+        
         signInWithEmailButton.constrainHeight(constant: buttonHeight)
         signInWithEmailButton.addTarget(self, action: #selector(handleLogIn), for: .touchUpInside)
         
@@ -97,17 +140,49 @@ class WelcomeScreen: UIViewController {
                                                     UIView(),
                                                     orLabel,
                                                     signInWithEmailButton,
-                                                    spacer,
-                                                    signUpButton], customSpacing: 8, distribution: .equalSpacing)
+//                                                    spacer,
+                                                    signUpButton]
+                                                , customSpacing: 8, distribution: .equalSpacing)
         
-        view.addSubview(logInButtonsStackview)
-        logInButtonsStackview.anchor(top: nil, leading: view.safeAreaLayoutGuide.leadingAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 0, left: padding, bottom: 8, right: padding))
+//        view.addSubview(logInButtonsStackview)
+//        logInButtonsStackview.anchor(top: nil, leading: view.safeAreaLayoutGuide.leadingAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 0, left: padding * 3, bottom: 8, right: padding * 3))
+        
+        
+        let stack = UIStackView(arrangedSubviews: [welcomeStackView,
+                                                   UIView(),
+                                                   logInButtonsStackview]
+                                , customSpacing: 32, distribution: .fill)
+        view.addSubview(stack)
+        
+        let safeArea = view.safeAreaLayoutGuide
+        
+        stack.anchor(top: safeArea.topAnchor, leading: safeArea.leadingAnchor, bottom: safeArea.bottomAnchor, trailing: safeArea.trailingAnchor, padding: .init(top: 46, left: padding, bottom: padding, right: padding))
+        
     }
     
     
-    
-    
-    
+    fileprivate func setupButtons() {
+//        signInWithEmailButton.constrainHeight(constant: buttonHeight)
+//        signInWithEmailButton.addTarget(self, action: #selector(handleLogIn), for: .touchUpInside)
+//
+//        signUpButton.addTarget(self, action: #selector(handleSignUpButtonPressed), for: .touchUpInside)
+//
+//        googleButton.addTarget(self, action: #selector(handleGoogleLogin), for: .touchUpInside)
+//
+//        appleButton.addTarget(self, action: #selector(startSignInWithAppleFlow), for: .touchUpInside)
+//
+//        let logInButtonsStackview = UIStackView(arrangedSubviews: [
+//                                                    googleButton,
+//                                                    appleButton,
+//                                                    UIView(),
+//                                                    orLabel,
+//                                                    signInWithEmailButton,
+//                                                    spacer,
+//                                                    signUpButton], customSpacing: 8, distribution: .equalSpacing)
+//
+//        view.addSubview(logInButtonsStackview)
+//        logInButtonsStackview.anchor(top: nil, leading: view.safeAreaLayoutGuide.leadingAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 0, left: padding * 3, bottom: 8, right: padding * 3))
+    }
     
     
     
@@ -244,14 +319,6 @@ extension WelcomeScreen: GIDSignInDelegate {
 
 
 
-
-
-
-
-
-
-
-
 // apple
 
 @available(iOS 13.0, *)
@@ -274,9 +341,6 @@ extension WelcomeScreen: ASAuthorizationControllerDelegate {
                                                       rawNonce: nonce)
             Auth.auth().signIn(with: credential) { (authResult, error) in
                 if (error != nil) {
-                    // Error. If error.code == .MissingOrInvalidNonce, make sure
-                    // you're sending the SHA256-hashed nonce as a hex string with
-                    // your request to Apple.
                     print(error?.localizedDescription ?? "")
                     return
                 }
@@ -314,3 +378,17 @@ extension WelcomeScreen : ASAuthorizationControllerPresentationContextProviding 
 
 
 // apple
+
+
+
+
+
+
+extension UIFont {
+    static func preferredFont(for style: TextStyle, weight: Weight) -> UIFont {
+        let metrics = UIFontMetrics(forTextStyle: style)
+        let desc = UIFontDescriptor.preferredFontDescriptor(withTextStyle: style)
+        let font = UIFont.systemFont(ofSize: desc.pointSize, weight: weight)
+        return metrics.scaledFont(for: font)
+    }
+}

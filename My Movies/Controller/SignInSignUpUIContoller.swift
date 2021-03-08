@@ -17,42 +17,70 @@ class SignInSignUpUIContoller: UIViewController {
         return scrollView
     }()
     
-    let welcomeLabel = UILabel(fontSize: 36, fontWeight: .bold)
-    
-    let emailTextField = UITextField(placeholder: "Email", keyboardType: .emailAddress, returnKeyType: .next, autocorrectionType: .no)
-    let emailSeperatorView = UIView(backgroundColor: .lightGray)
-    
-    let passwordTextField = UITextField(placeholder: "Password", keyboardType: .default, returnKeyType: .go, autocorrectionType: .no)
-    let passwordSeperatorView = UIView(backgroundColor: .lightGray)
-    
-    let signInSignUpButton: UIButton = {
-        let button = UIButton(setTitleColor: .white, font: .systemFont(ofSize: 17, weight: .medium), cornerRadius: 12)
-        button.constrainHeight(constant: 54)
-        return button
-    }()
-    
-    let forgotPasswordButton: UIButton = {
-        let button = UIButton(title: "Forgot Password", backgroundColor: .clear, setTitleColor: .tertiaryLabel, font: .systemFont(ofSize: 14), cornerRadius: 0)
-        button.constrainHeight(constant: 36)
-        button.addTarget(self, action: #selector(handleForgotPasswordButtonPressed), for: .touchUpInside)
-        return button
-    }()
     
     let spacer: UIView = {
         let view = UIView()
         view.constrainHeight(constant: 36)
         return view
     }()
+
+    let smallSpacer: UIView = {
+        let view = UIView()
+        view.constrainHeight(constant: 16)
+        return view
+    }()
     
-    let needOrAlreadyHaveAccountButton: UIButton = {
-        let button = UIButton(backgroundColor: .clear, setTitleColor: .lightGray, font: .systemFont(ofSize: 14, weight: .regular), cornerRadius: 0)
+    
+    let welcomeLabel: UILabel = {
+        let label = UILabel(textColor: .white, numberOfLines: 2)
+        if let fontDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .largeTitle).withDesign(.serif)?.withSymbolicTraits(.traitBold) {
+            label.font = UIFont(descriptor: fontDescriptor , size: 32)
+        }
+        
+        label.constrainHeight(constant: 86)
+        
+        return label
+    }()
+    
+    let heroImage: UIImageView = {
+        let imageView = UIImageView(image: "undraw_mobile_inbox_3h46", cornerRadius: 0)
+        imageView.contentMode = .scaleAspectFit
+        imageView.constrainHeight(constant: 250)
+//        imageView.constrainWidth(constant: 86)
+//        imageView.backgroundColor = .red
+        return imageView
+    }()
+    
+    let emailTextField = UITextField(keyboardType: .emailAddress, returnKeyType: .next, autocorrectionType: .no)
+    let emailSeperatorView = UIView(backgroundColor: UIColor.white.withAlphaComponent(0.75))
+    
+    let passwordTextField = UITextField(keyboardType: .default, returnKeyType: .go, autocorrectionType: .no)
+    let passwordSeperatorView = UIView(backgroundColor: UIColor.white.withAlphaComponent(0.75))
+    
+    let signInSignUpButton: UIButton = {
+        let button = UIButton(backgroundColor: .white, setTitleColor: .black, font: .systemFont(ofSize: 17, weight: .medium), cornerRadius: 6)
+        button.constrainHeight(constant: 54)
+        return button
+    }()
+    
+    let forgotPasswordButton: UIButton = {
+        let button = UIButton(title: "Forgot Password", backgroundColor: .clear, setTitleColor: UIColor.white.withAlphaComponent(0.75), font: .systemFont(ofSize: 14), cornerRadius: 0)
         button.constrainHeight(constant: 36)
+        button.addTarget(self, action: #selector(handleForgotPasswordButtonPressed), for: .touchUpInside)
+        button.constrainHeight(constant: 32)
+        return button
+    }()
+    
+
+    let needOrAlreadyHaveAccountButton: UIButton = {
+        let button = UIButton(backgroundColor: .clear, setTitleColor: UIColor.white.withAlphaComponent(0.75), font: .systemFont(ofSize: 14, weight: .regular), cornerRadius: 0)
+        button.constrainHeight(constant: 32)
         return button
     }()
     
     
     // MARK: - vars and lets
-    let dividerHeight: CGFloat = 0.5
+    let dividerHeight: CGFloat = 1.5
     let textFieldHeight: CGFloat = 46
     
     
@@ -60,7 +88,7 @@ class SignInSignUpUIContoller: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .systemBlue
         
         emailTextField.delegate = self
         passwordTextField.delegate = self
@@ -86,43 +114,85 @@ class SignInSignUpUIContoller: UIViewController {
     
     
     fileprivate func setupWelcomeLabel() {
-        view.addSubview(welcomeLabel)
-        welcomeLabel.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.safeAreaLayoutGuide.leadingAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 76, left: padding, bottom: 0, right: padding))
+//        view.addSubview(welcomeLabel)
+//        welcomeLabel.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.safeAreaLayoutGuide.leadingAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 46, left: padding, bottom: 0, right: padding))
     }
     
     
     fileprivate func setupTextFields() {
+        let welcomeStack = UIStackView(arrangedSubviews: [
+                                                          welcomeLabel,
+                                           UIView(),               heroImage, UIView()]
+                                       , distribution: .fill)
+        
+        
         emailSeperatorView.constrainHeight(constant: dividerHeight)
         emailTextField.constrainHeight(constant: textFieldHeight)
         emailTextField.autocapitalizationType = .none
+        emailTextField.textColor = .white
+        emailTextField.attributedPlaceholder = NSAttributedString(string: "Email",
+                                                                  attributes: [NSAttributedString.Key.foregroundColor: UIColor.white.withAlphaComponent(0.75)])
         
         passwordSeperatorView.constrainHeight(constant: dividerHeight)
         passwordTextField.isSecureTextEntry = true
         passwordTextField.constrainHeight(constant: textFieldHeight)
         passwordTextField.autocapitalizationType = .none
+        passwordTextField.textColor = .white
+        passwordTextField.attributedPlaceholder = NSAttributedString(string: "Password",
+                                                                  attributes: [NSAttributedString.Key.foregroundColor: UIColor.white.withAlphaComponent(0.75)])
         
-        let textFieldsStackview = UIStackView(arrangedSubviews: [UIStackView(arrangedSubviews: [emailTextField, emailSeperatorView], customSpacing: -4, distribution: .fillProportionally),
-                                                                 UIStackView(arrangedSubviews: [passwordTextField, passwordSeperatorView], customSpacing: -4, distribution: .fillProportionally)
-        ], customSpacing: 42)
+        let textFieldsStackview = UIStackView(arrangedSubviews: [UIStackView(arrangedSubviews: [emailTextField,
+                                                                                                emailSeperatorView],
+                                                                             customSpacing: -4, distribution: .fillProportionally),
+                                                                 UIStackView(arrangedSubviews: [passwordTextField,
+                                                                                                passwordSeperatorView],
+                                                                             customSpacing: -4, distribution: .fillProportionally)],
+                                              customSpacing: 42)
         
-        view.addSubview(scrollView)
-        scrollView.fillSuperview()
+        textFieldsStackview.constrainHeight(constant: 116)
         
-        [textFieldsStackview].forEach { scrollView.addSubview($0) }
+//        view.addSubview(scrollView)
+//        scrollView.fillSuperview()
+//
+//        [textFieldsStackview].forEach { scrollView.addSubview($0) }
+//
+//        textFieldsStackview.centerInSuperview()
+//        textFieldsStackview.constrainWidth(constant: view.frame.width - 32)
         
-        textFieldsStackview.centerInSuperview()
-        textFieldsStackview.constrainWidth(constant: view.frame.width - 32)
+        
+        
+        let logInButtonsStackview = UIStackView(arrangedSubviews: [signInSignUpButton,
+                                                                   forgotPasswordButton,
+//                                                                   spacer,
+                                                                   needOrAlreadyHaveAccountButton],
+                                                customSpacing: 8, distribution: .fillProportionally)
+        
+//        view.addSubview(logInButtonsStackview)
+//        logInButtonsStackview.anchor(leading: view.safeAreaLayoutGuide.leadingAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 0, left: padding, bottom: padding, right: padding))
+        
+        
+        let stack = UIStackView(arrangedSubviews: [welcomeStack,
+//                                                   spacer,
+//                                                   UIView(),
+                                                   textFieldsStackview,
+                                                   smallSpacer,
+                                                   logInButtonsStackview],
+                                customSpacing: 32, distribution: .fill)
+        
+        view.addSubview(stack)
+        stack.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.safeAreaLayoutGuide.leadingAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 32, left: padding, bottom: padding, right: padding))
+        
     }
     
     
     fileprivate func setupButtons() {
-        let logInButtonsStackview = UIStackView(arrangedSubviews: [signInSignUpButton,
-                                                                   forgotPasswordButton,
-                                                                   spacer,
-                                                                   needOrAlreadyHaveAccountButton], customSpacing: 8, distribution: .fillProportionally)
-        
-        view.addSubview(logInButtonsStackview)
-        logInButtonsStackview.anchor(leading: view.safeAreaLayoutGuide.leadingAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 0, left: padding, bottom: padding, right: padding))
+//        let logInButtonsStackview = UIStackView(arrangedSubviews: [signInSignUpButton,
+//                                                                   forgotPasswordButton,
+////                                                                   spacer,
+//                                                                   needOrAlreadyHaveAccountButton], customSpacing: 8, distribution: .fillProportionally)
+//
+//        view.addSubview(logInButtonsStackview)
+//        logInButtonsStackview.anchor(leading: view.safeAreaLayoutGuide.leadingAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 0, left: padding, bottom: padding, right: padding))
     }
     
     
